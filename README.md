@@ -19,6 +19,8 @@
 ---
 
 > 🌍 **Bilingual Documentation / Documentación Bilingüe:** 
+> All detailed technical documentation, API manuals, and user guides can be found in the `docs/` folder. Available in **English (`docs/en/`)** and **Spanish (`docs/es/`)**.
+> 
 > Toda la documentación técnica detallada, manuales de API y guías de usuario se encuentran en la carpeta `docs/`. Disponible en **Inglés (`docs/en/`)** y en **Español (`docs/es/`)**.
 
 ---
