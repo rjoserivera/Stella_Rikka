@@ -4,7 +4,8 @@ import uuid
 from datetime import datetime
 
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR   = os.path.join(BASE_DIR, '..', '..', 'data', 'kanban')
+from backend.config import DATA_DIR_BASE
+DATA_DIR = os.path.join(DATA_DIR_BASE, 'kanban')
 ITEMS_FILE = os.path.join(DATA_DIR, 'tareas.json')
 
 COLUMNAS_VALIDAS   = ['backlog', 'should', 'could', 'wont']

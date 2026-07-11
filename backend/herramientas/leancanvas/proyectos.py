@@ -5,7 +5,8 @@ from datetime import datetime
 
 # Definimos la ruta al archivo
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DATA_FILE = os.path.join(BASE_DIR, 'data', 'leancanvas', 'proyectos.json')
+from backend.config import DATA_DIR_BASE
+DATA_FILE = os.path.join(DATA_DIR_BASE, 'leancanvas', 'proyectos.json')
 
 def _cargar():
     if not os.path.exists(DATA_FILE): return []

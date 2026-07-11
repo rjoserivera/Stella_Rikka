@@ -4,7 +4,8 @@ import uuid
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DATA_FILE = os.path.join(BASE_DIR, 'data', 'leancanvas', 'versiones.json')
+from backend.config import DATA_DIR_BASE
+DATA_FILE = os.path.join(DATA_DIR_BASE, 'leancanvas', 'versiones.json')
 
 def _cargar():
     if not os.path.exists(DATA_FILE): return []

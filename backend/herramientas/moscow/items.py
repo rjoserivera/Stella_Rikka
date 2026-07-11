@@ -4,7 +4,8 @@ import uuid
 from datetime import datetime
 
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR   = os.path.join(BASE_DIR, '..', '..', 'data', 'moscow')
+from backend.config import DATA_DIR_BASE
+DATA_DIR = os.path.join(DATA_DIR_BASE, 'moscow')
 ITEMS_FILE = os.path.join(DATA_DIR, 'items.json')
 
 COLUMNAS_VALIDAS   = ['must', 'should', 'could', 'wont']
