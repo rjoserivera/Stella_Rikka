@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matriz de Eisenhower</title>
+  <meta name="description" content="Gestiona tus tareas con la Matriz de Eisenhower: urgente, importante, delegar, eliminar." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link rel="stylesheet" href="/css/tema.css" />
+  <link rel="stylesheet" href="/eisenhower/css/styles.css?v=3" />
+  <link rel="stylesheet" href="/eisenhower/css/flip.css" />
+
+  <!-- SortableJS -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <!-- SheetJS (para Excel) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- html2canvas (para PNG) -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <!-- jsPDF (para PDF) -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <script>
+    (function() {
+      const t = localStorage.getItem('suite_tema') || 'oscuro';
+      document.documentElement.setAttribute('data-tema', t);
+    })();
+  </script>
+<link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ── Topbar ── -->
+  <header class="topbar" id="topbar">
+    <a href="/eisenhower/seleccion" class="topbar-back" aria-label="Volver a selección">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      <span>Proyectos</span>
+    </a>
+    <div class="topbar-divider"></div>
+
+    <div class="project-name-wrapper">
+      <input
+        class="project-name-input"
+        id="project-name-input"
+        type="text"
+        value="Cargando..."
+        maxlength="80"
+        aria-label="Nombre del proyecto (editable)"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="topbar-actions">
+      <!-- Historial -->
+      <button class="topbar-btn" id="btn-historial" aria-label="Ver historial" title="Historial">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>Historial</span>
+      </button>
+
+      <!-- Estadísticas -->
+      <button class="topbar-btn" id="btn-stats" aria-label="Ver estadísticas" title="Estadísticas">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        <span>Stats</span>
+      </button>
+
+      <!-- Guardar -->
+      <button class="topbar-btn btn-export-file" id="btn-save-project" title="Descargar archivo del proyecto (.rikka)" aria-label="Descargar .rikka">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span>Descargar .rikka</span>
+      </button>
+
+      <!-- Exportar -->
+      <div class="export-dropdown">
+        <button class="topbar-btn" id="btn-exportar" aria-haspopup="true" aria-expanded="false" aria-label="Exportar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Exportar</span>
+        </button>
+        <div class="export-menu" id="export-menu" role="menu">
+          <button class="export-menu-item" id="export-png" role="menuitem">🖼️ Exportar PNG</button>
+          <button class="export-menu-item" id="export-pdf" role="menuitem">📄 Exportar PDF</button>
+          <button class="export-menu-item" id="export-csv" role="menuitem">📊 Exportar CSV</button>
+        </div>
+      </div>
+
+      <!-- Ayuda -->
+      <button class="topbar-btn topbar-btn-help" id="btn-ayuda" aria-label="Ayuda: ¿Cómo usar la Matriz de Eisenhower?" title="¿Cómo funciona?">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>Ayuda</span>
+      </button>
+
+      <!-- Tema -->
+      <button class="theme-toggle" id="toggle-tema" aria-label="Alternar modo claro/oscuro"></button>
+    </div>
+  </header>
+
+  <!-- ── Lienzo principal ── -->
+  <div class="canvas-container" id="canvas-container">
+    <div class="canvas-inner" id="canvas-inner">
+      <div class="matrix-grid" id="matrix-grid">
+
+        <!-- Cuadrante 1: Importante + Urgente (HACER) -->
+        <div class="quadrant" data-q="importante_urgente" id="q-importante_urgente">
+          <div class="quadrant-header">
+            <div class="quadrant-label">
+              <div class="quadrant-dot"></div>
+              <div class="quadrant-name">Importante + Urgente</div>
+            </div>
+            <span class="quadrant-action-label">🔥 HACER</span>
+            <span class="quadrant-count" id="count-importante_urgente">0</span>
+          </div>
+          <div class="quadrant-body sortable-list" id="list-importante_urgente" data-q="importante_urgente"></div>
+          <button class="quadrant-add-btn" data-q="importante_urgente" aria-label="Agregar tarea en HACER">+ Nueva tarea</button>
+        </div>
+
+        <!-- Cuadrante 2: Importante + No Urgente (PLANIFICAR) -->
+        <div class="quadrant" data-q="importante_no_urgente" id="q-importante_no_urgente">
+          <div class="quadrant-header">
+            <div class="quadrant-label">
+              <div class="quadrant-dot"></div>
+              <div class="quadrant-name">Importante + No Urgente</div>
+            </div>
+            <span class="quadrant-action-label">📅 PLANIFICAR</span>
+            <span class="quadrant-count" id="count-importante_no_urgente">0</span>
+          </div>
+          <div class="quadrant-body sortable-list" id="list-importante_no_urgente" data-q="importante_no_urgente"></div>
+          <button class="quadrant-add-btn" data-q="importante_no_urgente" aria-label="Agregar tarea en PLANIFICAR">+ Nueva tarea</button>
+        </div>
+
+        <!-- Cuadrante 3: No Importante + Urgente (DELEGAR) -->
+        <div class="quadrant" data-q="no_importante_urgente" id="q-no_importante_urgente">
+          <div class="quadrant-header">
+            <div class="quadrant-label">
+              <div class="quadrant-dot"></div>
+              <div class="quadrant-name">No Importante + Urgente</div>
+            </div>
+            <span class="quadrant-action-label">👋 DELEGAR</span>
+            <span class="quadrant-count" id="count-no_importante_urgente">0</span>
+          </div>
+          <div class="quadrant-body sortable-list" id="list-no_importante_urgente" data-q="no_importante_urgente"></div>
+          <button class="quadrant-add-btn" data-q="no_importante_urgente" aria-label="Agregar tarea en DELEGAR">+ Nueva tarea</button>
+        </div>
+
+        <!-- Cuadrante 4: No Importante + No Urgente (ELIMINAR) -->
+        <div class="quadrant" data-q="no_importante_no_urgente" id="q-no_importante_no_urgente">
+          <div class="quadrant-header">
+            <div class="quadrant-label">
+              <div class="quadrant-dot"></div>
+              <div class="quadrant-name">No Importante + No Urgente</div>
+            </div>
+            <span class="quadrant-action-label">🗑️ ELIMINAR</span>
+            <span class="quadrant-count" id="count-no_importante_no_urgente">0</span>
+          </div>
+          <div class="quadrant-body sortable-list" id="list-no_importante_no_urgente" data-q="no_importante_no_urgente"></div>
+          <button class="quadrant-add-btn" data-q="no_importante_no_urgente" aria-label="Agregar tarea en ELIMINAR">+ Nueva tarea</button>
+        </div>
+
+      </div>
+      </div><!-- /.matrix-grid -->
+
+      <!-- ── Zona de Backlog (Bandeja de Entrada) ── -->
+      <div class="backlog-zone" id="backlog-zone-container">
+        <div class="backlog-header">
+          <div class="backlog-title">📥 Bandeja de entrada (Sin priorizar)</div>
+          <span class="backlog-count" id="count-backlog">0</span>
+        </div>
+        <div class="backlog-body">
+          <table class="staging-table" id="backlog-table" aria-label="Tareas importadas">
+            <thead>
+              <tr>
+                <th class="st-col-num">ID</th>
+                <th class="st-col-title">Descripción</th>
+                <th class="st-col-action">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="list-backlog" class="sortable-list" data-q="backlog">
+              <!-- Filas dinámicas -->
+            </tbody>
+          </table>
+        </div>
+        <button class="backlog-add-btn" id="btn-backlog-manual" aria-label="Agregar fila vacía al backlog">+ Agregar fila manual</button>
+      </div>
+
+    </div><!-- /.canvas-inner -->
+
+  </div><!-- /.canvas-container -->
+
+
+  <!-- FAB -->
+  <div class="fab-container">
+    <button class="fab-btn fab-main" id="fab-nueva-tarea" aria-label="Nueva tarea">
+      ＋
+      <span class="fab-tooltip">Nueva tarea</span>
+    </button>
+    <button class="fab-btn fab-secondary" id="fab-importar" aria-label="Importar desde Excel">
+      📂
+      <span class="fab-tooltip">Importar Excel</span>
+    </button>
+  </div>
+
+</div><!-- /.app-wrapper -->
+
+<!-- ─────────────────────────────────────── -->
+<!-- Modal: Crear / Editar tarea            -->
+<!-- ─────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-tarea" role="dialog" aria-modal="true" aria-labelledby="modal-tarea-title">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-tarea-title">Nueva tarea</h2>
+      <button class="modal-close" id="modal-tarea-close" aria-label="Cerrar">✕</button>
+    </div>
+
+    <form id="form-tarea" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="tarea-id">ID de la tarea <span style="color:var(--accent-danger)">*</span></label>
+        <input class="input" id="tarea-id" type="text" placeholder="Ej: 6899" maxlength="30" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="tarea-titulo">Título <span style="color:var(--accent-danger)">*</span></label>
+        <input class="input" id="tarea-titulo" type="text" placeholder="¿Qué hay que hacer?" maxlength="100" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="tarea-descripcion">Descripción</label>
+        <textarea class="input" id="tarea-descripcion" rows="3" placeholder="Detalla el contexto, objetivo o pasos a seguir..." maxlength="600" style="resize:vertical;min-height:80px;"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="tarea-cuadrante">Cuadrante</label>
+          <select class="input" id="tarea-cuadrante">
+            <option value="importante_urgente">🔥 Hacer</option>
+            <option value="importante_no_urgente">📅 Planificar</option>
+            <option value="no_importante_urgente">👋 Delegar</option>
+            <option value="no_importante_no_urgente">🗑️ Eliminar</option>
+            <option value="backlog">📥 Backlog (Sin priorizar)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="tarea-prioridad">Prioridad</label>
+          <select class="input" id="tarea-prioridad">
+            <option value="alta">Alta</option>
+            <option value="media" selected>Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </div>
+      </div>
+
+
+      <!-- Relacionadas -->
+      <div class="form-group" id="grupo-relacionadas">
+        <label class="form-label" for="select-relacionadas">Tareas relacionadas</label>
+        <div id="lista-relacionadas" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;min-height:28px;"></div>
+        <select class="input" id="select-relacionadas" aria-label="Vincular con otra tarea" style="margin-top:8px;">
+          <option value="">— Vincular con otra tarea —</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-danger" id="btn-eliminar-tarea" style="display:none;margin-right:auto;">🗑️ Eliminar</button>
+        <button type="button" class="btn btn-ghost" id="btn-cancelar-tarea">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btn-guardar-tarea">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<!-- Modal: Detalle de tarea (flip)         -->
+<!-- ─────────────────────────────────────── -->
+<div class="detail-modal" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+  <div class="detail-box" id="detail-box">
+    <div class="detail-header">
+      <div class="detail-quadrant-dot" id="detail-dot"></div>
+      <h2 class="detail-title" id="detail-title">—</h2>
+      <button class="detail-close" id="detail-close" aria-label="Cerrar detalle">✕</button>
+    </div>
+
+    <p class="detail-body" id="detail-descripcion">—</p>
+
+    <div class="detail-meta" id="detail-meta"></div>
+
+    <div id="detail-related-section" style="display:none;">
+      <div class="detail-section-title">🔗 Tareas relacionadas</div>
+      <div class="related-list" id="detail-related-list"></div>
+    </div>
+
+    <div class="detail-actions">
+      <button class="btn btn-ghost" id="detail-btn-editar">✏️ Editar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<!-- Panel de Estadísticas                  -->
+<!-- ─────────────────────────────────────── -->
+<div class="stats-panel" id="stats-panel" role="complementary" aria-label="Estadísticas del proyecto">
+  <div class="stats-title">
+    📊 Estadísticas
+    <button class="stats-close" id="stats-close" aria-label="Cerrar estadísticas">✕</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-value" id="stat-total">0</div>
+      <div class="stat-label">Total tareas</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="stat-completadas" style="color:var(--accent-success)">0</div>
+      <div class="stat-label">Completadas</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="stat-pendientes" style="color:var(--accent-warning)">0</div>
+      <div class="stat-label">Pendientes</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="stat-pct" style="color:var(--accent-primary)">0%</div>
+      <div class="stat-label">Completado</div>
+    </div>
+  </div>
+
+  <div id="stats-bars"></div>
+
+  <canvas id="stats-chart" height="180" style="margin-top:16px;"></canvas>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<!-- Panel de Historial                     -->
+<!-- ─────────────────────────────────────── -->
+<div class="history-panel" id="history-panel" role="complementary" aria-label="Historial de cambios">
+  <div class="history-title">
+    🕐 Historial
+    <button class="stats-close" id="history-close" aria-label="Cerrar historial">✕</button>
+  </div>
+  <div class="history-list" id="history-list">
+    <div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:20px;">Cargando historial...</div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<!-- Panel de Importación Excel             -->
+<!-- ─────────────────────────────────────── -->
+<div class="import-panel" id="import-panel" role="dialog" aria-modal="true" aria-labelledby="import-title">
+  <div class="import-box">
+    <div class="modal-header">
+      <h2 class="modal-title" id="import-title">📂 Importar tareas desde Excel</h2>
+      <button class="modal-close" id="import-close" aria-label="Cerrar importación">✕</button>
+    </div>
+
+    <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:4px;">
+      El archivo Excel debe tener columnas con estos encabezados (en la primera fila):
+    </p>
+    <code style="font-size:0.78rem;color:var(--accent-tertiary);display:block;margin-bottom:4px;">
+      titulo | descripcion | cuadrante | prioridad
+    </code>
+    <p style="color:var(--text-muted);font-size:0.78rem;margin-bottom:8px;">
+      Cuadrante puede ser: <em>hacer</em>, <em>planificar</em>, <em>delegar</em> o <em>eliminar</em>.
+    </p>
+
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon">📎</div>
+      <div class="dropzone-text">Arrastrá el archivo aquí o hacé clic para seleccionarlo</div>
+      <div class="dropzone-hint">Solo archivos .xlsx o .xls</div>
+      <input type="file" id="excel-input" accept=".xlsx,.xls" style="display:none" />
+    </div>
+
+    <div id="import-preview" style="display:none;margin-bottom:16px;max-height:200px;overflow-y:auto;"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-cancelar-import">Cancelar</button>
+      <button class="btn btn-primary" id="btn-confirmar-import" style="display:none;">
+        ✅ Importar tareas
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<!-- Modal: Ayuda / Guía de uso             -->
+<!-- ─────────────────────────────────────── -->
+<div class="modal-overlay help-modal-overlay" id="modal-ayuda" role="dialog" aria-modal="true" aria-labelledby="ayuda-title">
+  <div class="modal-box help-modal-box">
+
+    <div class="modal-header">
+      <h2 class="modal-title" id="ayuda-title">
+        <span class="help-title-icon">❓</span>
+        ¿Cómo usar la Matriz de Eisenhower?
+      </h2>
+      <button class="modal-close" id="modal-ayuda-close" aria-label="Cerrar ayuda">✕</button>
+    </div>
+
+    <!-- Intro -->
+    <p class="help-intro">
+      La <strong>Matriz de Eisenhower</strong> es un método para priorizar tareas según su <strong>urgencia</strong> e <strong>importancia</strong>.
+      Te ayuda a enfocarte en lo que realmente impulsa tus metas y a dejar de reaccionar solo ante lo urgente.
+    </p>
+
+    <!-- Mapa visual de los cuadrantes -->
+    <div class="help-matrix-preview" aria-label="Vista previa de la matriz 2x2">
+      <div class="help-matrix-axis help-axis-x" aria-hidden="true">
+        <span>← No urgente</span>
+        <span>Urgente →</span>
+      </div>
+      <div class="help-matrix-axis help-axis-y" aria-hidden="true">
+        <span>Importante ↑</span>
+        <span>No importante ↓</span>
+      </div>
+      <div class="help-matrix-grid">
+        <div class="help-quad hq-hacer">
+          <div class="hq-num">1️⃣</div>
+          <div class="hq-name">HACER</div>
+          <div class="hq-sub">Urgente + Importante</div>
+        </div>
+        <div class="help-quad hq-planificar">
+          <div class="hq-num">2️⃣</div>
+          <div class="hq-name">PLANIFICAR</div>
+          <div class="hq-sub">Importante + No Urgente</div>
+        </div>
+        <div class="help-quad hq-delegar">
+          <div class="hq-num">3️⃣</div>
+          <div class="hq-name">DELEGAR</div>
+          <div class="hq-sub">Urgente + No Importante</div>
+        </div>
+        <div class="help-quad hq-eliminar">
+          <div class="hq-num">4️⃣</div>
+          <div class="hq-name">ELIMINAR</div>
+          <div class="hq-sub">No Urgente + No Importante</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalle de cada cuadrante -->
+    <div class="help-quads-list">
+
+      <div class="help-quad-item hqi-hacer">
+        <div class="hqi-header">
+          <span class="hqi-emoji">⏳🔥</span>
+          <div>
+            <div class="hqi-title">Cuadrante 1 — <strong>Hazlo ya</strong></div>
+            <div class="hqi-badge" style="background:rgba(239,68,68,0.12);color:#ef4444;">Urgente + Importante</div>
+          </div>
+        </div>
+        <p class="hqi-desc">
+          Son crisis o tareas con fecha límite inmediata que <em>no pueden esperar</em> y que tienen consecuencias reales si no se atienden.
+          Viven aquí las urgencias que requieren tu atención ahora mismo.
+        </p>
+        <div class="hqi-example">
+          <span class="hqi-example-label">📌 Ejemplos:</span>
+          Atender una urgencia médica · Entregar un informe para hoy · Reparar un fallo crítico en producción
+        </div>
+        <div class="hqi-tip">
+          ⚠️ <strong>Cuidado:</strong> Si siempre estás en el Cuadrante 1, probablemente estás descuidando la planificación. ¡La solución está en el Cuadrante 2!
+        </div>
+      </div>
+
+      <div class="help-quad-item hqi-planificar">
+        <div class="hqi-header">
+          <span class="hqi-emoji">📅🌱</span>
+          <div>
+            <div class="hqi-title">Cuadrante 2 — <strong>Planifícalo</strong></div>
+            <div class="hqi-badge" style="background:rgba(99,102,241,0.12);color:#6366f1;">Importante + No Urgente</div>
+          </div>
+        </div>
+        <p class="hqi-desc">
+          Actividades que impulsan tus metas a largo plazo. No gritan ni presionan, pero son las que <em>más impacto tienen</em> en tu vida y carrera.
+          Eisenhower decía que este es el cuadrante de los líderes.
+        </p>
+        <div class="hqi-example">
+          <span class="hqi-example-label">📌 Ejemplos:</span>
+          Estudiar o formarte · Hacer ejercicio · Planificar proyectos · Construir hábitos · Fortalecer relaciones importantes
+        </div>
+        <div class="hqi-tip" style="border-left-color:#6366f1;background:rgba(99,102,241,0.06);">
+          💡 <strong>La clave del éxito:</strong> Invertir más tiempo aquí previene las crisis del Cuadrante 1 y mejora tu bienestar de forma sostenida.
+        </div>
+      </div>
+
+      <div class="help-quad-item hqi-delegar">
+        <div class="hqi-header">
+          <span class="hqi-emoji">🤝📞</span>
+          <div>
+            <div class="hqi-title">Cuadrante 3 — <strong>Delégalo</strong></div>
+            <div class="hqi-badge" style="background:rgba(245,158,11,0.12);color:#f59e0b;">Urgente + No Importante</div>
+          </div>
+        </div>
+        <p class="hqi-desc">
+          Tareas que parecen urgentes pero que no requieren <em>necesariamente tu atención</em>. Son las que más te interrumpen y roban tiempo sin hacerte avanzar.
+          La solución: delegarlas o resolverlas rápido sin que consuman energía mental.
+        </p>
+        <div class="hqi-example">
+          <span class="hqi-example-label">📌 Ejemplos:</span>
+          Contestar ciertos correos · Reuniones no esenciales · Solicitudes de otros que no dependen de tu expertise
+        </div>
+        <div class="hqi-tip" style="border-left-color:#f59e0b;background:rgba(245,158,11,0.06);">
+          🔑 <strong>Truco:</strong> Pregúntate: "¿Puede hacerlo otra persona o puede esperar?" Si la respuesta es sí, delega sin culpa.
+        </div>
+      </div>
+
+      <div class="help-quad-item hqi-eliminar">
+        <div class="hqi-header">
+          <span class="hqi-emoji">❌📺</span>
+          <div>
+            <div class="hqi-title">Cuadrante 4 — <strong>Elimínalo</strong></div>
+            <div class="hqi-badge" style="background:rgba(107,114,128,0.12);color:#6b7280;">No Urgente + No Importante</div>
+          </div>
+        </div>
+        <p class="hqi-desc">
+          Distracciones puras que no aportan valor a tus metas ni son urgentes. Consumen tiempo y energía sin retorno.
+          Identificarlas y eliminarlas es un acto de disciplina y autocuidado.
+        </p>
+        <div class="hqi-example">
+          <span class="hqi-example-label">📌 Ejemplos:</span>
+          Scroll en redes sociales sin propósito · Ver contenido sin intención · Actividades por inercia que no disfrutas ni aportan
+        </div>
+        <div class="hqi-tip" style="border-left-color:#6b7280;background:rgba(107,114,128,0.06);">
+          🧹 <strong>No juzgues:</strong> Está bien descansar, pero elige hacerlo conscientemente. El descanso intencional no es Cuadrante 4.
+        </div>
+      </div>
+
+    </div><!-- /.help-quads-list -->
+
+    <!-- Tip Mental Prime destacado -->
+    <div class="help-prime-tip">
+      <div class="help-prime-tip-icon">💡</div>
+      <div>
+        <div class="help-prime-tip-title">Tip Mental Prime</div>
+        <div class="help-prime-tip-text">
+          Invierte más tiempo en el <strong>Cuadrante 2</strong> para prevenir crisis y mejorar tu productividad y bienestar.
+          La persona productiva no es la que apaga más incendios — es la que los previene.
+        </div>
+      </div>
+    </div>
+
+    <!-- Guía rápida de uso de la app -->
+    <div class="help-howto">
+      <h3 class="help-howto-title">🖱️ Cómo usar esta aplicación</h3>
+      <ul class="help-howto-list">
+        <li><span class="help-step-num">1</span> Hacé clic en <strong>"+ Nueva tarea"</strong> (botón flotante abajo a la izquierda) o en el botón <strong>"+ Nueva tarea"</strong> dentro de cada cuadrante para crear una tarea directamente ahí.</li>
+        <li><span class="help-step-num">2</span> <strong>Arrastrá</strong> las tarjetas entre cuadrantes para reclasificarlas cuando cambien de prioridad.</li>
+        <li><span class="help-step-num">3</span> Hacé <strong>clic en una tarjeta</strong> para ver su detalle completo: descripción y tareas relacionadas.</li>
+        <li><span class="help-step-num">4</span> Usá la <strong>rueda del mouse</strong> para hacer zoom y arrastrá el fondo para moverte por la matriz.</li>
+        <li><span class="help-step-num">5</span> Marcá las tareas como <strong>completadas</strong> con el checkbox en la esquina superior izquierda de cada tarjeta.</li>
+        <li><span class="help-step-num">6</span> Usá <strong>Exportar</strong> (arriba a la derecha) para descargar la matriz como imagen PNG, PDF o CSV.</li>
+        <li><span class="help-step-num">7</span> Consultá las <strong>estadísticas</strong> para ver tu progreso por cuadrante.</li>
+      </ul>
+    </div>
+
+    <div class="modal-actions" style="margin-top:24px;">
+      <button class="btn btn-primary" id="btn-ayuda-cerrar">
+        ¡Entendido, vamos a priorizar! 🚀
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<!-- Toast                                  -->
+<!-- ─────────────────────────────────────── -->
+<div id="toast-container" role="alert" aria-live="polite"></div>
+
+<!-- Scripts -->
+<script src="/js/tema.js?v=4"></script>
+<script src="/eisenhower/js/matriz.js?v=4"></script>
+<script src="/eisenhower/js/dragdrop.js?v=4"></script>
+<script src="/eisenhower/js/flip.js?v=4"></script>
+<script src="/eisenhower/js/relaciones.js?v=4"></script>
+<script src="/eisenhower/js/exportar.js?v=4"></script>
+<script src="/eisenhower/js/estadisticas.js?v=4"></script>
+<script src="/eisenhower/js/importarExcel.js?v=4"></script>
+
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Espacio de Trabajo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link rel="stylesheet" href="/css/tema.css" />
+  <link rel="stylesheet" href="/hub/css/hub.css" />
+
+  <script>
+    (function() {
+      const t = localStorage.getItem('suite_tema') || 'oscuro';
+      document.documentElement.setAttribute('data-tema', t);
+    })();
+  </script>
+<link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ── Topbar ── -->
+  <header class="topbar">
+    <a href="/hub/seleccion" class="topbar-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      <span>Proyectos</span>
+    </a>
+    <div class="topbar-divider"></div>
+
+    <div class="project-name-wrapper" style="display: flex; align-items: center; gap: 16px; flex: 1;">
+      <input class="project-name-input" id="project-name-input" type="text" value="Cargando..." autocomplete="off" style="width: auto; max-width: 300px; flex-shrink: 0;" />
+      
+      <div class="project-progress" title="Progreso del Proyecto (Documentos Completados)">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <span class="progress-text" id="progress-text">0%</span>
+      </div>
+    </div>
+
+    <div class="topbar-filters" id="topbar-filters" style="display:flex; gap:8px; margin-right: 15px;">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="archivo">Archivos</button>
+      <button class="filter-btn" data-filter="markdown">Textos</button>
+      <button class="filter-btn" data-filter="link">Enlaces</button>
+      <button class="filter-btn" data-filter="herramienta">Herramientas</button>
+    </div>
+
+    <div class="topbar-actions">
+      <button class="topbar-btn" id="btn-exportar-dossier" title="Exportar Proyecto Completo" style="color: var(--accent-primary); border-color: var(--accent-primary);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span>Exportar Dossier</span>
+      </button>
+      <!-- Ayuda -->
+      <button class="topbar-btn" id="btn-ayuda" title="Guía">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>Ayuda</span>
+      </button>
+      <!-- Tema -->
+      <button class="theme-toggle" id="toggle-tema" aria-label="Alternar modo claro/oscuro"></button>
+    </div>
+  </header>
+
+  <!-- ── Dashboard Principal ── -->
+  <main class="dashboard-container">
+    <div class="dashboard-inner" id="dashboard-inner">
+      <!-- Fases renderizadas por JS -->
+    </div>
+  </main>
+
+</div>
+
+<!-- ── Modal Crear Nodo (Reemplaza al prompt) ── -->
+<div class="modal-overlay" id="modal-crear">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title">✨ Agregar Documento</h2>
+      <button class="modal-close" id="modal-crear-close">✕</button>
+    </div>
+    <form id="form-crear">
+      <div class="form-group">
+        <label class="form-label">Título del documento</label>
+        <input class="input" id="crear-titulo" type="text" placeholder="Ej: Diagrama de Secuencia" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tipo de documento</label>
+        <div class="type-selector">
+          <label class="type-option">
+            <input type="radio" name="crear-tipo" value="markdown" checked>
+            <div class="type-card">📝 Texto (Markdown)</div>
+          </label>
+          <label class="type-option">
+            <input type="radio" name="crear-tipo" value="archivo">
+            <div class="type-card">📎 Subir Archivo</div>
+          </label>
+          <label class="type-option">
+            <input type="radio" name="crear-tipo" value="link">
+            <div class="type-card">🔗 Enlace URL</div>
+          </label>
+        </div>
+      </div>
+      <div class="form-group" id="group-crear-archivo" style="display:none; margin-top: 15px;">
+        <label class="form-label">Seleccionar archivo (Opcional)</label>
+        <input type="file" id="crear-archivo-input" class="input" style="padding: 6px;" />
+      </div>
+      <div class="form-group" id="group-crear-link" style="display:none; margin-top: 15px;">
+        <label class="form-label">URL del Enlace (Opcional)</label>
+        <input type="url" id="crear-link-input" class="input" placeholder="https://..." />
+      </div>
+      <input type="hidden" id="crear-fase" value="">
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="btn-cancelar-crear">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Agregar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Modal Edición/Vista de Nodo ── -->
+<div class="modal-overlay" id="modal-nodo">
+  <div class="modal-box modal-box-large">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-nodo-title">Documento</h2>
+      <button class="modal-close" id="modal-nodo-close">✕</button>
+    </div>
+
+    <form id="form-nodo">
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label class="form-label">Título</label>
+          <input class="input" id="nodo-titulo" type="text" required />
+        </div>
+        <div class="form-group" style="flex:1">
+          <label class="form-label">Estado</label>
+          <select class="input" id="nodo-estado">
+            <option value="pendiente">⏳ Pendiente</option>
+            <option value="proceso">🚧 En Proceso</option>
+            <option value="completado">✅ Completado</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Markdown -->
+      <div class="form-group">
+        <label class="form-label">📝 Contenido (Markdown)</label>
+        <textarea class="input markdown-editor" id="nodo-markdown"></textarea>
+      </div>
+
+      <!-- Enlaces URL -->
+      <div class="form-group">
+        <label class="form-label">🔗 Enlaces URL</label>
+        <div id="enlaces-container" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+        <div style="display:flex; gap:10px;">
+          <input class="input" type="text" id="nuevo-enlace-titulo" placeholder="Título (Opcional)" style="flex:1;" />
+          <input class="input" type="url" id="nuevo-enlace-url" placeholder="https://..." style="flex:2;" />
+          <button type="button" class="btn btn-primary" id="btn-add-enlace">Añadir</button>
+        </div>
+      </div>
+
+      <!-- Archivos Adjuntos -->
+      <div class="form-group file-upload-wrapper">
+        <label class="form-label">📎 Archivos Adjuntos</label>
+        <div id="archivos-container" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+        <label class="file-upload-btn" style="padding: 12px; font-size: 0.9rem;">
+          <span>📁 Clic aquí para subir un documento (PDF, PNG, etc.)</span>
+          <input type="file" id="nodo-archivo" class="file-upload-input" />
+        </label>
+        <div id="upload-status" style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px;"></div>
+      </div>
+
+      <!-- Herramienta Suite -->
+      <div class="form-group">
+        <label class="form-label">🛠️ Herramienta Suite Asociada (Opcional)</label>
+        <div style="display: flex; gap: 10px;">
+          <select class="input" id="nodo-herramienta" style="flex: 1;">
+            <option value="">Ninguna</option>
+            <option value="leancanvas">Lean Canvas</option>
+            <option value="moscow">Matriz MoSCoW</option>
+            <option value="eisenhower">Matriz Eisenhower</option>
+            <option value="kanban">Tablero Kanban</option>
+          </select>
+          <select class="input" id="nodo-herramienta-id" style="flex: 2; display: none;">
+            <option value="">-- Seleccionar proyecto existente --</option>
+            <!-- Options populated by JS -->
+          </select>
+        </div>
+        <div id="herramienta-action-container" style="margin-top: 10px; display: none;">
+          <button type="button" class="tool-action-btn" style="padding: 10px; font-size: 1rem;" id="btn-abrir-herramienta">
+            Desplegar Herramienta 🚀
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-danger" id="btn-eliminar-nodo" style="margin-right:auto;">🗑️ Eliminar</button>
+        <button type="submit" class="btn btn-primary" id="btn-guardar-nodo">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Modal IFrame (In-Place Viewing) ── -->
+<div class="modal-overlay" id="modal-iframe">
+  <div class="modal-box modal-fullscreen">
+    <div class="modal-header">
+      <h2 class="modal-title" id="iframe-title">Herramienta</h2>
+      <button class="modal-close" id="modal-iframe-close">✕</button>
+    </div>
+    <div class="iframe-wrapper">
+      <div id="iframe-loader" class="iframe-loader">Cargando herramienta...</div>
+      <iframe id="tool-iframe" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal Ayuda de Nodo (Tooltip) ── -->
+<div class="modal-overlay" id="modal-ayuda-nodo">
+  <div class="modal-box" style="max-width:400px; text-align:center;">
+    <div style="font-size:3rem; margin-bottom:10px;">💡</div>
+    <h3 style="color:var(--text-primary); margin-bottom:12px; font-size:1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;" id="ayuda-nodo-titulo">Título</h3>
+    <div style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; text-align: left; max-height: 50vh; overflow-y: auto; padding: 10px 5px;" id="ayuda-nodo-texto">
+      Texto de ayuda.
+    </div>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn btn-primary" id="btn-ayuda-nodo-cerrar" style="width:100%; justify-content:center;">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal Ayuda General ── -->
+<div class="modal-overlay" id="modal-ayuda">
+  <div class="modal-box modal-box-large" style="max-width: 650px;">
+    <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 15px;">
+      <h2 class="modal-title" style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.5rem;">📖</span> Guía Maestra del Espacio de Trabajo
+      </h2>
+      <button class="modal-close" id="modal-ayuda-close">✕</button>
+    </div>
+    
+    <div style="max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+      <p style="color:var(--text-secondary); line-height:1.6; font-size: 1rem; margin-bottom: 15px;">
+        Bienvenido al <strong>Hub de Proyectos</strong>. Este espacio actúa como la "columna vertebral" de tu proyecto, permitiéndote centralizar, gestionar y enlazar toda tu documentación técnica, requerimientos y diseños en un solo lugar.
+      </p>
+
+      <h3 style="color: var(--accent-primary); margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem;">🛠️ Gestión de Documentos y Herramientas</h3>
+      <ul style="color:var(--text-secondary); margin-left: 20px; font-size:0.95rem; line-height:1.8;">
+        <li><strong>Nodos Flexibles:</strong> Cada tarjeta que ves es un "nodo". Un nodo puede ser un texto escrito en Markdown, un archivo adjunto (PDF, PNG, etc.), un enlace hacia la web, o una integración directa con otra herramienta de la suite (Lean Canvas, Kanban, MoSCoW, etc.).</li>
+        <li><strong>Herramientas Integradas:</strong> Si un nodo está enlazado a una herramienta de la suite (por ejemplo, el Tablero Kanban), hacer clic en el botón de edición y luego en "Desplegar Herramienta 🚀" abrirá esa herramienta sin salir del Hub.</li>
+        <li><strong>Filtros:</strong> Usa la barra superior para filtrar tu vista y enfocarte solo en Archivos, Textos, Enlaces o Herramientas.</li>
+      </ul>
+
+      <h3 style="color: var(--accent-primary); margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem;">❓ Ayuda en Contexto</h3>
+      <ul style="color:var(--text-secondary); margin-left: 20px; font-size:0.95rem; line-height:1.8;">
+        <li><strong>Guía por Fases:</strong> Cada título de Fase (Ej. "1. Ideación y Gestión") tiene un icono <strong>❓</strong>. Al hacerle clic, te mostrará recomendaciones detalladas sobre qué documentos, diagramas o textos deberían ir específicamente en esa etapa del ciclo de vida del software.</li>
+        <li><strong>Guía por Nodos:</strong> Los documentos que creas también tienen su propio botón de ayuda. Te explicarán conceptos como "¿Qué es un Lean Canvas?" o "¿Para qué sirve un Plan de Pruebas?".</li>
+      </ul>
+
+      <h3 style="color: var(--accent-primary); margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem;">📦 Exportación y Compartición</h3>
+      <ul style="color:var(--text-secondary); margin-left: 20px; font-size:0.95rem; line-height:1.8;">
+        <li><strong>Dossier Completo:</strong> Con el botón "Exportar Dossier", puedes generar un archivo Markdown (`.md`) que compilará y redactará de manera automática el estado, texto y enlaces de todos los nodos de tu proyecto.</li>
+        <li><strong>Portabilidad Total:</strong> Este diseño garantiza que puedas encapsular tu proyecto y enviárselo a otros miembros del equipo. Cualquier persona que reciba la carpeta o archivo exportado tendrá acceso inmediato a toda la documentación de las diferentes fases, junto con los archivos y diagramas que hayas adjuntado.</li>
+      </ul>
+
+      <div style="margin-top:25px; padding:15px; background:rgba(99,102,241,0.08); border-left:4px solid var(--accent-primary); border-radius:6px; font-size:0.95rem; color:var(--text-primary); line-height: 1.5;">
+        <strong>💡 Consejo Pro:</strong> No estás obligado a usar todos los tipos de documentos. Si tu proyecto es pequeño, quizás solo necesites un Lean Canvas, un Kanban y un Diagrama de Base de Datos. Elimina, agrega y personaliza a tu medida. ¡El Hub se adapta a ti, no tú al Hub!
+      </div>
+    </div>
+
+    <div class="modal-actions" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+      <button class="btn btn-primary" id="btn-ayuda-cerrar" style="width: 100%; justify-content: center; font-size: 1.05rem;">Comenzar a trabajar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" role="alert"></div>
+
+<script src="/js/tema.js"></script>
+<script src="/hub/js/hub.js"></script>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+

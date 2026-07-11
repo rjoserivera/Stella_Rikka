@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stella Rikka — Workspace</title>
+  <meta name="description" content="Stella Rikka — Tu espacio de ingeniería, diseño y gestión de proyectos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/css/tema.css" />
+  <link rel="stylesheet" href="/css/home.css" />
+  <script>
+    (function () {
+      const t = localStorage.getItem('suite_tema') || 'oscuro';
+      document.documentElement.setAttribute('data-tema', t);
+    })();
+  </script>
+</head>
+
+<body>
+
+  <!-- ── Partículas flotantes (peces/energía) ── -->
+  <div class="particles-container" id="particles"></div>
+
+  <!-- ── Fondo con orbes animados ── -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- ── Fondo de Escena de Cielo y Mar (Sea Horizon) ── -->
+  <div class="wr-sea-scene" id="wr-sea-scene">
+    <!-- Sky objects (sun / moon / clouds) -->
+    <div class="wr-sky-objects">
+      <!-- SUN — visible in light mode -->
+      <div class="wr-sun" id="wr-sun" style="opacity: 0; width: 120px; height: 120px; position: absolute; top: 50px; right: 10vw;">
+        <div class="wr-sun-core"></div>
+        <div class="wr-sun-rays">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <!-- MOON — visible in dark mode -->
+      <svg class="wr-moon" id="wr-moon" style="opacity: 0; width: 100px; height: 100px; position: absolute; top: 50px; right: 10vw;" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="moonGrad" cx="40%" cy="35%" r="60%">
+            <stop offset="0%"   stop-color="#f8f4e8"/>
+            <stop offset="70%"  stop-color="#e8dfc0"/>
+            <stop offset="100%" stop-color="#c4b38a"/>
+          </radialGradient>
+        </defs>
+        <circle cx="40" cy="40" r="28" fill="url(#moonGrad)"/>
+        <!-- craters -->
+        <circle cx="32" cy="35" r="4" fill="rgba(180,160,110,0.35)"/>
+        <circle cx="50" cy="46" r="5" fill="rgba(180,160,110,0.3)"/>
+        <circle cx="38" cy="52" r="3" fill="rgba(180,160,110,0.25)"/>
+      </svg>
+      <!-- Clouds -->
+      <div class="wr-cloud wr-cloud-1">
+        <div class="wr-cloud-puff wr-cp-1"></div>
+        <div class="wr-cloud-puff wr-cp-2"></div>
+        <div class="wr-cloud-puff wr-cp-3"></div>
+        <div class="wr-cloud-puff wr-cp-4"></div>
+      </div>
+      <div class="wr-cloud wr-cloud-2">
+        <div class="wr-cloud-puff wr-cp-1"></div>
+        <div class="wr-cloud-puff wr-cp-2"></div>
+        <div class="wr-cloud-puff wr-cp-3"></div>
+      </div>
+      <div class="wr-cloud wr-cloud-3">
+        <div class="wr-cloud-puff wr-cp-1"></div>
+        <div class="wr-cloud-puff wr-cp-2"></div>
+        <div class="wr-cloud-puff wr-cp-3"></div>
+      </div>
+    </div>
+    <!-- Night stars -->
+    <div class="wr-sky-stars" id="wr-sky-stars"></div>
+    <div class="wr-shooting-stars" id="wr-shooting-stars"></div>
+    <!-- (olas eliminadas) -->
+    </div>
+  </div>
+
+  <div class="home-wrapper">
+
+    <!-- ── BANNER ACTUALIZACIÓN (oculto por defecto) ── -->
+    <div id="update-banner" class="update-banner" hidden>
+      <div class="update-banner-inner">
+        <span class="update-icon">⬡</span>
+        <span class="update-msg">
+          Nueva versión disponible: <strong id="update-version"></strong>
+        </span>
+        <a id="update-link" href="#" target="_blank" class="update-btn">Ver novedades →</a>
+        <button class="update-close" onclick="document.getElementById('update-banner').hidden=true" aria-label="Cerrar">×</button>
+      </div>
+    </div>
+
+    <!-- ── NAVBAR ── -->
+    <header class="navbar">
+      <a href="/" class="navbar-brand">
+        <img src="/assets/stella_rikka_logo.png" alt="Stella Rikka" class="brand-logo" />
+        <span class="brand-name">Stella<span class="brand-accent">Rikka</span></span>
+      </a>
+
+      <nav class="navbar-links">
+        <a href="#" class="nav-link active">Resumen</a>
+        <a href="#tools" class="nav-link">Módulos</a>
+        <a href="#stats" class="nav-link">Métricas</a>
+      </nav>
+
+      <div class="navbar-actions" style="display: flex; align-items: center; gap: 15px;">
+        <button id="btn-host-home" class="host-wifi-btn" aria-label="Modo Nube"></button>
+        <button class="wr-theme-btn" id="toggle-tema" aria-label="Cambiar tema">
+          <!-- Sol (modo claro) -->
+          <div class="wr-btn-sun">
+            <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="20" cy="20" r="9" fill="#FFD700" />
+              <g stroke="#FFD700" stroke-width="2.5" stroke-linecap="round">
+                <line x1="20" y1="3" x2="20" y2="7" />
+                <line x1="20" y1="33" x2="20" y2="37" />
+                <line x1="3" y1="20" x2="7" y2="20" />
+                <line x1="33" y1="20" x2="37" y2="20" />
+                <line x1="8" y1="8" x2="11" y2="11" />
+                <line x1="29" y1="29" x2="32" y2="32" />
+                <line x1="8" y1="32" x2="11" y2="29" />
+                <line x1="29" y1="11" x2="32" y2="8" />
+              </g>
+            </svg>
+          </div>
+          <!-- Luna (modo oscuro) -->
+          <div class="wr-btn-moon">
+            <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="btnMoonGrad" cx="38%" cy="32%" r="60%">
+                  <stop offset="0%"   stop-color="#fffde7"/>
+                  <stop offset="60%"  stop-color="#e8dfc0"/>
+                  <stop offset="100%" stop-color="#c4b38a"/>
+                </radialGradient>
+              </defs>
+              <circle cx="20" cy="20" r="14" fill="url(#btnMoonGrad)"/>
+              <circle cx="16" cy="17" r="2"   fill="rgba(180,155,100,0.35)"/>
+              <circle cx="25" cy="23" r="2.5" fill="rgba(180,155,100,0.30)"/>
+              <circle cx="19" cy="26" r="1.5" fill="rgba(180,155,100,0.25)"/>
+            </svg>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <!-- ── HERO ── -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-tag">
+          <span class="tag-dot"></span>
+          Tu espacio creativo local
+        </div>
+        <h1 class="hero-title">
+          Diseña. Planifica.<br>
+          <span class="hero-gradient">Construye.</span>
+        </h1>
+        <p class="hero-desc">
+          Un workspace de ingeniería que integra análisis, gestión ágil y diagramación en un solo lugar. Sin internet,
+          sin login, solo tú y tus proyectos.
+        </p>
+        <div class="hero-actions">
+          <a href="/hub/seleccion" class="btn-hero-primary">
+            Abrir Hub de Proyectos
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a href="#tools" class="btn-hero-ghost">Ver módulos →</a>
+        </div>
+      </div>
+
+      <!-- Stats flotantes -->
+      <div class="hero-stats" id="stats">
+        <div class="hstat-card">
+          <div class="hstat-icon" style="color:#7A3DFF">⬡</div>
+          <div class="hstat-num" id="stat-proyectos">—</div>
+          <div class="hstat-label">Proyectos</div>
+        </div>
+        <div class="hstat-card">
+          <div class="hstat-icon" style="color:#20E3FF">◈</div>
+          <div class="hstat-num" id="stat-tareas">—</div>
+          <div class="hstat-label">Tareas</div>
+        </div>
+        <div class="hstat-card">
+          <div class="hstat-icon" style="color:#FF5A6A">⚡</div>
+          <div class="hstat-num" id="stat-urgentes">—</div>
+          <div class="hstat-label">Urgentes</div>
+        </div>
+        <div class="hstat-card">
+          <div class="hstat-icon" style="color:#FFB020">★</div>
+          <div class="hstat-num" id="stat-reqs">—</div>
+          <div class="hstat-label">Must-Have</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MÓDULOS ── -->
+    <section class="tools-section" id="tools">
+      <div class="tools-header">
+        <div class="tools-label">Sistema de Módulos</div>
+        <h2 class="tools-title">Todas las herramientas</h2>
+      </div>
+
+      <div class="tools-grid">
+
+        <!-- Hub — Ancho completo -->
+        <a href="/hub/seleccion" class="tool-card tool-card--featured disponible" id="card-hub">
+          <div class="tc-glow tc-glow--purple"></div>
+          <div class="tc-badge tc-badge--star">⭐ Recomendado</div>
+          <div class="tc-content">
+            <div class="tc-icon" style="background: transparent;">
+              <img src="/assets/icon-hub.png" alt="Hub Icon" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <div class="tc-info">
+              <div class="tc-name">Hub de Proyectos</div>
+              <p class="tc-desc">Centro de mando. Organiza, enlaza y gestiona toda la documentación de tus proyectos en
+                un solo lugar.</p>
+              <div class="tc-tags">
+                <span class="tc-tag">Visual Flow</span>
+                <span class="tc-tag">Markdown</span>
+                <span class="tc-tag">Gestión Centralizada</span>
+              </div>
+            </div>
+          </div>
+          <div class="tc-arrow">Abrir Hub <span>→</span></div>
+        </a>
+
+        <!-- Lean Canvas -->
+        <a href="/leancanvas/seleccion" class="tool-card disponible" id="card-leancanvas">
+          <div class="tc-glow tc-glow--cyan"></div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-leancanvas.png" alt="Lean Canvas Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Lean Canvas</div>
+          <p class="tc-desc">Valida tu modelo de negocio. Define problemas, soluciones y métricas clave.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">Ideación</span>
+            <span class="tc-tag">Snapshots</span>
+            <span class="tc-tag">PNG/PDF</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- MoSCoW -->
+        <a href="/moscow/seleccion" class="tool-card disponible" id="card-moscow">
+          <div class="tc-glow tc-glow--red"></div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-moscow.png" alt="MoSCoW Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Matriz MoSCoW</div>
+          <p class="tc-desc">Prioriza funcionalidades por Must, Should, Could y Won't Have.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">MVP Scoping</span>
+            <span class="tc-tag">Drag & Drop</span>
+            <span class="tc-tag">Estadísticas</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- Kanban -->
+        <a href="/kanban/seleccion" class="tool-card disponible" id="card-kanban">
+          <div class="tc-glow tc-glow--green"></div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-kanban.png" alt="Kanban Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Tablero Kanban</div>
+          <p class="tc-desc">Motor de ejecución. Mueve tareas de Backlog a Terminado en tiempo real.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">Drag & Drop</span>
+            <span class="tc-tag">Flujo de Trabajo</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- Eisenhower -->
+        <a href="/eisenhower/seleccion" class="tool-card disponible" id="card-eisenhower">
+          <div class="tc-glow tc-glow--purple"></div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-eisenhower.png" alt="Eisenhower Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Matriz Eisenhower</div>
+          <p class="tc-desc">Clasifica tareas por urgencia e importancia. Visualiza tu carga de trabajo.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">Drag & Drop</span>
+            <span class="tc-tag">Export PNG</span>
+            <span class="tc-tag">Import Excel</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- Diagramas de Flujo -->
+        <a href="/diagramas/seleccion" class="tool-card disponible" id="card-diagramas">
+          <div class="tc-glow tc-glow--blue"></div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-diagramas.png" alt="Diagramas Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Diagramas de Flujo</div>
+          <p class="tc-desc">Editor interactivo con formas, flechas SVG y exportación en alta resolución.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">Drag & Drop</span>
+            <span class="tc-tag">SVG</span>
+            <span class="tc-tag">Export PNG</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- BD / ER -->
+        <a href="/dbdiagrams/seleccion" class="tool-card disponible" id="card-dbdiagrams">
+          <div class="tc-glow tc-glow--violet"></div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-dbdiagrams.png" alt="DB Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Diagramas BD / ER</div>
+          <p class="tc-desc">Genera diagramas ER desde SQL. Modela tus bases de datos visualmente.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">SQL → Diagrama</span>
+            <span class="tc-tag">Entidad-Relación</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- Casos de Uso -->
+        <a href="/casosdeuso/seleccion" class="tool-card disponible" id="card-casosdeuso">
+          <div class="tc-glow tc-glow--cyan"></div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-casosdeuso.png" alt="Casos de Uso Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Casos de Uso UML</div>
+          <p class="tc-desc">Define actores, sistemas y relaciones include/extend. Estándar UML.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">UML</span>
+            <span class="tc-tag">Requerimientos</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ── SECCIÓN: ¿Por qué Stella Rikka? ── -->
+    <section class="rikka-origin-section" aria-label="Origen del nombre Stella Rikka">
+      <div class="rikka-origin-inner">
+        <div class="rikka-origin-logo">
+          <img src="/assets/stella_rikka_logo.png" alt="Stella Rikka Logo" class="rikka-origin-img" />
+        </div>
+        <div class="rikka-origin-text">
+          <h2 class="rikka-origin-title">¿Por qué <span class="rikka-highlight">Stella Rikka</span>?</h2>
+          <p class="rikka-origin-desc">
+            <strong>Stella</strong> proviene del latín y significa <em>"estrella"</em> — refleja la naturaleza espacial y de constelaciones de esta suite, donde cada herramienta es un punto de luz en tu sistema de trabajo.
+          </p>
+          <p class="rikka-origin-desc">
+            <strong>Rikka</strong> es un homenaje al poder <em>Shun Shun Rikka</em> de Orihime Inoue — las <strong>Seis Flores Espirituales</strong> de su horquilla que protegen, rechazan el daño y sanan lo roto. Como esta suite: protege tu flujo de trabajo, rechaza el caos y restaura el orden.
+          </p>
+          <div class="rikka-origin-spirits">
+            <span class="spirit-badge">⬡ Hinagiku</span>
+            <span class="spirit-badge">⬡ Lily</span>
+            <span class="spirit-badge">⬡ Baigon</span>
+            <span class="spirit-badge">⬡ Ayame</span>
+            <span class="spirit-badge">⬡ Shun'o</span>
+            <span class="spirit-badge spirit-badge--tsubaki">⬡ Tsubaki</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer class="site-footer">
+      <div class="footer-left">
+        <span class="footer-brand">Stella Rikka</span>
+        <span class="footer-sep">·</span>
+        <span>Uso local y personal</span>
+      </div>
+      <span id="footer-hora" class="footer-time"></span>
+    </footer>
+
+  </div>
+
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <script src="/js/tema.js"></script>
+  <script src="/js/home.js"></script>
+  <script src="/js/host.js"></script>
+  <script>
+    setTimeout(() => { if(window.initHostBtn) window.initHostBtn('btn-host-home'); }, 200);
+  </script>
+  <script>
+    // ── Stats ──
+    fetch('/api/global/stats')
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById('stat-proyectos').textContent = d.proyectos_activos ?? '—';
+        document.getElementById('stat-tareas').textContent = d.tareas_totales ?? '—';
+        document.getElementById('stat-urgentes').textContent = d.tareas_urgentes ?? '—';
+        document.getElementById('stat-reqs').textContent = d.requisitos_must ?? '—';
+      }).catch(() => { });
+
+    // ── Hora footer ──
+    function actualizarHora() {
+      const el = document.getElementById('footer-hora');
+      if (el) el.textContent = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    }
+    actualizarHora();
+    setInterval(actualizarHora, 60000);
+
+    // ── Tema ──
+    function syncTema() {
+      // No dual logo toggling needed with transparent Stella Rikka logo
+      if (typeof window.syncTema === 'function' && window._bgSyncReady) window.syncTema();
+    }
+
+    // Flash Soten Kisshun al cambiar tema
+    function kisshunActivate() {
+      const flash = document.createElement('div');
+      flash.className = 'kisshun-flash';
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 750);
+    }
+
+    document.getElementById('toggle-tema').addEventListener('click', () => {
+      kisshunActivate();
+      setTimeout(syncTema, 20);
+    });
+    setTimeout(syncTema, 50);
+
+    // ── 3D Tilt + Aura ──
+    document.querySelectorAll('.tool-card.disponible').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        const cx = r.width / 2, cy = r.height / 2;
+        const rx = ((y - cy) / cy) * -6;
+        const ry = ((x - cx) / cx) * 6;
+        card.style.setProperty('--mx', `${x}px`);
+        card.style.setProperty('--my', `${y}px`);
+        card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(1.015)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+
+    // ── Auto-actualización: verifica tras 5 seg (el backend lo chequea en background) ──
+    async function checkForUpdates() {
+      try {
+        const res  = await fetch('/api/system/update-status');
+        const data = await res.json();
+        if (data.available) {
+          document.getElementById('update-version').textContent = `v${data.latest}`;
+          document.getElementById('update-link').href = data.url || '#';
+          document.getElementById('update-banner').hidden = false;
+        }
+      } catch (_) { /* Sin internet o GitHub no responde — ignorar */ }
+    }
+    setTimeout(checkForUpdates, 5000);
+
+  </script>
+  <script src="/js/background.js"></script>
+
+</body>
+
+</html>

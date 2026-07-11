@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor de Diagrama</title>
+  <link rel="stylesheet" href="/css/tema.css" />
+  <link rel="stylesheet" href="/dbdiagrams/css/editor.css" />
+  <script>
+    (function() {
+      const t = localStorage.getItem('suite_tema') || 'oscuro';
+      document.documentElement.setAttribute('data-tema', t);
+    })();
+  </script>
+<link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body>
+<div class="editor-wrapper">
+
+  <!-- ── Topbar ── -->
+  <header class="topbar">
+    <a href="/dbdiagrams/seleccion" class="topbar-back" title="Volver">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Diagramas BD / ER
+    </a>
+    <div class="topbar-divider"></div>
+    <input class="diagram-name-input" id="diagram-name" type="text" value="Cargando..." autocomplete="off" title="Haz clic para renombrar" />
+    <div class="topbar-spacer"></div>
+
+    <!-- Zoom controls -->
+    <div class="zoom-controls">
+      <button class="zoom-btn" id="btn-zoom-out" title="Alejar">－</button>
+      <span class="zoom-label" id="zoom-label">100%</span>
+      <button class="zoom-btn" id="btn-zoom-in" title="Acercar">＋</button>
+      <button class="zoom-btn" id="btn-zoom-fit" title="Ajustar al lienzo" style="font-size:0.8rem; padding: 0 10px;">⊡</button>
+    </div>
+
+    <!-- Snap -->
+    <label class="snap-toggle" title="Ajustar a la cuadrícula">
+      <input type="checkbox" id="snap-grid" checked />
+      <span class="snap-label">Snap</span>
+    </label>
+
+    <div class="topbar-divider"></div>
+
+    <div class="topbar-actions">
+    <button class="topbar-btn" id="btn-generar-db" title="Generar Diagrama desde SQL">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+      </svg>
+      Importar BD
+    </button>
+    <button class="topbar-btn btn-save" id="btn-guardar" title="Guardar (Ctrl+S)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+        <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+      </svg>
+      Guardar
+    </button>
+    <button class="topbar-btn btn-export" id="btn-exportar" title="Exportar como PNG">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Exportar PNG
+    </button>
+    <button class="topbar-btn btn-export-file" id="btn-export-rikka" title="Descargar archivo del proyecto (.rikka)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Descargar .rikka
+    </button>
+    <!-- Ayuda -->
+    <button class="topbar-btn topbar-btn-help" id="btn-ayuda" aria-label="Ayuda: ¿Cómo usar el Diagrama BD?" title="¿Cómo funciona?">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <span>Ayuda</span>
+    </button>
+    <button class="theme-toggle" id="toggle-tema" aria-label="Tema"></button>
+    </div>
+  </header>
+
+  <!-- ── Cuerpo ── -->
+  <div class="editor-body">
+
+    <!-- ── Toolbox (izquierda) ── -->
+    <aside class="toolbox">
+      <div class="toolbox-section">
+        <div class="toolbox-label">Nodos de BD</div>
+        <div class="tool-item" draggable="true" data-tipo="tabla" title="Tabla de BD">
+          <div class="tool-shape shape-rect">🗄️</div>
+          <span>Tabla</span>
+        </div>
+        <div class="tool-item" draggable="true" data-tipo="vista" title="Vista / Consulta">
+          <div class="tool-shape shape-doc">👁️</div>
+          <span>Vista SQL</span>
+        </div>
+        <div class="tool-item" draggable="true" data-tipo="rectangulo" title="Nota / Comentario">
+          <div class="tool-shape shape-rect" style="border-style:dashed;">📝</div>
+          <span>Nota</span>
+        </div>
+      </div>
+      <div class="toolbox-section" style="margin-top:16px;">
+        <div class="toolbox-label">Modo</div>
+        <button class="mode-btn active" id="mode-select" title="Modo Selección">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 3l14 9-7 1-4 7z"/>
+          </svg>
+          Seleccionar
+        </button>
+        <button class="mode-btn" id="mode-connect" title="Modo Conexión: haz clic en un nodo para empezar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M17 8l4 4-4 4"/>
+          </svg>
+          Conectar
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── Lienzo ── -->
+    <div class="canvas-container" id="canvas-container">
+      <!-- Un solo contenedor transformado: SVG + nodos comparten el mismo espacio -->
+      <div class="canvas-world" id="canvas-world">
+        <svg class="canvas-svg" id="canvas-svg">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#6366f1" id="arr-poly"/>
+            </marker>
+          </defs>
+        </svg>
+        <div class="canvas-nodes" id="canvas-nodes"></div>
+      </div>
+    </div>
+
+    <!-- ── Panel de Propiedades (derecha) ── -->
+    <aside class="props-panel" id="props-panel">
+      <div class="props-empty" id="props-empty">
+        <div style="font-size:2rem; margin-bottom:12px;">🖱️</div>
+        <p style="color:var(--text-secondary); font-size:0.85rem; text-align:center; line-height:1.6;">
+          Haz clic en un nodo o flecha para ver y editar sus propiedades
+        </p>
+      </div>
+
+      <!-- Panel Nodo -->
+      <div id="props-nodo" style="display:none;">
+        <div class="props-title">⬜ Propiedades del Nodo</div>
+
+        <div class="props-section">
+          <div class="props-label">🎨 Color de Fondo</div>
+          <div class="color-row">
+            <input type="color" id="prop-bg-color" class="color-picker" value="#1e1e2e" />
+            <div class="color-presets">
+              <div class="color-preset" style="background:#6366f1" data-target="bg" data-color="#6366f1"></div>
+              <div class="color-preset" style="background:#10b981" data-target="bg" data-color="#10b981"></div>
+              <div class="color-preset" style="background:#f59e0b" data-target="bg" data-color="#f59e0b"></div>
+              <div class="color-preset" style="background:#ef4444" data-target="bg" data-color="#ef4444"></div>
+              <div class="color-preset" style="background:#3b82f6" data-target="bg" data-color="#3b82f6"></div>
+              <div class="color-preset" style="background:#8b5cf6" data-target="bg" data-color="#8b5cf6"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="props-section">
+          <div class="props-label">🔲 Color de Borde</div>
+          <div class="color-row">
+            <input type="color" id="prop-border-color" class="color-picker" value="#6366f1" />
+            <input type="range" id="prop-border-width" min="0" max="8" value="2" step="1" class="range-input" title="Grosor del borde" />
+          </div>
+        </div>
+
+        <div class="props-section">
+          <div class="props-label">🔤 Texto Global del Nodo</div>
+          <div style="display:flex; gap:8px; margin-bottom:8px;">
+            <select id="prop-font-size" class="props-select" title="Tamaño de letra">
+              <option value="10">10px</option>
+              <option value="12">12px</option>
+              <option value="14" selected>14px</option>
+              <option value="16">16px</option>
+              <option value="18">18px</option>
+              <option value="22">22px</option>
+              <option value="28">28px</option>
+              <option value="36">36px</option>
+            </select>
+            <button class="fmt-btn" id="prop-bold" title="Negrita">B</button>
+            <button class="fmt-btn" id="prop-italic" title="Cursiva"><em>I</em></button>
+          </div>
+          <div class="color-row">
+            <input type="color" id="prop-text-color" class="color-picker" value="#ffffff" />
+            <div class="color-presets">
+              <div class="color-preset" style="background:#ffffff; border:1px solid #444" data-target="text" data-color="#ffffff"></div>
+              <div class="color-preset" style="background:#111827" data-target="text" data-color="#111827"></div>
+              <div class="color-preset" style="background:#ef4444" data-target="text" data-color="#ef4444"></div>
+              <div class="color-preset" style="background:#10b981" data-target="text" data-color="#10b981"></div>
+              <div class="color-preset" style="background:#3b82f6" data-target="text" data-color="#3b82f6"></div>
+              <div class="color-preset" style="background:#f59e0b" data-target="text" data-color="#f59e0b"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="props-section">
+          <div class="props-label">📐 Tamaño del Nodo</div>
+          <div style="display:flex; gap:8px;">
+            <div style="flex:1;">
+              <label style="font-size:0.75rem; color:var(--text-secondary);">Ancho</label>
+              <input type="number" id="prop-width" class="props-input" min="60" max="500" step="10" value="140" />
+            </div>
+            <div style="flex:1;">
+              <label style="font-size:0.75rem; color:var(--text-secondary);">Alto</label>
+              <input type="number" id="prop-height" class="props-input" min="40" max="300" step="10" value="60" />
+            </div>
+          </div>
+        </div>
+
+        <div class="props-section">
+          <div class="props-label">⚡ Acciones</div>
+          <div style="display:flex; gap:8px;">
+            <button class="action-btn" id="btn-duplicar">📋 Duplicar</button>
+            <button class="action-btn action-danger" id="btn-eliminar-nodo">🗑️ Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Flecha -->
+      <div id="props-flecha" style="display:none;">
+        <div class="props-title">➡️ Propiedades de la Flecha</div>
+
+        <div class="props-section">
+          <div class="props-label">↔️ Tipo de Línea</div>
+          <select id="prop-linea-tipo" class="props-select" style="width:100%;">
+            <option value="recta">Recta</option>
+            <option value="curva" selected>Curva (Bézier)</option>
+            <option value="ortogonal">Ortogonal (90°)</option>
+          </select>
+        </div>
+
+        <div class="props-section">
+          <div class="props-label">🎨 Color de la Flecha</div>
+          <div class="color-row">
+            <input type="color" id="prop-stroke-color" class="color-picker" value="#6366f1" />
+            <input type="range" id="prop-stroke-width" min="1" max="6" value="2" step="1" class="range-input" />
+          </div>
+        </div>
+
+        <div class="props-section">
+          <div class="props-label">🏷️ Etiqueta de la Flecha</div>
+          <input type="text" id="prop-edge-label" class="props-input" style="width:100%;" placeholder="Ej: Sí / No" />
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <div style="flex:1;">
+               <div class="props-label" style="font-size:0.75rem; color:var(--text-secondary);">Color Texto</div>
+               <div class="color-row"><input type="color" id="prop-edge-text-color" class="color-picker" value="#6366f1" style="width:100%;" /></div>
+            </div>
+            <div style="flex:1;">
+               <div class="props-label" style="font-size:0.75rem; color:var(--text-secondary);">Color Fondo</div>
+               <div class="color-row"><input type="color" id="prop-edge-bg-color" class="color-picker" value="#ffffff" style="width:100%;" /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="props-section">
+          <div class="props-label">⚡ Acciones</div>
+          <button class="action-btn action-danger" id="btn-eliminar-flecha">🗑️ Eliminar Flecha</button>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- end editor-body -->
+</div>
+
+<!-- Mini barra flotante de formato de texto -->
+<div class="format-bar" id="format-bar">
+  <button class="fmt-bar-btn" id="fb-bold" title="Negrita (Ctrl+B)"><strong>B</strong></button>
+  <button class="fmt-bar-btn" id="fb-italic" title="Cursiva (Ctrl+I)"><em>I</em></button>
+  <button class="fmt-bar-btn" id="fb-underline" title="Subrayado (Ctrl+U)"><u>U</u></button>
+  <div class="fmt-bar-divider"></div>
+  <select class="fmt-bar-select" id="fb-size" title="Tamaño de letra">
+    <option value="10">10</option>
+    <option value="12">12</option>
+    <option value="14" selected>14</option>
+    <option value="16">16</option>
+    <option value="18">18</option>
+    <option value="22">22</option>
+    <option value="28">28</option>
+    <option value="36">36</option>
+  </select>
+  <div class="fmt-bar-divider"></div>
+  <div class="fmt-color-palette">
+    <div class="fmt-color" style="background:#ffffff; border:1px solid #555;" data-color="#ffffff" title="Blanco"></div>
+    <div class="fmt-color" style="background:#111827;" data-color="#111827" title="Negro"></div>
+    <div class="fmt-color" style="background:#ef4444;" data-color="#ef4444" title="Rojo"></div>
+    <div class="fmt-color" style="background:#f97316;" data-color="#f97316" title="Naranja"></div>
+    <div class="fmt-color" style="background:#eab308;" data-color="#eab308" title="Amarillo"></div>
+    <div class="fmt-color" style="background:#10b981;" data-color="#10b981" title="Verde"></div>
+    <div class="fmt-color" style="background:#3b82f6;" data-color="#3b82f6" title="Azul"></div>
+    <div class="fmt-color" style="background:#8b5cf6;" data-color="#8b5cf6" title="Morado"></div>
+    <div class="fmt-color" style="background:#ec4899;" data-color="#ec4899" title="Rosa"></div>
+    <div class="fmt-color" style="background:#6b7280;" data-color="#6b7280" title="Gris"></div>
+  </div>
+  <div class="fmt-bar-divider"></div>
+  <button class="fmt-bar-btn" id="fb-align-left" title="Alinear izquierda">⇤</button>
+  <button class="fmt-bar-btn" id="fb-align-center" title="Centrar">≡</button>
+  <button class="fmt-bar-btn" id="fb-align-right" title="Alinear derecha">⇥</button>
+</div>
+
+<!-- Modal Exportar -->
+<div class="modal-overlay" id="modal-export">
+  <div class="modal-box" style="max-width:380px;">
+    <div class="modal-header">
+      <h2 class="modal-title">📤 Exportar Diagrama</h2>
+      <button class="modal-close" id="export-close">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Resolución</label>
+      <select id="export-res" class="props-select" style="width:100%;">
+        <option value="1">1x — Pantalla normal</option>
+        <option value="2" selected>2x — Alta resolución</option>
+        <option value="3">3x — Impresión</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fondo</label>
+      <select id="export-bg" class="props-select" style="width:100%;">
+        <option value="tema">Fondo del tema actual</option>
+        <option value="blanco">Blanco</option>
+        <option value="transparente">Transparente</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="export-cancel">Cancelar</button>
+      <button class="btn-primary" id="export-confirm">⬇️ Descargar PNG</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal BD -->
+<div class="modal-overlay" id="modal-db">
+  <div class="modal-box" style="max-width:600px; width:90%;">
+    <div class="modal-header">
+      <h2 class="modal-title">🗄️ Importar Base de Datos (SQL)</h2>
+      <button class="modal-close" id="db-close">✕</button>
+    </div>
+    <div class="form-group">
+      <div class="syntax-guide mb-3" style="background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; padding: 12px; margin-bottom: 15px;">
+          <h4 style="font-size: 0.95rem; color: #8b5cf6; margin-top: 0; margin-bottom: 8px;">📖 Instrucciones de Sintaxis (3 formas soportadas)</h4>
+          <ol style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; padding-left: 20px;">
+              <li style="margin-bottom: 6px;">
+                  <strong>SQL (CREATE TABLE):</strong>
+                  <br><code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 4px; color: #a5b4fc;">CREATE TABLE Usuarios ( id INT, nombre VARCHAR );</code>
+              </li>
+              <li style="margin-bottom: 6px;">
+                  <strong>DBML:</strong>
+                  <br><code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 4px; color: #a5b4fc;">Table Pedidos { id int, usuario_id int } Ref: Pedidos.usuario_id > Usuarios.id</code>
+              </li>
+              <li>
+                  <strong>Lista Simple (Markdown-like):</strong>
+                  <br><code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 4px; color: #a5b4fc;">Usuarios<br>- id<br>- nombre<br>Pedidos<br>- usuario_id -> Usuarios</code>
+              </li>
+          </ol>
+      </div>
+      <textarea id="db-input" class="props-input" style="width:100%; height:250px; font-family:monospace; resize:vertical; background:var(--bg-primary);" placeholder="Table Usuarios {
+  id int [pk, increment]
+  nombre varchar
+}
+
+Table Pedidos {
+  id int [pk, increment]
+  usuario_id int
+  total decimal
+}
+
+Ref: Pedidos.usuario_id > Usuarios.id"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="db-cancel">Cancelar</button>
+      <button class="btn-primary" id="db-confirm">⚡ Generar Diagrama</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ayuda -->
+<div class="modal-overlay help-modal-overlay" id="modal-ayuda">
+  <div class="modal-box help-modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title">📖 Guía Rápida: Diagramas BD / ER</h2>
+      <button class="modal-close" id="modal-ayuda-close">✕</button>
+    </div>
+    <div class="help-content">
+      <p>Bienvenido al <strong>Diseñador de Base de Datos y Entidad Relación</strong>.</p>
+      <div class="help-section">
+        <h3>✨ Funciones Principales</h3>
+        <ul>
+          <li><strong>Importar BD:</strong> Genera tablas y relaciones automáticamente insertando SQL o sintaxis DBML.</li>
+          <li><strong>Arrastrar y Soltar:</strong> Añade tablas y notas arrastrándolas desde el panel izquierdo.</li>
+          <li><strong>Relacionar Tablas:</strong> Usa el modo <em>Conectar</em> para crear relaciones (líneas) entre tablas.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-actions" style="margin-top:20px; justify-content:flex-end;">
+      <button class="btn btn-primary" id="btn-ayuda-cerrar">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" role="alert"></div>
+
+<script src="/js/tema.js"></script>
+<script src="/dbdiagrams/js/editor.js"></script>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+

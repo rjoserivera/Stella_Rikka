@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matriz MoSCoW</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link rel="stylesheet" href="/css/tema.css" />
+  <link rel="stylesheet" href="/moscow/css/styles.css" />
+
+  <!-- SortableJS -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+  <script>
+    (function() {
+      const t = localStorage.getItem('suite_tema') || 'oscuro';
+      document.documentElement.setAttribute('data-tema', t);
+    })();
+  </script>
+<link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <a href="/moscow/seleccion" class="topbar-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      <span>Proyectos</span>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="project-name-wrapper">
+      <input class="project-name-input" id="project-name-input" type="text" value="Cargando..." autocomplete="off" />
+    </div>
+    
+    <div class="topbar-actions">
+      <button class="topbar-btn" id="btn-toggle-resumen">📊 Resumen</button>
+      <button class="topbar-btn" id="btn-save-project">💾 Guardar Archivo</button>
+      
+      <!-- Ayuda -->
+      <button class="topbar-btn topbar-btn-help" id="btn-ayuda" aria-label="Ayuda: ¿Cómo usar MoSCoW?" title="¿Cómo funciona?">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>Ayuda</span>
+      </button>
+      
+      <button class="topbar-btn btn-export-file" id="btn-save-project" title="Descargar archivo del proyecto (.rikka)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span>Descargar .rikka</span>
+      </button>
+
+      <div class="export-dropdown">
+        <button class="topbar-btn" id="btn-exportar">📥 Exportar ▾</button>
+        <div class="export-menu" id="export-menu">
+          <button class="export-menu-item" id="export-png">🖼️ Imagen (PNG)</button>
+          <button class="export-menu-item" id="export-csv">📊 Datos (CSV)</button>
+        </div>
+      </div>
+      
+      <button class="theme-toggle" id="toggle-tema" aria-label="Alternar tema"></button>
+    </div>
+  </header>
+
+  <!-- CANVAS -->
+  <div class="canvas-container">
+    <div class="moscow-grid" id="moscow-grid">
+      
+      <!-- MUST -->
+      <div class="moscow-col" data-col="must">
+        <div class="moscow-col-header">
+          <div class="moscow-col-label">
+            <div class="moscow-col-dot"></div>
+            <div class="moscow-col-name">Obligatorio (Must Have)</div>
+            <span class="moscow-col-action-label">🔴 OBLIGATORIO</span>
+          </div>
+          <div class="moscow-col-count" id="count-must">0</div>
+        </div>
+        <div class="moscow-col-body sortable-list" id="list-must" data-col="must"></div>
+        <button class="moscow-add-btn" data-col="must">+ Nueva funcionalidad</button>
+      </div>
+
+      <!-- SHOULD -->
+      <div class="moscow-col" data-col="should">
+        <div class="moscow-col-header">
+          <div class="moscow-col-label">
+            <div class="moscow-col-dot"></div>
+            <div class="moscow-col-name">Importante (Should Have)</div>
+            <span class="moscow-col-action-label">🟠 IMPORTANTE</span>
+          </div>
+          <div class="moscow-col-count" id="count-should">0</div>
+        </div>
+        <div class="moscow-col-body sortable-list" id="list-should" data-col="should"></div>
+        <button class="moscow-add-btn" data-col="should">+ Nueva funcionalidad</button>
+      </div>
+
+      <!-- COULD -->
+      <div class="moscow-col" data-col="could">
+        <div class="moscow-col-header">
+          <div class="moscow-col-label">
+            <div class="moscow-col-dot"></div>
+            <div class="moscow-col-name">Deseable (Could Have)</div>
+            <span class="moscow-col-action-label">🔵 DESEABLE</span>
+          </div>
+          <div class="moscow-col-count" id="count-could">0</div>
+        </div>
+        <div class="moscow-col-body sortable-list" id="list-could" data-col="could"></div>
+        <button class="moscow-add-btn" data-col="could">+ Nueva funcionalidad</button>
+      </div>
+
+      <!-- WON'T -->
+      <div class="moscow-col" data-col="wont">
+        <div class="moscow-col-header">
+          <div class="moscow-col-label">
+            <div class="moscow-col-dot"></div>
+            <div class="moscow-col-name">Descartado (Won't Have)</div>
+            <span class="moscow-col-action-label">⬛ DESCARTADO</span>
+          </div>
+          <div class="moscow-col-count" id="count-wont">0</div>
+        </div>
+        <div class="moscow-col-body sortable-list" id="list-wont" data-col="wont"></div>
+        <button class="moscow-add-btn" data-col="wont">+ Nueva funcionalidad</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <div class="fab-container">
+    <button class="fab-btn fab-main" id="fab-nuevo" title="Nuevo ítem">＋</button>
+  </div>
+
+  <!-- PANEL RESUMEN -->
+  <div class="resumen-panel" id="resumen-panel">
+    <div class="resumen-title">
+      📊 Balance del Scope
+      <button class="modal-close" id="btn-close-resumen">✕</button>
+    </div>
+    
+    <div class="resumen-row">
+      <div class="resumen-label"><span>🔴 Obligatorio (Must)</span> <span id="resumen-must-pct">0%</span></div>
+      <div class="resumen-bar-bg"><div class="resumen-bar-fill fill-must" id="resumen-must-bar" style="width:0%"></div></div>
+    </div>
+    <div class="resumen-row">
+      <div class="resumen-label"><span>🟠 Importante (Should)</span> <span id="resumen-should-pct">0%</span></div>
+      <div class="resumen-bar-bg"><div class="resumen-bar-fill fill-should" id="resumen-should-bar" style="width:0%"></div></div>
+    </div>
+    <div class="resumen-row">
+      <div class="resumen-label"><span>🔵 Deseable (Could)</span> <span id="resumen-could-pct">0%</span></div>
+      <div class="resumen-bar-bg"><div class="resumen-bar-fill fill-could" id="resumen-could-bar" style="width:0%"></div></div>
+    </div>
+    <div class="resumen-row">
+      <div class="resumen-label"><span>⬛ Descartado (Won't)</span> <span id="resumen-wont-pct">0%</span></div>
+      <div class="resumen-bar-bg"><div class="resumen-bar-fill fill-wont" id="resumen-wont-bar" style="width:0%"></div></div>
+    </div>
+    
+    <div class="resumen-total">Total: <span id="resumen-total">0</span> ítems</div>
+    <div class="resumen-salud" id="resumen-salud" title="Indicador de salud del scope">🟢</div>
+    <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:8px;">
+      Ideal: Must &lt; 60%
+    </p>
+  </div>
+
+</div>
+
+<!-- MODAL CRUD -->
+<div class="modal-overlay" id="modal-item">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-title">Nueva Funcionalidad</h2>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    
+    <form id="form-item" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="item-id">ID de la funcionalidad (ej: US-001) <span style="color:var(--accent-danger)">*</span></label>
+        <input class="input" id="item-id" type="text" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="item-titulo">Título <span style="color:var(--accent-danger)">*</span></label>
+        <input class="input" id="item-titulo" type="text" required maxlength="120" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="item-descripcion">Criterios de Aceptación / Descripción</label>
+        <textarea class="input" id="item-descripcion" rows="3" maxlength="600"></textarea>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="item-columna">Columna MoSCoW</label>
+          <select class="input" id="item-columna">
+            <option value="must">🔴 Obligatorio (Must Have)</option>
+            <option value="should">🟠 Importante (Should Have)</option>
+            <option value="could">🔵 Deseable (Could Have)</option>
+            <option value="wont">⬛ Descartado (Won't Have)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="item-tipo">Tipo</label>
+          <select class="input" id="item-tipo">
+            <option value="feature">✨ Feature</option>
+            <option value="bug">🐛 Bug</option>
+            <option value="tecnico">🔧 Deuda Técnica</option>
+            <option value="ux">🎨 UX/UI</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="item-prioridad">Prioridad Interna</label>
+          <select class="input" id="item-prioridad">
+            <option value="alta">Alta</option>
+            <option value="media" selected>Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="item-esfuerzo">Esfuerzo Estimado</label>
+          <select class="input" id="item-esfuerzo">
+            <option value="bajo">Bajo</option>
+            <option value="medio" selected>Medio</option>
+            <option value="alto">Alto</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn btn-danger" id="btn-eliminar" style="display:none;margin-right:auto;">🗑️ Eliminar</button>
+        <button type="button" class="btn btn-ghost" id="btn-cancelar">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btn-guardar">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Ayuda / Guía de uso -->
+<div class="modal-overlay help-modal-overlay" id="modal-ayuda" role="dialog" aria-modal="true" aria-labelledby="ayuda-title">
+  <div class="modal-box help-modal-box" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+    <div class="modal-header">
+      <h2 class="modal-title" id="ayuda-title">
+        <span class="help-title-icon">❓</span>
+        ¿Cómo usar la Matriz MoSCoW?
+      </h2>
+      <button class="modal-close" id="modal-ayuda-close" aria-label="Cerrar ayuda">✕</button>
+    </div>
+
+    <!-- Intro -->
+    <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+      La <strong>Matriz MoSCoW</strong> es una técnica de priorización utilizada en desarrollo de software para acordar con los interesados (stakeholders) qué requerimientos son esenciales y cuáles pueden posponerse.
+    </p>
+
+    <!-- Explicación de bloques -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+      <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: #ef4444; margin-top: 0; margin-bottom: 8px;">🔴 Obligatorio (Must Have)</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Requerimientos vitales. Si falta alguno de estos, el producto no sirve o no se puede lanzar. El proyecto fracasará si no se cumplen.</p>
+      </div>
+      
+      <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: #f59e0b; margin-top: 0; margin-bottom: 8px;">🟠 Importante (Should Have)</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Requerimientos de alta prioridad pero no críticos para el lanzamiento. Si se omiten, el producto funcionará, pero el valor disminuirá.</p>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: #3b82f6; margin-top: 0; margin-bottom: 8px;">🔵 Deseable (Could Have)</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Requerimientos "nice-to-have". Solo se incluirán si sobra tiempo y presupuesto. Mejoran la experiencia pero no son esenciales.</p>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: #6b7280; margin-top: 0; margin-bottom: 8px;">⬛ Descartado (Won't Have)</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Requerimientos acordados para ser excluidos en esta fase. Ayudan a mantener el alcance claro y evitar que el proyecto crezca sin control.</p>
+      </div>
+    </div>
+
+    <!-- Guía rápida de uso de la app -->
+    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+      <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 1rem; color: var(--text-primary);">🖱️ Cómo usar esta aplicación</h3>
+      <ul style="color: var(--text-secondary); font-size: 0.85rem; padding-left: 20px; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+        <li>Usa el botón <strong>"+"</strong> en cada columna o el botón flotante inferior para agregar funcionalidades.</li>
+        <li><strong>Arrastra y suelta (Drag & Drop)</strong> las tarjetas entre columnas para re-priorizarlas fácilmente.</li>
+        <li>Haz clic en una tarjeta para editar su título, descripción, esfuerzo o prioridad.</li>
+        <li>Revisa el <strong>"📊 Resumen"</strong> arriba. Lo ideal es que los "Must Have" no superen el 60% del esfuerzo total.</li>
+      </ul>
+    </div>
+
+    <div class="modal-actions" style="margin-top:24px;">
+      <button class="btn btn-primary" id="btn-ayuda-cerrar">
+        ¡Entendido! 🚀
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="/js/tema.js"></script>
+<script src="/moscow/js/matriz.js"></script>
+<script src="/moscow/js/dragdrop.js"></script>
+<script src="/moscow/js/exportar.js"></script>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+

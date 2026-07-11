@@ -1,0 +1,35 @@
+/* ════════════════════════════════════════════
+   flip.css — Efecto 3D de tarjeta
+   ════════════════════════════════════════════ */
+
+/* Nota: el flip se implementa en el modal de detalle
+   (detail-modal). La tarjeta en el canvas NO hace flip
+   porque debe seguir siendo arrastrable.
+   En cambio, al hacer clic se abre el modal de detalle
+   con una animación de entrada tipo flip. */
+
+.flip-enter {
+  animation: flipIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes flipIn {
+  0% {
+    opacity: 0;
+    transform: perspective(600px) rotateY(-90deg) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(600px) rotateY(0deg) scale(1);
+  }
+}
+
+@keyframes flipOut {
+  0% {
+    opacity: 1;
+    transform: perspective(600px) rotateY(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: perspective(600px) rotateY(90deg) scale(0.9);
+  }
+}

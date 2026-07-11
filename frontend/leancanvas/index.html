@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lean Canvas</title>
+  <meta name="description" content="Valida tu modelo de negocio con el Lean Canvas." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link rel="stylesheet" href="/css/tema.css" />
+  <link rel="stylesheet" href="/leancanvas/css/canvas.css" />
+
+  <!-- html2canvas (para PNG) -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <!-- jsPDF (para PDF) -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <script>
+    (function() {
+      const t = localStorage.getItem('suite_tema') || 'oscuro';
+      document.documentElement.setAttribute('data-tema', t);
+    })();
+  </script>
+<link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ── Topbar ── -->
+  <header class="topbar" id="lc-topbar">
+
+    <div class="project-name-wrapper">
+      <input
+        class="project-name-input"
+        id="project-name-input"
+        type="text"
+        value="Cargando..."
+        maxlength="80"
+        aria-label="Nombre del proyecto (editable)"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="topbar-actions">
+      <!-- Versiones (Hidden, as snapshot/comparar are removed, we only need internal version tracking if any, but let's keep the select just in case, or hide it if it's unused. Wait, the user still wants the dropdown? No, they said remove Snapshot and Comparar.) -->
+      <div class="version-control" style="display: none;">
+        <select id="select-version" class="input input-sm" aria-label="Seleccionar versión"></select>
+      </div>
+
+      <!-- Importar -->
+      <button class="topbar-btn" id="btn-importar" title="Importar Excel/CSV">
+        📂 Importar
+      </button>
+
+      <!-- Ayuda -->
+      <button class="topbar-btn topbar-btn-help" id="btn-ayuda" aria-label="Ayuda: ¿Cómo usar el Lean Canvas?" title="¿Cómo funciona?">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>Ayuda</span>
+      </button>
+
+      <!-- Exportar -->
+      <div class="export-dropdown">
+        <button class="topbar-btn" id="btn-exportar" aria-haspopup="true" aria-expanded="false" aria-label="Exportar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Exportar</span>
+        </button>
+        <div class="export-menu" id="export-menu" role="menu">
+          <button class="export-menu-item" id="export-png" role="menuitem">🖼️ Exportar PNG</button>
+          <button class="export-menu-item" id="export-png-clean" role="menuitem">🖼️ Exportar PNG (Sin estado)</button>
+          <button class="export-menu-item" id="export-pdf" role="menuitem">📄 Exportar PDF</button>
+          <button class="export-menu-item" id="export-rikka" role="menuitem">📦 Exportar Proyecto (.rikka)</button>
+        </div>
+      </div>
+
+      <!-- Tema -->
+      <button class="theme-toggle" id="toggle-tema" aria-label="Alternar modo claro/oscuro"></button>
+    </div>
+  </header>
+
+  <!-- ── Lienzo principal ── -->
+  <div class="canvas-container" id="canvas-container">
+    <div class="canvas-inner" id="canvas-inner">
+      <div class="lean-canvas-grid" id="lean-canvas-grid">
+        
+        <!-- Bloque 1: Problema -->
+        <div class="lc-block b-problem" data-block="problema">
+          <div class="lc-block-header">
+            <h3>Problema</h3>
+            <button class="lc-add-btn" aria-label="Añadir nota">+</button>
+          </div>
+          <div class="lc-block-body" id="list-problema"></div>
+        </div>
+
+        <!-- Bloque 2: Solución -->
+        <div class="lc-block b-solution" data-block="solucion">
+          <div class="lc-block-header">
+            <h3>Solución</h3>
+            <button class="lc-add-btn" aria-label="Añadir nota">+</button>
+          </div>
+          <div class="lc-block-body" id="list-solucion"></div>
+        </div>
+
+        <!-- Bloque 3: Métricas Clave -->
+        <div class="lc-block b-metrics" data-block="metricas">
+          <div class="lc-block-header">
+            <h3>Métricas Clave</h3>
+            <button class="lc-add-btn" aria-label="Añadir nota">+</button>
+          </div>
+          <div class="lc-block-body" id="list-metricas"></div>
+        </div>
+
+        <!-- Bloque 4: Propuesta de Valor Única -->
+        <div class="lc-block b-uvp" data-block="propuesta">
+          <div class="lc-block-header">
+            <h3>Propuesta de Valor Única</h3>
+            <button class="lc-add-btn" aria-label="Añadir nota">+</button>
+          </div>
+          <div class="lc-block-body" id="list-propuesta"></div>
+        </div>
+
+        <!-- Bloque 5: Ventaja Injusta -->
+        <div class="lc-block b-unfair" data-block="ventaja">
+          <div class="lc-block-header">
+            <h3>Ventaja Injusta</h3>
+            <button class="lc-add-btn" aria-label="Añadir nota">+</button>
+          </div>
+          <div class="lc-block-body" id="list-ventaja"></div>
+        </div>
+
+        <!-- Bloque 6: Canales -->
+        <div class="lc-block b-channels" data-block="canales">
+          <div class="lc-block-header">
+            <h3>Canales</h3>
+            <button class="lc-add-btn" aria-label="Añadir nota">+</button>
+          </div>
+          <div class="lc-block-body" id="list-canales"></div>
+        </div>
+
+        <!-- Bloque 7: Segmentos de Clientes -->
+        <div class="lc-block b-segments" data-block="segmentos">
+          <div class="lc-block-header">
+            <h3>Segmentos de Clientes</h3>
+            <button class="lc-add-btn" aria-label="Añadir nota">+</button>
+          </div>
+          <div class="lc-block-body" id="list-segmentos"></div>
+        </div>
+
+        <!-- Bloque 8: Estructura de Costos -->
+        <div class="lc-block b-costs" data-block="costos">
+          <div class="lc-block-header">
+            <h3>Estructura de Costos</h3>
+            <button class="lc-add-btn" aria-label="Añadir nota">+</button>
+          </div>
+          <div class="lc-block-body" id="list-costos"></div>
+        </div>
+
+        <!-- Bloque 9: Flujos de Ingreso -->
+        <div class="lc-block b-revenues" data-block="ingresos">
+          <div class="lc-block-header">
+            <h3>Flujos de Ingreso</h3>
+            <button class="lc-add-btn" aria-label="Añadir nota">+</button>
+          </div>
+          <div class="lc-block-body" id="list-ingresos"></div>
+        </div>
+
+      </div>
+    </div>
+</div>
+
+<!-- Controles de Zoom -->
+<div class="zoom-controls">
+  <button class="zoom-btn" id="btn-zoom-in" aria-label="Acercar">＋</button>
+  <button class="zoom-btn" id="btn-zoom-out" aria-label="Alejar">－</button>
+</div>
+
+<!-- Modal: Editar/Crear Nota -->
+<div class="modal-overlay" id="modal-nota" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-nota-title">Editar Nota</h2>
+      <button class="modal-close" id="modal-nota-close" aria-label="Cerrar">✕</button>
+    </div>
+
+    <form id="form-nota" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="nota-texto">Texto <span style="color:var(--accent-danger)">*</span></label>
+        <textarea class="input" id="nota-texto" rows="3" placeholder="Ej: Falta de tiempo para organizar tareas..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="nota-estado">Estado de validación</label>
+        <select class="input" id="nota-estado">
+          <option value="hipotesis">🤔 Hipótesis</option>
+          <option value="validacion">🧪 En Validación</option>
+          <option value="validado">✅ Validado</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-danger" id="btn-eliminar-nota" style="display:none;margin-right:auto;">🗑️ Eliminar</button>
+        <button type="button" class="btn btn-ghost" id="btn-cancelar-nota">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btn-guardar-nota">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Comparar Versiones -->
+<div class="modal-overlay" id="modal-comparar" role="dialog" aria-modal="true">
+  <div class="modal-box" style="max-width: 600px;">
+    <div class="modal-header">
+      <h2 class="modal-title">⚖️ Comparar Versiones</h2>
+      <button class="modal-close" id="modal-comparar-close" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div class="form-row" style="margin-bottom: 20px;">
+      <div class="form-group">
+        <label class="form-label">Versión A (Base)</label>
+        <select class="input" id="select-comp-a"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Versión B (Comparar)</label>
+        <select class="input" id="select-comp-b"></select>
+      </div>
+    </div>
+
+    <div id="diff-results" style="max-height: 400px; overflow-y: auto; background: var(--bg-secondary); padding: 16px; border-radius: 8px;">
+      <p style="color:var(--text-muted);text-align:center;">Selecciona dos versiones para comparar.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal: Importar Excel/CSV -->
+<div class="modal-overlay" id="modal-importar" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title">📂 Importar Excel/CSV</h2>
+      <button class="modal-close" id="modal-importar-close" aria-label="Cerrar">✕</button>
+    </div>
+
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+      Selecciona un archivo Excel (.xlsx) o CSV. El archivo debe contener dos columnas: <strong>Bloque</strong> y <strong>Texto</strong>. Opcionalmente puedes agregar una columna <strong>Estado</strong> (hipotesis, validacion, validado).
+    </p>
+
+    <div class="form-group">
+      <input type="file" id="input-importar-excel" accept=".xlsx, .xls, .csv" class="input" />
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-cancelar-importar">Cancelar</button>
+      <button class="btn btn-primary" id="btn-confirmar-importar">Importar a la versión actual</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ayuda / Guía de uso -->
+<div class="modal-overlay help-modal-overlay" id="modal-ayuda" role="dialog" aria-modal="true" aria-labelledby="ayuda-title">
+  <div class="modal-box help-modal-box" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+
+    <div class="modal-header">
+      <h2 class="modal-title" id="ayuda-title">
+        <span class="help-title-icon">❓</span>
+        ¿Cómo usar el Lean Canvas?
+      </h2>
+      <button class="modal-close" id="modal-ayuda-close" aria-label="Cerrar ayuda">✕</button>
+    </div>
+
+    <!-- Intro -->
+    <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+      El <strong>Lean Canvas</strong> es una herramienta de un solo folio diseñada para ayudarte a deconstruir tu idea de negocio en sus suposiciones clave. En lugar de crear un plan de negocios extenso, te permite validar tus hipótesis de manera ágil.
+    </p>
+
+    <!-- Explicación de bloques -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">1. Problema</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Los 3 problemas principales que tiene tu cliente. ¿Qué dolor estás aliviando?</p>
+      </div>
+      
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">2. Segmentos de Clientes</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">¿Quién es tu cliente ideal (Early Adopters)? Sé lo más específico posible.</p>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">3. Propuesta de Valor</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Mensaje claro que explica por qué eres diferente y por qué vale la pena comprarte.</p>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">4. Solución</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Las 3 características principales de tu producto/servicio que resuelven el problema.</p>
+      </div>
+      
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">5. Canales</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">¿Cómo llegará tu producto al cliente? (Redes sociales, ventas directas, SEO, etc.)</p>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">6. Flujos de Ingreso</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">¿Cómo vas a ganar dinero? Modelo de suscripción, venta directa, freemium, etc.</p>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">7. Estructura de Costos</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Tus gastos más importantes: servidores, salarios, marketing, desarrollo.</p>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">8. Métricas Clave</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Los 1-3 números clave que te indicarán si tu negocio va bien (CAC, LTV, tráfico).</p>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">9. Ventaja Injusta</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Algo que tienes y que no se puede copiar o comprar fácilmente (comunidad, patente).</p>
+      </div>
+    </div>
+
+    <!-- Estados -->
+    <div style="margin-bottom: 24px;">
+      <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 1rem; color: var(--text-primary);">🔬 Validación de Hipótesis</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">En esta aplicación, cada nota tiene un estado que representa tu nivel de certeza:</p>
+      
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <div style="flex: 1; padding: 10px; border-radius: 6px; background: rgba(99,102,241,0.05); border: 1px solid rgba(99,102,241,0.3);">
+          <strong style="color: #6366f1; display: block; margin-bottom: 4px;">🤔 Hipótesis</strong>
+          <span style="font-size: 0.8rem; color: var(--text-secondary);">Suposición que aún no has probado en la realidad.</span>
+        </div>
+        <div style="flex: 1; padding: 10px; border-radius: 6px; background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.3);">
+          <strong style="color: #f59e0b; display: block; margin-bottom: 4px;">🧪 En Validación</strong>
+          <span style="font-size: 0.8rem; color: var(--text-secondary);">Estás realizando experimentos o encuestas para probarla.</span>
+        </div>
+        <div style="flex: 1; padding: 10px; border-radius: 6px; background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.3);">
+          <strong style="color: #10b981; display: block; margin-bottom: 4px;">✅ Validado</strong>
+          <span style="font-size: 0.8rem; color: var(--text-secondary);">Tienes evidencia real de que esta suposición es cierta.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guía rápida de uso de la app -->
+    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+      <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 1rem; color: var(--text-primary);">🖱️ Cómo usar esta aplicación</h3>
+      <ul style="color: var(--text-secondary); font-size: 0.85rem; padding-left: 20px; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+        <li>Usa el botón <strong>"+"</strong> en cada bloque para agregar una nueva nota.</li>
+        <li>Haz <strong>clic en una nota</strong> existente para editar su texto o cambiar su estado de validación.</li>
+        <li>Guarda <strong>Versiones</strong> usando el botón superior "➕ Snapshot" para mantener un historial de tu evolución.</li>
+        <li>Usa el botón <strong>"⚖️ Comparar"</strong> para ver qué cambió entre dos versiones (muy útil para retrospectivas).</li>
+        <li>Usa la <strong>rueda del ratón (con Ctrl)</strong> para hacer zoom y arrastra el fondo para moverte por el lienzo.</li>
+      </ul>
+    </div>
+
+    <div class="modal-actions" style="margin-top:24px;">
+      <button class="btn btn-primary" id="btn-ayuda-cerrar">
+        ¡Entendido, vamos a crear! 🚀
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast-container" role="alert" aria-live="polite"></div>
+
+<!-- SheetJS (para Excel) -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="/js/tema.js"></script>
+<script src="/leancanvas/js/canvas.js"></script>
+
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+

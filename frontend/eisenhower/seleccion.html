@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matriz de Eisenhower — Selección de proyecto</title>
+  <meta name="description" content="Crea o abre un proyecto de Eisenhower para priorizar tareas." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link rel="stylesheet" href="/css/tema.css" />
+  <link rel="stylesheet" href="/css/seleccion.css" />
+
+  <script>
+    (function() {
+      const t = localStorage.getItem('suite_tema') || 'oscuro';
+      document.documentElement.setAttribute('data-tema', t);
+    })();
+  </script>
+<link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body>
+<div class="sel-wrapper">
+
+  <main class="sel-content">
+    <h1 class="sel-page-title">¿Qué deseas hacer?</h1>
+    <p class="sel-page-subtitle">Crea o abre un proyecto de Eisenhower para priorizar tareas.</p>
+
+    <div class="sel-options" role="group" aria-label="Opciones de proyecto">
+
+      <button class="sel-option-btn active" id="btn-nuevo" aria-pressed="true" aria-controls="panel-nuevo">
+        <div class="sel-option-icon sel-option-icon-nuevo">✨</div>
+        <div class="sel-option-name">Crear proyecto nuevo</div>
+        <div class="sel-option-desc">Comenzar desde cero. El proyecto arrancará vacío y listo para rellenar.</div>
+      </button>
+
+      <button class="sel-option-btn" id="btn-existente" aria-pressed="false" aria-controls="panel-existente">
+        <div class="sel-option-icon sel-option-icon-existente">📂</div>
+        <div class="sel-option-name">Editar proyecto existente</div>
+        <div class="sel-option-desc">Retomar un proyecto guardado y seguir trabajando en él.</div>
+      </button>
+
+      <button class="sel-option-btn" id="btn-importar-json">
+        <div class="sel-option-icon" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);">📥</div>
+        <div class="sel-option-name">Abrir desde Archivo</div>
+        <div class="sel-option-desc">Cargar un proyecto guardado previamente en tu PC (.json).</div>
+      </button>
+      <input type="file" id="input-import-json" accept=".json" style="display:none" />
+
+    </div>
+
+    <!-- Panel: Nuevo proyecto -->
+    <div class="panel visible" id="panel-nuevo" role="region" aria-label="Formulario nuevo proyecto">
+      <h2 class="panel-title">Datos del nuevo proyecto</h2>
+      <form id="form-nuevo" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="input-titulo">Título del proyecto <span style="color:var(--accent-danger)">*</span></label>
+          <input class="input" id="input-titulo" type="text" placeholder="Ej: Proyecto Nuevo..." maxlength="80" autocomplete="off" required />
+          <span class="form-hint">Máximo 80 caracteres.</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="input-descripcion">Descripción (opcional)</label>
+          <textarea class="input" id="input-descripcion" rows="3" placeholder="¿Cuál es el objetivo de este proyecto?" maxlength="300" style="resize:vertical;min-height:90px;"></textarea>
+          <span class="form-hint">Máximo 300 caracteres.</span>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="btn-cancelar-nuevo">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-crear">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Crear y abrir
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Panel: Proyectos existentes -->
+    <div class="panel" id="panel-existente" role="region" aria-label="Proyectos existentes">
+      <h2 class="panel-title">Tus proyectos de Matriz de Eisenhower</h2>
+      <div class="projects-list" id="projects-list" aria-live="polite">
+        <div class="empty-state">
+          <div class="empty-state-icon">⏳</div>
+          <p class="empty-state-text">Cargando proyectos...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- Modal eliminación -->
+<div class="modal-overlay" id="modal-eliminar" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h3 class="modal-title" id="modal-title">⚠️ Eliminar proyecto</h3>
+    <p class="modal-body" id="modal-body">¿Seguro? Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-modal-cancelar">Cancelar</button>
+      <button class="btn btn-danger" id="btn-modal-confirmar">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" role="alert" aria-live="polite"></div>
+
+<script src="/js/tema.js"></script>
+<script src="/eisenhower/js/seleccion.js"></script>
+<script src="/js/navbar.js"></script>
+</body>
+</html>

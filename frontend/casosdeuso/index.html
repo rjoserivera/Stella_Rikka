@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casos de Uso UML | Editor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/casosdeuso/css/style.css">
+<link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body class="editor-body text-light d-flex flex-column vh-100">
+    
+    <!-- Navbar -->
+    <header class="topbar">
+        <a href="/casosdeuso/seleccion" class="topbar-back" aria-label="Volver">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>Volver</span>
+        </a>
+
+        <div class="header-title d-flex align-items-center gap-2">
+            <h5 class="mb-0 text-white fw-bold" id="header-titulo">Cargando...</h5>
+            <span class="badge bg-primary">UML Casos de Uso</span>
+            <span id="save-status" class="text-secondary small ms-2"><i class="fa-solid fa-cloud me-1"></i>Guardado</span>
+        </div>
+
+        <div class="topbar-actions">
+            <!-- Ayuda -->
+            <button class="topbar-btn topbar-btn-help" id="btn-ayuda" aria-label="Ayuda: ¿Cómo usar el Casos de Uso UML?" title="¿Cómo funciona?">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <span>Ayuda</span>
+            </button>
+            
+            <button class="topbar-btn btn-export" id="btn-export-png" title="Exportar PNG">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Exportar PNG
+            </button>
+            <button class="topbar-btn btn-export-file" id="btn-export-rikka" title="Descargar archivo del proyecto (.rikka)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Descargar .rikka
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Editor Area -->
+    <div class="d-flex flex-grow-1 overflow-hidden">
+        
+        <!-- Left Toolbar -->
+        <div class="toolbar-panel p-3">
+            <h6 class="text-secondary fw-bold text-uppercase mb-3"><i class="fa-solid fa-toolbox me-2"></i>Herramientas</h6>
+            
+            <div class="tool-item" draggable="true" data-type="actor">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="fa-solid fa-user fs-3 text-primary"></i>
+                    <div>
+                        <div class="fw-bold text-white">Actor</div>
+                        <div class="small text-secondary">Usuario o Sistema Externo</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-item" draggable="true" data-type="case">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="border border-primary rounded-pill" style="width: 40px; height: 25px;"></div>
+                    <div>
+                        <div class="fw-bold text-white">Caso de Uso</div>
+                        <div class="small text-secondary">Acción en el sistema</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-item" draggable="true" data-type="system">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="border border-secondary bg-dark" style="width: 40px; height: 35px;"></div>
+                    <div>
+                        <div class="fw-bold text-white">Límite Sistema</div>
+                        <div class="small text-secondary">Contenedor resizable</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-item" draggable="true" data-type="note">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width: 35px; height: 35px; background: #ffeb3b; border-radius: 2px;"></div>
+                    <div>
+                        <div class="fw-bold text-white">Nota</div>
+                        <div class="small text-secondary">Texto descriptivo</div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary my-3">
+            <h6 class="text-secondary fw-bold text-uppercase mb-3"><i class="fa-solid fa-link me-2"></i>Conexiones</h6>
+            <div class="text-secondary small mb-2">Para conectar, arrastra desde el punto amarillo de un nodo a otro nodo.</div>
+            
+            <div class="mb-3">
+                <label class="form-label text-light small">Tipo de conexión a crear:</label>
+                <select id="conn-type-select" class="form-select form-select-sm bg-dark text-light border-secondary">
+                    <option value="asociacion">Asociación (Línea continua)</option>
+                    <option value="include">&lt;&lt;include&gt;&gt; (Línea punteada)</option>
+                    <option value="extend">&lt;&lt;extend&gt;&gt; (Línea punteada)</option>
+                </select>
+            </div>
+
+        </div>
+
+        <!-- Canvas -->
+        <div class="flex-grow-1 position-relative" id="canvas-container">
+            <svg id="svg-layer">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaa" />
+                    </marker>
+                    <marker id="arrow-hover" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0d6efd" />
+                    </marker>
+                </defs>
+                <g id="connections-group"></g>
+            </svg>
+            <div id="nodes-layer">
+                <!-- Nodes injected by JS -->
+            </div>
+        </div>
+
+        <!-- Right Properties -->
+        <div class="properties-panel p-3">
+            <h6 class="text-secondary fw-bold text-uppercase mb-3"><i class="fa-solid fa-sliders me-2"></i>Propiedades</h6>
+            
+            <div id="no-selection" class="text-secondary small">
+                Selecciona un elemento en el lienzo para editar sus propiedades.
+            </div>
+
+            <div id="prop-actor" class="d-none">
+                <div class="mb-3">
+                    <label class="form-label small text-light">Nombre del Actor</label>
+                    <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" id="actor-name-input">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="actor-color-input" value="#ffffff">
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="actor-lock-input">
+                    <label class="form-check-label small text-light">Bloquear posición</label>
+                </div>
+                <button class="btn btn-outline-danger btn-sm w-100 btn-delete-node"><i class="fa-solid fa-trash me-2"></i>Eliminar Actor</button>
+            </div>
+
+            <div id="prop-case" class="d-none">
+                <div class="mb-3">
+                    <label class="form-label small text-light">Nombre del Caso de Uso</label>
+                    <textarea class="form-control form-control-sm bg-dark text-white border-secondary" id="case-name-input" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color Fondo</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="case-bg-color-input" value="#1e1e1e">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color Borde</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="case-border-color-input" value="#0d6efd">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color Texto</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="case-text-color-input" value="#ffffff">
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="case-lock-input">
+                    <label class="form-check-label small text-light">Bloquear posición</label>
+                </div>
+                <button class="btn btn-outline-danger btn-sm w-100 btn-delete-node"><i class="fa-solid fa-trash me-2"></i>Eliminar Caso</button>
+            </div>
+
+            <div id="prop-system" class="d-none">
+                <div class="mb-3">
+                    <label class="form-label small text-light">Nombre del Sistema</label>
+                    <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" id="system-name-input">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color Fondo (Cabecera)</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="system-bg-color-input" value="#333333">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color Borde</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="system-border-color-input" value="#444444">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color Texto</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="system-text-color-input" value="#ffffff">
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="system-lock-input">
+                    <label class="form-check-label small text-light">Bloquear tamaño y posición</label>
+                </div>
+                <button class="btn btn-outline-danger btn-sm w-100 btn-delete-node"><i class="fa-solid fa-trash me-2"></i>Eliminar Sistema</button>
+            </div>
+
+            <div id="prop-note" class="d-none">
+                <div class="mb-3">
+                    <label class="form-label small text-light">Contenido de la Nota</label>
+                    <textarea class="form-control form-control-sm bg-dark text-white border-secondary" id="note-text-input" rows="4"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color Fondo</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="note-bg-color-input" value="#ffeb3b">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color Texto</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="note-text-color-input" value="#000000">
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="note-lock-input">
+                    <label class="form-check-label small text-light">Bloquear tamaño y posición</label>
+                </div>
+                <button class="btn btn-outline-danger btn-sm w-100 btn-delete-node"><i class="fa-solid fa-trash me-2"></i>Eliminar Nota</button>
+            </div>
+
+            <div id="prop-conn" class="d-none">
+                <div class="mb-3">
+                    <label class="form-label small text-light">Tipo de Conexión</label>
+                    <select class="form-select form-select-sm bg-dark text-light border-secondary" id="conn-edit-type">
+                        <option value="asociacion">Asociación</option>
+                        <option value="include">&lt;&lt;include&gt;&gt;</option>
+                        <option value="extend">&lt;&lt;extend&gt;&gt;</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-light">Color de Línea</label>
+                    <input type="color" class="form-control form-control-color bg-dark border-secondary p-1 w-100" id="conn-color-input" value="#aaaaaa">
+                </div>
+                <button class="btn btn-outline-danger btn-sm w-100" id="btn-delete-conn"><i class="fa-solid fa-trash me-2"></i>Eliminar Conexión</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Exportar -->
+    <div class="modal-overlay d-none" id="modal-export" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; display:flex; align-items:center; justify-content:center;">
+        <div class="modal-box bg-dark text-light p-4 rounded border border-secondary" style="max-width:380px; width:100%;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">📤 Exportar Diagrama</h5>
+                <button class="btn btn-sm btn-outline-secondary border-0" id="export-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="mb-3">
+                <label class="form-label small">Resolución</label>
+                <select id="export-res" class="form-select form-select-sm bg-dark text-light border-secondary">
+                    <option value="1">1x — Pantalla normal</option>
+                    <option value="2" selected>2x — Alta resolución</option>
+                    <option value="3">3x — Impresión</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="form-label small">Fondo</label>
+                <select id="export-bg" class="form-select form-select-sm bg-dark text-light border-secondary">
+                    <option value="oscuro" selected>Oscuro (Fondo actual)</option>
+                    <option value="blanco">Blanco</option>
+                    <option value="transparente">Transparente</option>
+                </select>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-secondary btn-sm" id="export-cancel">Cancelar</button>
+                <button class="btn btn-primary btn-sm" id="export-confirm">⬇️ Descargar PNG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ayuda -->
+    <div class="modal-overlay help-modal-overlay d-none" id="modal-ayuda" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; display:flex; align-items:center; justify-content:center;">
+        <div class="modal-box help-modal-box bg-dark text-light p-4 rounded border border-secondary" style="max-width:450px; width:100%;">
+            <div class="modal-header d-flex justify-content-between align-items-center mb-3">
+                <h2 class="modal-title h5 mb-0">📖 Guía Rápida: Casos de Uso UML</h2>
+                <button class="btn btn-sm btn-outline-secondary border-0" id="modal-ayuda-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="help-content small">
+                <p>Bienvenido al <strong>Editor de Casos de Uso UML</strong>.</p>
+                <div class="help-section mb-3">
+                    <h3 class="h6 text-primary">✨ Funciones Principales</h3>
+                    <ul class="ps-3 mb-0">
+                        <li><strong>Arrastrar y Soltar:</strong> Arrastra Actores, Casos de Uso y otros elementos desde el panel izquierdo hacia el lienzo.</li>
+                        <li><strong>Conexiones:</strong> Haz clic en los puntos amarillos que aparecen al seleccionar un elemento y arrastra hacia otro para conectarlos.</li>
+                        <li><strong>Propiedades:</strong> Haz clic en cualquier elemento para editar su nombre, colores, etc. desde el panel derecho.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-actions d-flex justify-content-end mt-4">
+                <button class="btn btn-primary btn-sm" id="btn-ayuda-cerrar">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="/casosdeuso/js/editor.js"></script>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+

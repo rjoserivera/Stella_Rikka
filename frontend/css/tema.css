@@ -1,0 +1,503 @@
+/* ════════════════════════════════════════════════
+   tema.css — Variables de modo claro / oscuro
+   Suite de Productividad
+   ════════════════════════════════════════════════ */
+
+/* ── Importar fuente ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap');
+
+/* ── Modo Oscuro — Cosmos Nebulosa (Stella Rikka) ── */
+:root,
+[data-tema="oscuro"] {
+  /* Fondos: azul marino cósmico profundo */
+  --bg-primary:     #060D1E;
+  --bg-secondary:   #0A1628;
+  --bg-card:        #0C1830;
+  --bg-card-hover:  #122240;
+  --bg-overlay:     rgba(6, 13, 30, 0.90);
+
+  /* Bordes: teal cósmico */
+  --border-color:   #1A2E50;
+  --border-focus:   #F59E0B;
+
+  /* Texto */
+  --text-primary:   #FFF8EE;
+  --text-secondary: #C8B89A;
+  --text-muted:     #7A6A55;
+
+  /* Acentos: energía espiritual de Orihime */
+  --accent-primary:   #F59E0B;  /* Naranja ámbar — cabello de Orihime   */
+  --accent-secondary: #F97316;  /* Naranja intenso — energía Rikka      */
+  --accent-tertiary:  #FBBF24;  /* Dorado brillante — escudo Kesshun    */
+  --accent-success:   #34D399;  /* Curación — Soten Kisshun             */
+  --accent-warning:   #FDE68A;  /* Luz dorada suave                     */
+  --accent-danger:    #FB923C;  /* Tsubaki — espíritu ofensivo          */
+
+  /* Gradientes estelares */
+  --gradient-hero:  linear-gradient(135deg, #F59E0B 0%, #F97316 50%, #FBBF24 100%);
+  --gradient-card:  linear-gradient(145deg, #0C1830 0%, #060D1E 100%);
+  --gradient-btn:   linear-gradient(90deg, #F59E0B, #F97316);
+
+  /* Sombras con resplandor dorado */
+  --shadow-sm:  0 2px 8px rgba(0,0,0,0.6);
+  --shadow-md:  0 8px 24px rgba(0,0,0,0.7);
+  --shadow-lg:  0 20px 60px rgba(0,0,0,0.8);
+  --shadow-glow: 0 0 12px rgba(245,158,11,0.6), 0 0 35px rgba(249,115,22,0.4), 0 0 70px rgba(251,191,36,0.2);
+
+  --scrollbar-thumb: #1A2E50;
+  --scrollbar-track: #0A1628;
+}
+
+/* ── Modo Claro — Soten Kisshun (Luz Sanadora) ── */
+[data-tema="claro"] {
+  /* Fondos: luz pura y cálida */
+  --bg-primary:     #FFFBF2;
+  --bg-secondary:   #FEF3DC;
+  --bg-card:        #FFFFFF;
+  --bg-card-hover:  #FFF7E6;
+  --bg-overlay:     rgba(255,251,242,0.94);
+
+  /* Bordes: ámbar suave */
+  --border-color:   rgba(245,158,11,0.15);
+  --border-focus:   rgba(249,115,22,0.5);
+
+  /* Texto oscuro sobre fondo claro */
+  --text-primary:   #1C1007;
+  --text-secondary: #5C4020;
+  --text-muted:     #9A7850;
+
+  /* Acentos en modo claro — más saturados para contraste */
+  --accent-primary:   #D97706;  /* Ámbar oscuro legible sobre blanco    */
+  --accent-secondary: #EA580C;  /* Naranja oscuro                       */
+  --accent-tertiary:  #B45309;  /* Dorado profundo                      */
+  --accent-success:   #059669;
+  --accent-warning:   #F59E0B;
+  --accent-danger:    #DC2626;
+
+  /* Gradientes cálidos diurnos */
+  --gradient-hero:  linear-gradient(135deg, #D97706 0%, #EA580C 50%, #F59E0B 100%);
+  --gradient-card:  linear-gradient(145deg, #FFFFFF 0%, #FFFBF2 100%);
+  --gradient-btn:   linear-gradient(135deg, #D97706, #EA580C);
+
+  /* Sombras con resplandor ámbar suave */
+  --shadow-sm:  0 2px 8px rgba(217,119,6,0.08);
+  --shadow-md:  0 8px 24px rgba(217,119,6,0.13);
+  --shadow-lg:  0 20px 60px rgba(217,119,6,0.18);
+  --shadow-glow: 0 0 30px rgba(245,158,11,0.25);
+
+  --scrollbar-thumb: #FBBF24;
+  --scrollbar-track: #FEF3DC;
+}
+
+/* ── Reset y base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+}
+
+/* ── Scrollbar personalizada ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+/* ── Tipografía ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+a { color: var(--accent-primary); text-decoration: none; }
+a:hover { color: var(--accent-secondary); }
+
+/* ── Botones base ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--gradient-btn);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+  color: #fff;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+.btn-ghost:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-focus);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+}
+.btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(239,68,68,0.4);
+  color: #fff;
+}
+
+/* ── Card base ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Input base ── */
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-primary) !important;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+}
+.input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+.input::placeholder { color: var(--text-muted) !important; }
+
+/* ── Toggle de tema (compartido) ── */
+.theme-toggle {
+  width: 48px;
+  height: 26px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 13px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+}
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+[data-tema="claro"] .theme-toggle::after {
+  transform: translateX(22px);
+}
+
+/* ── Badge ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.badge-alta   { background: rgba(239,68,68,0.15);  color: #ef4444; }
+.badge-media  { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.badge-baja   { background: rgba(16,185,129,0.15); color: #10b981; }
+
+/* ── Animaciones globales ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+
+/* ── Toast / Notificaciones ── */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 280px;
+}
+.toast-success { border-left: 3px solid var(--accent-success); }
+.toast-error   { border-left: 3px solid var(--accent-danger);  }
+.toast-info    { border-left: 3px solid var(--accent-primary);  }
+
+/* ── Widget de Soporte ── */
+.soporte-widget {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+.soporte-bubble {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 12px 18px;
+  border-radius: 20px;
+  border-bottom-right-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  max-width: 250px;
+  text-align: center;
+}
+.soporte-widget:hover .soporte-bubble,
+.soporte-bubble.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.soporte-avatar {
+  width: 140px;
+  height: 140px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.soporte-avatar img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+.soporte-avatar:hover {
+  transform: scale(1.08) translateY(-4px);
+}
+.soporte-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+.soporte-modal.visible {
+  display: flex;
+}
+.soporte-modal-content {
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  max-width: 350px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+.soporte-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.soporte-modal-close:hover {
+  color: var(--text-primary);
+}
+.soporte-modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+.soporte-modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.soporte-modal-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--bg-secondary);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.2s;
+}
+.soporte-modal-item:hover {
+  border-color: var(--accent-primary);
+}
+.soporte-modal-item svg {
+  color: var(--accent-primary);
+}
+
+/* ── Updates for Avatar size and Glow ── */
+.soporte-avatar {
+  width: 170px !important;
+  height: 170px !important;
+  position: relative;
+}
+
+/* Aura animada detrás de Inoue (Naranja/Cian como Stella Rikka) */
+.soporte-avatar::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%; height: 130%;
+  background: radial-gradient(circle, rgba(245,158,11,0.5) 0%, rgba(0,200,255,0.3) 40%, transparent 70%);
+  filter: blur(15px);
+  z-index: -1;
+  opacity: 0.6;
+  animation: inoueAuraPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes inoueAuraPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.9); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.soporte-avatar img {
+  filter: drop-shadow(0 0 15px rgba(245,158,11,0.6)) drop-shadow(0 0 8px rgba(0,200,255,0.4)) !important;
+}
+
+/* ── Botón WhatsApp en Modal ── */
+.whatsapp-btn {
+  background: rgba(37, 211, 102, 0.1) !important;
+  border-color: rgba(37, 211, 102, 0.3) !important;
+  color: #25D366 !important;
+}
+.whatsapp-btn:hover {
+  background: rgba(37, 211, 102, 0.2) !important;
+  border-color: #25D366 !important;
+}
+.whatsapp-btn svg {
+  color: #25D366 !important;
+}
+
+/* ── Fairies de Shun Shun Rikka ── */
+.inoue-fairy {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  margin-left: -4px;
+  background: #00E5FF;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00E5FF, 0 0 20px rgba(0,229,255,0.8);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.fairy-1 { animation: orbitFairy1 4.5s linear infinite; }
+.fairy-2 { animation: orbitFairy2 3.8s linear infinite reverse; }
+.fairy-3 { animation: orbitFairy3 5s linear infinite; }
+.fairy-4 {
+  background: #F97316;
+  box-shadow: 0 0 10px #F97316, 0 0 20px rgba(249,115,22,0.8);
+  animation: orbitFairy4 3.2s linear infinite;
+}
+.fairy-5 {
+  background: #34D399;
+  box-shadow: 0 0 10px #34D399, 0 0 20px rgba(52,211,153,0.8);
+  animation: orbitFairy5 6s linear infinite reverse;
+}
+.fairy-6 { animation: orbitFairy6 5.5s linear infinite; }
+
+@keyframes orbitFairy1 { 0% { transform: rotate(0deg) translateY(-85px) rotate(0deg); } 100% { transform: rotate(360deg) translateY(-85px) rotate(-360deg); } }
+@keyframes orbitFairy2 { 0% { transform: rotate(60deg) translateY(-75px) rotate(-60deg); } 100% { transform: rotate(420deg) translateY(-75px) rotate(-420deg); } }
+@keyframes orbitFairy3 { 0% { transform: rotate(120deg) translateY(-95px) rotate(-120deg); } 100% { transform: rotate(480deg) translateY(-95px) rotate(-480deg); } }
+@keyframes orbitFairy4 { 0% { transform: rotate(180deg) translateY(-70px) rotate(-180deg); } 100% { transform: rotate(540deg) translateY(-70px) rotate(-540deg); } }
+@keyframes orbitFairy5 { 0% { transform: rotate(240deg) translateY(-90px) rotate(-240deg); } 100% { transform: rotate(600deg) translateY(-90px) rotate(-600deg); } }
+@keyframes orbitFairy6 { 0% { transform: rotate(300deg) translateY(-80px) rotate(-300deg); } 100% { transform: rotate(660deg) translateY(-80px) rotate(-660deg); } }

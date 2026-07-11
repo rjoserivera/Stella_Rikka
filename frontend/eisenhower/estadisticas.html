@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estadísticas — Matriz de Eisenhower</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="/css/tema.css" />
+  <link rel="stylesheet" href="/eisenhower/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>(function(){const t=localStorage.getItem('suite_tema')||'oscuro';document.documentElement.setAttribute('data-tema',t);})();</script>
+  <style>
+    body { padding: 0; }
+    .stats-page { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+    .stats-page-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:40px; }
+    .stats-cards { display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px; }
+    .stats-card { background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;padding:20px;text-align:center; }
+    .stats-card-value { font-family:'Poppins',sans-serif;font-size:2rem;font-weight:800;color:var(--text-primary); }
+    .stats-card-label { font-size:0.78rem;color:var(--text-muted);margin-top:4px; }
+    .charts-grid { display:grid;grid-template-columns:1fr 1fr;gap:24px; }
+    .chart-card { background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;padding:24px; }
+    .chart-title { font-family:'Poppins',sans-serif;font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:20px; }
+  </style>
+<link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);background:var(--bg-overlay);border-bottom:1px solid var(--border-color);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;">
+  <a id="back-link" href="/eisenhower/seleccion" style="display:flex;align-items:center;gap:8px;color:var(--text-secondary);font-size:0.875rem;text-decoration:none;">
+    ← Volver a la matriz
+  </a>
+  <span style="font-family:'Poppins',sans-serif;font-weight:700;color:var(--text-primary);">📊 Estadísticas</span>
+  <button class="theme-toggle" id="toggle-tema"></button>
+</div>
+
+<div class="stats-page">
+  <div class="stats-cards">
+    <div class="stats-card"><div class="stats-card-value" id="s-total">—</div><div class="stats-card-label">Total tareas</div></div>
+    <div class="stats-card"><div class="stats-card-value" id="s-completadas" style="color:var(--accent-success)">—</div><div class="stats-card-label">Completadas</div></div>
+    <div class="stats-card"><div class="stats-card-value" id="s-pendientes" style="color:var(--accent-warning)">—</div><div class="stats-card-label">Pendientes</div></div>
+    <div class="stats-card"><div class="stats-card-value" id="s-pct" style="color:var(--accent-primary)">—</div><div class="stats-card-label">% Completado</div></div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Distribución por cuadrante</div>
+      <canvas id="chart-dona" height="250"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Completadas vs Pendientes por cuadrante</div>
+      <canvas id="chart-barras" height="250"></canvas>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="/js/tema.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const params = new URLSearchParams(window.location.search);
+  const pid = params.get('pid');
+  if (!pid) { window.location.href = '/eisenhower/seleccion'; return; }
+
+  document.getElementById('back-link').href = `/eisenhower/matriz?pid=${pid}`;
+
+  const res = await fetch(`/api/eisenhower/proyectos/${pid}/estadisticas`);
+  const s = await res.json();
+
+  document.getElementById('s-total').textContent = s.total;
+  document.getElementById('s-completadas').textContent = s.completadas;
+  document.getElementById('s-pendientes').textContent = s.pendientes;
+  const pct = s.total ? Math.round(s.completadas/s.total*100) : 0;
+  document.getElementById('s-pct').textContent = pct + '%';
+
+  const cuadrantes = ['importante_urgente','importante_no_urgente','no_importante_urgente','no_importante_no_urgente'];
+  const labels = ['Hacer','Planificar','Delegar','Eliminar'];
+  const colors = ['rgba(239,68,68,0.8)','rgba(99,102,241,0.8)','rgba(245,158,11,0.8)','rgba(107,114,128,0.8)'];
+  const data = cuadrantes.map(c => s.por_cuadrante[c] || 0);
+  const dataComp = cuadrantes.map(c => (s.completadas_por_cuadrante || {})[c] || 0);
+  const dataPend = data.map((n, i) => n - dataComp[i]);
+
+  new Chart(document.getElementById('chart-dona'), {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: colors, borderColor: 'transparent' }] },
+    options: { plugins: { legend: { position: 'bottom', labels: { color: '#8b92b8', font: { size: 11 } } } }, cutout: '65%', animation: { duration: 600 } }
+  });
+
+  new Chart(document.getElementById('chart-barras'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Completadas', data: dataComp, backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: 4 },
+        { label: 'Pendientes', data: dataPend, backgroundColor: 'rgba(245,158,11,0.5)', borderRadius: 4 }
+      ]
+    },
+    options: { plugins: { legend: { labels: { color: '#8b92b8', font: { size: 11 } } } }, scales: { x: { stacked: true, ticks: { color: '#8b92b8' } }, y: { stacked: true, ticks: { color: '#8b92b8', stepSize: 1 } } } }
+  });
+});
+</script>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+

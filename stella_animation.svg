@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 150" width="100%" height="100%">
+  <defs>
+    <!-- Fondo Cósmico (Basado en tema.css) -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#060D1E" />
+      <stop offset="50%" stop-color="#0A1628" />
+      <stop offset="100%" stop-color="#0C1830" />
+    </linearGradient>
+
+    <!-- Resplandores de los espíritus Rikka -->
+    <radialGradient id="glowCyan" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#00E5FF" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/>
+    </radialGradient>
+    
+    <radialGradient id="glowOrange" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F97316" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#F97316" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#F97316" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="glowAmber" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#F59E0B" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="glowGreen" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#34D399" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#34D399" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#34D399" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="800" height="150" fill="url(#bg)" rx="12" ry="12" />
+
+  <!-- Constelación Central (Ámbar) -->
+  <g stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5">
+    <path d="M100,75 L250,30 L400,90 L550,40 L700,80" fill="none">
+      <animate attributeName="opacity" values="0.2; 0.8; 0.2" dur="4s" repeatCount="indefinite" />
+    </path>
+    <path d="M250,30 L350,130 L400,90" fill="none">
+       <animate attributeName="opacity" values="0.1; 0.6; 0.1" dur="5s" repeatCount="indefinite" />
+    </path>
+    <path d="M550,40 L480,120 L400,90" fill="none">
+       <animate attributeName="opacity" values="0.1; 0.7; 0.1" dur="6s" repeatCount="indefinite" />
+    </path>
+  </g>
+
+  <!-- Estrellas de fondo (Color Texto Primario) -->
+  <g fill="#FFF8EE">
+    <!-- Fijas -->
+    <circle cx="50" cy="120" r="1" opacity="0.4"/>
+    <circle cx="180" cy="110" r="1.5" opacity="0.3"/>
+    <circle cx="320" cy="20" r="0.8" opacity="0.5"/>
+    <circle cx="600" cy="110" r="1" opacity="0.4"/>
+    <circle cx="750" cy="30" r="1.2" opacity="0.6"/>
+    <!-- Titilantes -->
+    <circle cx="90" cy="40" r="1.5"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/></circle>
+    <circle cx="280" cy="100" r="2"><animate attributeName="opacity" values="0;1;0" dur="3.5s" repeatCount="indefinite"/></circle>
+    <circle cx="450" cy="30" r="1"><animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite"/></circle>
+    <circle cx="680" cy="130" r="2"><animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite"/></circle>
+  </g>
+
+  <!-- Las 6 Flores del Escudo (Espíritus Rikka) Orbitando -->
+  <!-- 1. Hinagiku (Cyan) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" from="0 400 75" to="360 400 75" dur="12s" repeatCount="indefinite" />
+    <circle cx="400" cy="10" r="8" fill="url(#glowCyan)"/>
+    <circle cx="400" cy="10" r="3" fill="#00E5FF"/>
+  </g>
+
+  <!-- 2. Baigon (Verde Soten Kisshun) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" from="60 400 75" to="420 400 75" dur="14s" repeatCount="indefinite" />
+    <circle cx="400" cy="20" r="8" fill="url(#glowGreen)"/>
+    <circle cx="400" cy="20" r="3" fill="#34D399"/>
+  </g>
+
+  <!-- 3. Lily (Ámbar) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" from="120 400 75" to="480 400 75" dur="10s" repeatCount="indefinite" />
+    <circle cx="400" cy="15" r="8" fill="url(#glowAmber)"/>
+    <circle cx="400" cy="15" r="3" fill="#F59E0B"/>
+  </g>
+
+  <!-- 4. Ayame (Cyan) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" from="180 400 75" to="540 400 75" dur="13s" repeatCount="indefinite" />
+    <circle cx="400" cy="10" r="8" fill="url(#glowCyan)"/>
+    <circle cx="400" cy="10" r="3" fill="#00E5FF"/>
+  </g>
+
+  <!-- 5. Shun'o (Ámbar Brillante) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" from="240 400 75" to="600 400 75" dur="11s" repeatCount="indefinite" />
+    <circle cx="400" cy="20" r="10" fill="url(#glowAmber)"/>
+    <circle cx="400" cy="20" r="3.5" fill="#FBBF24"/>
+  </g>
+
+  <!-- 6. Tsubaki (Naranja Ofensivo) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" from="300 400 75" to="660 400 75" dur="9s" repeatCount="indefinite" />
+    <circle cx="400" cy="5" r="12" fill="url(#glowOrange)"/>
+    <circle cx="400" cy="5" r="4" fill="#F97316"/>
+  </g>
+
+  <!-- Centro Brillante (El escudo Kesshun) -->
+  <circle cx="400" cy="75" r="40" fill="url(#glowAmber)">
+    <animate attributeName="opacity" values="0.4; 0.8; 0.4" dur="3s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="400" cy="75" r="15" fill="url(#glowCyan)">
+    <animate attributeName="r" values="10; 20; 10" dur="2s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- Ondas de Energía Expandiendo -->
+  <circle cx="400" cy="75" r="10" fill="none" stroke="#FBBF24" stroke-width="1.5">
+    <animate attributeName="r" values="10; 150" dur="4s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.8; 0" dur="4s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="400" cy="75" r="10" fill="none" stroke="#00E5FF" stroke-width="1">
+    <animate attributeName="r" values="10; 120" dur="3s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.6; 0" dur="3s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- Meteoros Cruzando -->
+  <line x1="850" y1="-20" x2="600" y2="180" stroke="#F59E0B" stroke-width="2" opacity="0">
+    <animate attributeName="opacity" values="0;1;0;0" dur="6s" repeatCount="indefinite" begin="1s"/>
+    <animate attributeName="x1" values="850;600" dur="6s" repeatCount="indefinite" begin="1s"/>
+    <animate attributeName="y1" values="-20;180" dur="6s" repeatCount="indefinite" begin="1s"/>
+    <animate attributeName="x2" values="800;550" dur="6s" repeatCount="indefinite" begin="1s"/>
+    <animate attributeName="y2" values="-60;140" dur="6s" repeatCount="indefinite" begin="1s"/>
+  </line>
+</svg>

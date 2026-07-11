@@ -1,0 +1,66 @@
+# ── Python ──
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# ── Entornos virtuales ──
+.env
+.venv
+ENV/
+
+# ── Datos locales (NO subir datos personales) ──
+backend/data/
+backend/data_backups/
+data_backups/
+*.json
+
+# ── Archivos de sistema Windows ──
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Archivos temporales del editor ──
+.vscode/settings.json
+*.swp
+*.swo
+*~
+.idea/
+*.sublime-workspace
+
+# ── Logs ──
+*.log
+logs/
+
+# ── Scripts de parche/fix temporales ──
+frontend/fix.js
+frontend/fix_accents.js
+frontend/fix_bg.js
+crear_ejemplo_diagrama.py
+fix_colors.py
+scratch.js
+
+# ── Archivos de prueba ──
+*.xlsx
+Matriz_Prueba_*.xlsx
+
+# ── Node (si se agrega en el futuro) ──
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Antigravity / AI tools ──
+.gemini/
+
+# ── OS ──
+.DS_Store

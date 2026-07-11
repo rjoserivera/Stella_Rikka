@@ -1,0 +1,1574 @@
+/* ══════════════════════════════════════════════════
+   home.css — Stella Rikka Suite
+   ══════════════════════════════════════════════════ */
+
+/* ── Banner de actualización disponible ── */
+.update-banner {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: linear-gradient(90deg, rgba(0,180,220,0.18) 0%, rgba(90,15,190,0.18) 100%);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0, 200, 255, 0.25);
+  padding: 10px 24px;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.update-banner-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.update-icon { font-size: 1.1rem; color: #00E5FF; filter: drop-shadow(0 0 6px #00E5FF); }
+
+.update-msg {
+  flex: 1;
+  font-size: 0.88rem;
+  color: #D0E8FF;
+}
+
+.update-msg strong { color: #FBBF24; font-weight: 700; }
+
+.update-btn {
+  padding: 6px 18px;
+  background: linear-gradient(90deg, #F59E0B, #F97316);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: box-shadow 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.update-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 18px rgba(245,158,11,0.55);
+  color: #fff;
+}
+
+.update-close {
+  background: none;
+  border: none;
+  color: #8AA0C0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.update-close:hover { color: #fff; background: rgba(255,255,255,0.08); }
+
+[data-tema="claro"] .update-banner {
+  background: linear-gradient(90deg, rgba(14,165,233,0.12) 0%, rgba(139,92,246,0.10) 100%);
+  border-bottom-color: rgba(14,165,233,0.25);
+}
+
+[data-tema="claro"] .update-msg { color: #1E3A5F; }
+
+
+/* ── Fondo Nebulosa: modo oscuro ── */
+[data-tema="oscuro"] body {
+  background:
+    radial-gradient(ellipse 70% 55% at 0% 0%,   rgba(0, 180, 220, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 45%, rgba(90, 15, 190, 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 45% 100%, rgba(180, 140, 25, 0.16) 0%, transparent 50%),
+    #060D1E;
+  background-attachment: fixed;
+}
+
+/* ── Fondo con orbes ── */
+.bg-orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: orbFloat 20s ease-in-out infinite;
+}
+
+/* Orbe 1 — Nebulosa Cian (esquina superior izquierda) */
+.orb-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 180, 220, 0.18) 0%, rgba(0, 100, 180, 0.10) 50%, transparent 70%);
+  top: -150px;
+  left: -150px;
+  animation-delay: 0s;
+}
+
+/* Orbe 2 — Nebulosa Violeta (derecha) */
+.orb-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(100, 20, 200, 0.20) 0%, rgba(60, 10, 140, 0.10) 50%, transparent 70%);
+  top: 30%;
+  right: -120px;
+  animation-delay: -7s;
+}
+
+/* Orbe 3 — Nebulosa Dorada (centro inferior) */
+.orb-3 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(180, 140, 30, 0.14) 0%, rgba(140, 90, 10, 0.07) 50%, transparent 70%);
+  bottom: 10%;
+  left: 35%;
+  animation-delay: -14s;
+}
+
+@keyframes orbFloat {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(40px, -30px) scale(1.05);
+  }
+
+  66% {
+    transform: translate(-20px, 40px) scale(0.95);
+  }
+}
+
+/* ── Partículas ── */
+.particles-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Peces flotantes */
+.particle-fish {
+  position: absolute;
+  left: -80px;
+  animation: swimAcross linear infinite;
+  pointer-events: none;
+}
+
+@keyframes swimAcross {
+  0% {
+    left: -80px;
+    transform: scaleY(var(--fy, 1)) rotate(-3deg);
+  }
+
+  25% {
+    transform: scaleY(var(--fy, 1)) rotate(3deg);
+  }
+
+  50% {
+    transform: scaleY(var(--fy, 1)) rotate(-3deg);
+  }
+
+  75% {
+    transform: scaleY(var(--fy, 1)) rotate(3deg);
+  }
+
+  100% {
+    left: calc(100vw + 80px);
+    transform: scaleY(var(--fy, 1)) rotate(-3deg);
+  }
+}
+
+/* Puntos de energía */
+.particle-dot {
+  position: absolute;
+  border-radius: 50%;
+  animation: floatDot ease-in-out infinite;
+}
+
+@keyframes floatDot {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translateY(-30px) scale(1.3);
+    opacity: 1;
+  }
+}
+
+/* ── Layout ── */
+.home-wrapper {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══ NAVBAR ══ */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 68px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(9, 6, 15, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(245,158,11,0.10);
+}
+
+[data-tema="claro"] .navbar {
+  background: rgba(255,251,242,0.92);
+  border-bottom: 1px solid rgba(245,158,11,0.18);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.brand-logo {
+  height: 44px;
+  border-radius: 6px;
+  filter: drop-shadow(0 0 10px rgba(245,158,11,0.65)) drop-shadow(0 0 22px rgba(249,115,22,0.35));
+  transition: filter 0.3s ease;
+}
+.brand-logo:hover {
+  filter: drop-shadow(0 0 16px rgba(251,191,36,0.9)) drop-shadow(0 0 32px rgba(245,158,11,0.5));
+}
+
+.brand-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.brand-accent {
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 40px;
+  flex: 1;
+}
+
+.nav-link {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+  color: var(--accent-tertiary);
+  background: rgba(245, 158, 11, 0.13);
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgba(0, 208, 132, 0.1);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #00D084;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00D084;
+  animation: pulse 2s ease infinite;
+  flex-shrink: 0;
+}
+
+.theme-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-primary);
+  background: var(--bg-card-hover);
+}
+
+.icon-moon {
+  display: none;
+}
+
+/* ══ HERO ══ */
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 56px;
+  align-items: center;
+  padding: 90px 64px 70px;
+  max-width: 1320px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+}
+
+/* Aura sutil detrás del texto hero */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  left: 40px;
+  top: 60px;
+  width: 380px;
+  height: 280px;
+  background: radial-gradient(ellipse, rgba(0,180,220,0.10) 0%, transparent 70%);
+  pointer-events: none;
+  filter: blur(30px);
+}
+
+/* Badge animado — shimmer */
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(0, 200, 255, 0.08);
+  border: 1px solid rgba(0, 200, 255, 0.30);
+  border-radius: 30px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #67E8F9;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+  width: fit-content;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto shimmer en el badge */
+.hero-tag::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+  animation: badgeShimmer 2.5s ease-in-out infinite;
+  border-radius: inherit;
+}
+
+@keyframes badgeShimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.tag-dot {
+  width: 6px;
+  height: 6px;
+  background: #00E5FF;
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+  box-shadow: 0 0 6px #00E5FF;
+}
+
+/* Título: grande, impactante */
+.hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  margin-bottom: 22px;
+}
+[data-tema="oscuro"] .hero-title {
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+/* La línea gradient — ahora cálida ámbar/naranja */
+.hero-gradient {
+  background: linear-gradient(90deg, #F59E0B 0%, #FB923C 50%, #FBBF24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(245,158,11,0.4));
+}
+
+.hero-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 460px;
+  margin-bottom: 40px;
+}
+[data-tema="oscuro"] .hero-desc {
+  color: #B8C8E0;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Botón primario — naranja ámbar con shimmer y glow */
+.btn-hero-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: linear-gradient(90deg, #F59E0B, #F97316);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 14px;
+  text-decoration: none;
+  transition: all 0.25s;
+  box-shadow: 0 0 24px rgba(245,158,11,0.45), 0 4px 16px rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer en el botón primario */
+.btn-hero-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%);
+  animation: badgeShimmer 2s ease-in-out infinite;
+}
+
+.btn-hero-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 40px rgba(245,158,11,0.65), 0 8px 24px rgba(0,0,0,0.35);
+  color: #fff;
+}
+
+/* Botón ghost — vidrio con borde cian */
+.btn-hero-ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 22px;
+  background: rgba(0, 200, 255, 0.06);
+  color: #67E8F9;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 200, 255, 0.28);
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+}
+
+.btn-hero-ghost:hover {
+  background: rgba(0, 200, 255, 0.14);
+  border-color: rgba(0, 200, 255, 0.55);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(0,200,255,0.2);
+}
+
+/* ── Stats panel — glassmorphism + acento por tarjeta ── */
+.hero-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hstat-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 24px;
+  /* Glassmorphism oscuro por defecto */
+  background: rgba(6, 13, 30, 0.30);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  transition: transform 0.2s, border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-tema="claro"] .hstat-card {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+/* Brillo de borde izquierdo coloreado */
+.hstat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--hstat-accent, rgba(245,158,11,0.5));
+  box-shadow: 0 0 8px var(--hstat-accent, rgba(245,158,11,0.4));
+}
+
+.hstat-card:nth-child(1) { --hstat-accent: #7C3AED; }
+.hstat-card:nth-child(2) { --hstat-accent: #00E5FF; }
+.hstat-card:nth-child(3) { --hstat-accent: #F87171; }
+.hstat-card:nth-child(4) { --hstat-accent: #FBBF24; }
+
+.hstat-card:hover {
+  transform: translateX(6px);
+  background: rgba(6, 13, 30, 0.50);
+  border-color: rgba(255,255,255,0.14);
+  box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+}
+
+[data-tema="claro"] .hstat-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: -4px 0 20px rgba(245,158,11,0.15);
+}
+
+.hstat-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.hstat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  flex: 1;
+}
+[data-tema="oscuro"] .hstat-num {
+  text-shadow: 0 1px 10px rgba(0,0,0,0.5);
+}
+
+.hstat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #8AA0C0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ══ TOOLS ══ */
+.tools-section {
+  padding: 20px 64px 80px;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.tools-header {
+  margin-bottom: 28px;
+}
+
+.tools-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+.tools-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* ── Tool Card base — Glassmorphism casi transparente ── */
+.tool-card {
+  position: relative;
+  background: rgba(6, 13, 30, 0.28);        /* casi transparente */
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 24px;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.15s ease-out, box-shadow 0.3s, border-color 0.3s, background 0.3s;
+  animation: fadeIn 0.5s ease forwards;
+  
+  /* Grid Layout para tarjetas normales */
+  display: grid;
+  grid-template-columns: 85px 1fr;
+  grid-template-rows: auto auto auto auto;
+  align-items: start;
+}
+
+/* El hub (featured) maneja su propio flex layout interno, así que reseteamos grid */
+.tool-card--featured {
+  display: block;
+}
+
+.tool-card > .tc-glow { grid-column: 1 / -1; grid-row: 1 / -1; }
+.tool-card > .tc-badge { grid-column: 1 / -1; grid-row: 1 / -1; }
+
+.tool-card > .tc-icon {
+  grid-column: 1;
+  grid-row: 1;
+}
+.tool-card > .tc-name {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: left;
+  align-self: center;
+  margin-top: 0;
+  padding-left: 16px;
+  margin-bottom: 20px; /* para compensar el margin-bottom del icono y que la descripcion baje parejo */
+}
+.tool-card > .tc-desc { grid-column: 1 / -1; grid-row: 2; }
+.tool-card > .tc-tags { grid-column: 1 / -1; grid-row: 3; }
+.tool-card > .tc-arrow { grid-column: 1 / -1; grid-row: 4; }
+
+[data-tema="claro"] .tool-card {
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(245, 158, 11, 0.15);
+}
+
+/* Aura Santen Kesshun — escudo triangular sobre cursor */
+.tool-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%),
+      rgba(245, 158, 11, 0.45) 0%,
+      rgba(251, 191, 36, 0.18) 30%,
+      transparent 65%);
+  opacity: 0;
+  transition: opacity 0.35s;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Triángulo Kesshun sutil en hover */
+.tool-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(245,158,11,0.07) 0%, transparent 50%),
+    linear-gradient(225deg, rgba(251,191,36,0.05) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tool-card:hover::after,
+.tool-card:hover::before {
+  opacity: 1;
+}
+
+.tool-card:hover {
+  background: rgba(6, 13, 30, 0.50);         /* un poco más sólido al hover */
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 25px rgba(245,158,11,0.28), 0 0 50px rgba(249,115,22,0.12);
+  z-index: 10;
+}
+
+[data-tema="claro"] .tool-card:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 25px rgba(245,158,11,0.15), 0 0 50px rgba(249,115,22,0.08);
+}
+
+/* Glow de color por módulo */
+.tc-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.4s;
+}
+
+.tool-card:hover .tc-glow {
+  opacity: 1;
+}
+
+.tc-glow--purple {
+  background: radial-gradient(circle at 30% 30%, rgba(122, 61, 255, 0.08) 0%, transparent 60%);
+}
+
+.tc-glow--cyan {
+  background: radial-gradient(circle at 30% 30%, rgba(32, 227, 255, 0.08) 0%, transparent 60%);
+}
+
+.tc-glow--blue {
+  background: radial-gradient(circle at 30% 30%, rgba(63, 140, 255, 0.08) 0%, transparent 60%);
+}
+
+.tc-glow--green {
+  background: radial-gradient(circle at 30% 30%, rgba(0, 208, 132, 0.08) 0%, transparent 60%);
+}
+
+.tc-glow--red {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 90, 106, 0.08) 0%, transparent 60%);
+}
+
+.tc-glow--violet {
+  background: radial-gradient(circle at 30% 30%, rgba(155, 92, 255, 0.08) 0%, transparent 60%);
+}
+
+/* Featured card — ancho completo */
+.tool-card--featured {
+  grid-column: 1 / -1;
+}
+
+.tool-card--featured .tc-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.tool-card--featured .tc-info {
+  flex: 1;
+}
+
+.tool-card--featured .tc-icon {
+  width: 64px;
+  height: 64px;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+/* Card soon */
+.tool-card--soon {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.tool-card--soon:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border-color);
+}
+
+.tool-card--soon:hover::after {
+  opacity: 0;
+}
+
+/* Badge */
+.tc-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(122, 61, 255, 0.12);
+  border: 1px solid rgba(122, 61, 255, 0.25);
+  color: var(--accent-primary);
+  z-index: 5;
+  white-space: nowrap;
+  width: auto;
+  display: inline-block;
+}
+
+.tc-badge--star {
+  color: #FFB020;
+  background: rgba(255, 176, 32, 0.12);
+  border-color: rgba(255, 176, 32, 0.25);
+}
+
+.tc-badge--new {
+  color: #20E3FF;
+  background: rgba(32, 227, 255, 0.12);
+  border-color: rgba(32, 227, 255, 0.25);
+}
+
+.tc-badge--green {
+  color: #00D084;
+  background: rgba(0, 208, 132, 0.12);
+  border-color: rgba(0, 208, 132, 0.25);
+}
+
+.tc-badge--soon {
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Icon */
+.tc-icon {
+  width: 85px;  /* Icono agrandado */
+  height: 85px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  transition: transform 0.25s;
+}
+
+/* El Hub tiene un layout distinto, mantenemos su icono normal o un poco más grande */
+.tool-card--featured .tc-icon {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 0;
+}
+
+.tool-card:hover .tc-icon {
+  transform: scale(1.1) rotate(-3deg) translateZ(30px);
+}
+
+/* Name / Desc / Tags */
+.tc-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+[data-tema="oscuro"] .tc-name {
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+}
+
+.tc-desc {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+[data-tema="oscuro"] .tc-desc {
+  color: #D0D8EC;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.tc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+/* Etiquetas con colores rotativos — cada n-avo tiene su tono */
+.tc-tag {
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.70rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border: 1px solid;
+  /* Color por defecto: cian del logo */
+  color: #00E5FF;
+  background: rgba(0, 200, 255, 0.10);
+  border-color: rgba(0, 200, 255, 0.25);
+}
+
+/* Variantes de colores por posición nth */
+.tc-tag:nth-child(3n+1) {
+  color: #67E8F9;    /* cian claro */
+  background: rgba(103, 232, 249, 0.10);
+  border-color: rgba(103, 232, 249, 0.28);
+}
+.tc-tag:nth-child(3n+2) {
+  color: #A78BFA;    /* violeta suave */
+  background: rgba(167, 139, 250, 0.10);
+  border-color: rgba(167, 139, 250, 0.28);
+}
+.tc-tag:nth-child(3n+3) {
+  color: #FBBF24;    /* dorado */
+  background: rgba(251, 191, 36, 0.10);
+  border-color: rgba(251, 191, 36, 0.28);
+}
+
+/* Modo claro tags — colores más oscuros y legibles */
+[data-tema="claro"] .tc-tag {
+  color: #D97706;
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+[data-tema="claro"] .tc-tag:nth-child(3n+1) {
+  color: #0284C7;
+  background: rgba(14, 165, 233, 0.08);
+  border-color: rgba(14, 165, 233, 0.25);
+}
+[data-tema="claro"] .tc-tag:nth-child(3n+2) {
+  color: #7C3AED;
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.25);
+}
+[data-tema="claro"] .tc-tag:nth-child(3n+3) {
+  color: #D97706;
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.tc-arrow {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  transition: gap 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tc-arrow span {
+  transition: transform 0.2s;
+}
+
+.tool-card:hover .tc-arrow span {
+  transform: translateX(4px);
+}
+
+/* ══ FOOTER ══ */
+.site-footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-brand {
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.footer-sep {
+  opacity: 0.3;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .hero-section {
+    grid-template-columns: 1fr;
+    padding: 60px 32px 40px;
+  }
+
+  .hero-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .hstat-card {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tools-section {
+    padding: 20px 32px 60px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 2.4rem;
+  }
+
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .navbar-links,
+  .status-badge {
+    display: none;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tools-section,
+  .hero-section,
+  .site-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .tool-card--featured .tc-content {
+    flex-direction: column;
+  }
+}
+
+/* ── Sea Horizon (Fondo Animado para Home) ── */
+.wr-sea-scene {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%; /* Ocupa toda la altura del documento */
+  min-height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.wr-shooting-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.wr-shooting-star {
+  position: absolute;
+  height: 2px;
+  border-radius: 100px;
+  transform-origin: right center;
+  animation: wrShootStar linear forwards;
+  opacity: 0;
+}
+@keyframes wrShootStar {
+  0%   { opacity: 0;   transform: translateX(0) translateY(0) rotate(30deg); }
+  6%   { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0;   transform: translateX(var(--tx,10vw)) translateY(var(--ty,60vh)) rotate(30deg); }
+}
+
+.wr-sky-stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 8%  12%, rgba(255,255,255,0.85) 0%, transparent 100%),
+    radial-gradient(1px 1px at 22% 28%, rgba(255,255,255,0.65) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 37% 8%, rgba(200,180,255,0.85) 0%, transparent 100%),
+    radial-gradient(1px 1px at 48% 20%, rgba(255,255,255,0.75) 0%, transparent 100%),
+    radial-gradient(1px 1px at 61% 5%,  rgba(147,197,253,0.85) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 72% 15%, rgba(255,255,255,0.65) 0%, transparent 100%),
+    radial-gradient(1px 1px at 82% 25%, rgba(200,180,255,0.75) 0%, transparent 100%),
+    radial-gradient(1px 1px at 91% 10%, rgba(255,255,255,0.85) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 40%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 38%, rgba(147,197,253,0.55) 0%, transparent 100%),
+    radial-gradient(1px 1px at 78% 45%, rgba(255,255,255,0.45) 0%, transparent 100%);
+  animation: wrStarTwinkle 4s ease-in-out infinite alternate;
+}
+@keyframes wrStarTwinkle {
+  0%   { opacity: 0.55; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.65; }
+}
+
+/* Waves */
+.wr-sea-waves {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 120px;
+  overflow: hidden;
+}
+/* Olas como hilos de energía — La Princesa Tejedora */
+.svg-wave {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 200%;
+  height: 100%;
+  fill: rgba(245, 158, 11, 0.18);
+}
+/* Hilo primario — energía dorada */
+.svg-wave-1 {
+  animation: svgWaveMove 15s linear infinite;
+  fill: rgba(245, 158, 11, 0.38);
+  filter: drop-shadow(0 0 6px rgba(245,158,11,0.4));
+}
+/* Hilo secundario — resplandor ámbar */
+.svg-wave-2 {
+  animation: svgWaveMove 22s linear infinite reverse;
+  fill: rgba(251, 191, 36, 0.22);
+  filter: drop-shadow(0 0 4px rgba(251,191,36,0.3));
+}
+
+@keyframes svgWaveMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Modo claro — hilos de luz anaranjada diurna */
+[data-tema="claro"] .svg-wave-1 {
+  fill: rgba(217,119,6,0.35);
+}
+[data-tema="claro"] .svg-wave-2 {
+  fill: rgba(245,158,11,0.22);
+}
+/* ── Elementos según Tema (Espíritus Rikka vs Cometas Tsubaki) ── */
+/* En modo claro: solo cometas-Tsubaki naranjas, sin espíritus nocturnos */
+[data-tema="claro"] .particle-rikka,
+[data-tema="claro"] .particle-dot,
+[data-tema="claro"] .wr-shooting-star {
+  display: none !important;
+}
+
+/* En modo oscuro: ocultar cometas diurnos */
+[data-tema="oscuro"] .particle-kite {
+  display: none !important;
+}
+
+.particle-kite {
+  position: absolute;
+  pointer-events: none;
+  animation: kiteFloat linear infinite;
+}
+@keyframes kiteFloat {
+  0% { transform: translateX(-20vw) translateY(0) rotate(5deg); }
+  50% { transform: translateX(50vw) translateY(-20px) rotate(-5deg); }
+  100% { transform: translateX(120vw) translateY(10px) rotate(5deg); }
+}
+
+/* ── Sky objects container ── */
+.wr-sky-objects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ── SUN ── */
+.wr-sun {
+  position: absolute;
+  top: 50px; right: 10vw;
+  width: 120px; height: 120px;
+  opacity: 0;            /* hidden by default (dark mode) */
+  transition: opacity 0.8s ease;
+}
+.wr-sun-core {
+  position: absolute;
+  inset: 20px;
+  background: radial-gradient(circle, #fff9c4 0%, #FFD700 50%, #FFA500 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 40px rgba(255,215,0,0.8), 0 0 100px rgba(255,165,0,0.4);
+  animation: wrSunPulse 3s ease-in-out infinite;
+}
+@keyframes wrSunPulse {
+  0%, 100% { transform: scale(1);   box-shadow: 0 0 40px rgba(255,215,0,0.8), 0 0 100px rgba(255,165,0,0.4); }
+  50%       { transform: scale(1.05); box-shadow: 0 0 60px rgba(255,215,0,1),   0 0 140px rgba(255,165,0,0.6); }
+}
+.wr-sun-rays {
+  position: absolute;
+  inset: 0;
+  animation: wrSunRotate 24s linear infinite;
+}
+.wr-sun-rays span {
+  position: absolute;
+  top: 0; left: 50%;
+  width: 6px; height: 60px;
+  margin-left: -3px;
+  background: transparent;
+  transform-origin: bottom center;
+}
+.wr-sun-rays span::before {
+  content: '';
+  position: absolute;
+  top: 4px; left: 0;
+  width: 100%; height: 22px;
+  background: linear-gradient(to top, rgba(255,165,0,0), rgba(255,215,0,0.9));
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(255,215,0,0.5);
+}
+.wr-sun-rays span:nth-child(1) { transform: rotate(0deg); }
+.wr-sun-rays span:nth-child(2) { transform: rotate(45deg); }
+.wr-sun-rays span:nth-child(3) { transform: rotate(90deg); }
+.wr-sun-rays span:nth-child(4) { transform: rotate(135deg); }
+.wr-sun-rays span:nth-child(5) { transform: rotate(180deg); }
+.wr-sun-rays span:nth-child(6) { transform: rotate(225deg); }
+.wr-sun-rays span:nth-child(7) { transform: rotate(270deg); }
+.wr-sun-rays span:nth-child(8) { transform: rotate(315deg); }
+@keyframes wrSunRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── MOON ── */
+.wr-moon {
+  position: absolute;
+  top: 50px; right: 10vw;
+  width: 100px; height: 100px;
+  opacity: 1;            /* visible by default (dark mode) */
+  transition: opacity 0.8s ease;
+  filter: drop-shadow(0 0 20px rgba(232,220,192,0.5)) drop-shadow(0 0 50px rgba(200,180,140,0.25));
+  animation: wrMoonFloat 6s ease-in-out infinite;
+}
+@keyframes wrMoonFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ── CLOUDS ── */
+.wr-cloud {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  animation: wrCloudDrift linear infinite;
+}
+/* Nubes distribuidas a distintas alturas */
+/* Nube 1 — pasa por ENCIMA del sol (zona alta) */
+.wr-cloud-1 { top: 6px;   left: -180px; animation-name: wrCloudDrift;     animation-duration: 48s;  animation-delay: 0s;   transform: scale(1.6); opacity: 0.82; }
+/* Nube 2 — la nube del eclipse: cruza el sol pero muy raramente (~cada 4 min) */
+.wr-cloud-2 { top: 52px;  left: -220px; animation-name: rareEclipseCloud; animation-duration: 260s; animation-delay: -40s; transform: scale(1.8); opacity: 0.92; }
+/* Nube 3 — pasa por DEBAJO del sol */
+.wr-cloud-3 { top: 155px; left: -120px; animation-name: wrCloudDrift;     animation-duration: 36s;  animation-delay: -10s; transform: scale(1.3); opacity: 0.68; }
+
+@keyframes wrCloudDrift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(120vw); }
+}
+
+/* La nube eclipse está fuera de pantalla el 94% del tiempo.
+   Solo cruza durante ~15s cada ~4 minutos. Muy muy raro. */
+@keyframes rareEclipseCloud {
+  0%    { transform: translateX(-300px); opacity: 0; }
+  1%    { opacity: 0.92; }
+  5%    { opacity: 0.92; }
+  5.8%  { transform: translateX(calc(120vw + 300px)); opacity: 0; }
+  5.81% { transform: translateX(-300px); opacity: 0; }
+  100%  { transform: translateX(-300px); opacity: 0; }
+}
+.wr-cloud-puff {
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+}
+/* Light mode — white puffy clouds */
+.wr-cloud-1 .wr-cp-1 { width: 36px; height: 36px; }
+.wr-cloud-1 .wr-cp-2 { width: 50px; height: 46px; margin-left: -10px; }
+.wr-cloud-1 .wr-cp-3 { width: 40px; height: 38px; margin-left: -8px; }
+.wr-cloud-1 .wr-cp-4 { width: 30px; height: 28px; margin-left: -8px; }
+
+.wr-cloud-2 .wr-cp-1 { width: 28px; height: 26px; }
+.wr-cloud-2 .wr-cp-2 { width: 38px; height: 36px; margin-left: -8px; }
+.wr-cloud-2 .wr-cp-3 { width: 28px; height: 24px; margin-left: -6px; }
+
+.wr-cloud-3 .wr-cp-1 { width: 24px; height: 22px; }
+.wr-cloud-3 .wr-cp-2 { width: 32px; height: 30px; margin-left: -6px; }
+.wr-cloud-3 .wr-cp-3 { width: 22px; height: 20px; margin-left: -5px; }
+
+/* Modo oscuro — nubes con tinte dorado sutil (Santen Kesshun) */
+[data-tema="oscuro"] .wr-cloud-puff {
+  background: rgba(245, 200, 120, 0.12);
+}
+/* Modo claro — nubes blancas esponjosas con borde ámbar */
+[data-tema="claro"] .wr-cloud-puff {
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 4px 16px rgba(245,158,11,0.15);
+}
+/* Light mode wave color adjustment */
+[data-tema="claro"] .wr-wave-1 {
+  background: linear-gradient(to bottom, rgba(32,180,255,0.3), rgba(30,120,255,0.4), rgba(20,80,200,0.45));
+}
+[data-tema="claro"] .wr-wave-2 {
+  background: linear-gradient(to bottom, rgba(32,180,255,0.18), rgba(30,120,255,0.28), rgba(20,80,200,0.32));
+}
+[data-tema="claro"] .wr-wave-3 {
+  background: linear-gradient(to bottom, rgba(100,210,255,0.25), rgba(32,180,255,0.30), rgba(30,120,255,0.35));
+}
+
+/* ── Theme Toggle Button (Copied from navbar.css) ── */
+.wr-theme-btn {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  overflow: visible;
+  padding: 0;
+}
+.wr-theme-btn:hover { transform: scale(1.12); }
+.wr-theme-btn:active { transform: scale(0.95); }
+
+.wr-btn-sun {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 0;
+  transform: scale(0.6) rotate(-45deg);
+}
+.wr-btn-sun svg {
+  width: 26px; height: 26px;
+  filter: drop-shadow(0 0 6px rgba(255,215,0,0.8));
+  animation: wrBtnSunSpin 12s linear infinite;
+}
+@keyframes wrBtnSunSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.wr-btn-moon {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+.wr-btn-moon svg {
+  width: 28px; height: 28px;
+  filter: drop-shadow(0 0 8px rgba(220,200,140,0.8)) drop-shadow(0 0 18px rgba(180,160,100,0.4));
+  animation: wrBtnMoonFloat 4s ease-in-out infinite;
+}
+@keyframes wrBtnMoonFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(-2px) rotate(5deg); }
+}
+
+[data-tema="claro"] .wr-btn-sun  { opacity: 1; transform: scale(1)   rotate(0deg); }
+[data-tema="claro"] .wr-btn-moon { opacity: 0; transform: scale(0.5) rotate(90deg); }
+
+[data-tema="oscuro"] .wr-btn-sun  { opacity: 0; transform: scale(0.6) rotate(-45deg); }
+[data-tema="oscuro"] .wr-btn-moon { opacity: 1; transform: scale(1)   rotate(0deg); }
+
+/* ─── Flash de activación Soten Kisshun al cambiar tema ─── */
+@keyframes kisshunFlash {
+  0%   { opacity: 0; transform: scale(0.5); }
+  35%  { opacity: 0.55; transform: scale(1); }
+  100% { opacity: 0; transform: scale(2); }
+}
+.kisshun-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kisshun-flash::after {
+  content: '';
+  width: 200vmax;
+  height: 200vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,191,36,0.55) 0%, rgba(245,158,11,0.25) 35%, transparent 70%);
+  animation: kisshunFlash 0.7s ease-out forwards;
+}
+
+/* ─── Sección ¿Por qué Stella Rikka? ─── */
+.rikka-origin-section {
+  padding: 80px 40px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Resplandor de fondo sutil */
+.rikka-origin-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 0% 50%, rgba(0,180,220,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.rikka-origin-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.rikka-origin-logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rikka-origin-img {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(0,220,255,0.5)) drop-shadow(0 0 50px rgba(41,121,255,0.3));
+  animation: rikkaOriginFloat 5s ease-in-out infinite;
+}
+
+@keyframes rikkaOriginFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(-10px) rotate(5deg); }
+}
+
+.rikka-origin-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+}
+
+.rikka-highlight {
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rikka-origin-desc {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin: 0 0 14px;
+}
+
+.rikka-origin-desc strong { color: var(--text-primary); }
+.rikka-origin-desc em     { color: var(--accent-tertiary); font-style: normal; font-weight: 500; }
+
+/* Insignias de los 6 espíritus */
+.rikka-origin-spirits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.spirit-badge {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: 'Space Grotesk', sans-serif;
+  border: 1px solid rgba(0,220,255,0.3);
+  color: #00E5FF;
+  background: rgba(0,180,220,0.08);
+  letter-spacing: 0.03em;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.spirit-badge:hover {
+  background: rgba(0,180,220,0.18);
+  transform: translateY(-2px);
+}
+
+/* Tsubaki — el único espíritu ofensivo, badge naranja */
+.spirit-badge--tsubaki {
+  border-color: rgba(249,115,22,0.4);
+  color: #FB923C;
+  background: rgba(249,115,22,0.08);
+}
+
+.spirit-badge--tsubaki:hover {
+  background: rgba(249,115,22,0.18);
+}
+
+/* Responsivo */
+@media (max-width: 680px) {
+  .rikka-origin-inner { flex-direction: column; gap: 30px; text-align: center; }
+  .rikka-origin-spirits { justify-content: center; }
+}
+/* Light Mode overrides for Hero badges and buttons */
+[data-tema="claro"] .hero-tag {
+  background: rgba(14, 165, 233, 0.15);
+  border-color: rgba(14, 165, 233, 0.4);
+  color: #0369A1;
+}
+
+[data-tema="claro"] .btn-hero-ghost {
+  background: rgba(14, 165, 233, 0.1);
+  color: #0369A1;
+  border-color: rgba(14, 165, 233, 0.3);
+}
+
+[data-tema="claro"] .btn-hero-ghost:hover {
+  background: rgba(14, 165, 233, 0.2);
+  color: #0C4A6E;
+  border-color: rgba(14, 165, 233, 0.5);
+  box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+}
+
+[data-tema="claro"] .spirit-badge {
+  border-color: rgba(14, 165, 233, 0.4);
+  color: #0369A1;
+  background: rgba(14, 165, 233, 0.12);
+}
+
+[data-tema="claro"] .spirit-badge:hover {
+  background: rgba(14, 165, 233, 0.22);
+}
+
+[data-tema="claro"] .spirit-badge--tsubaki {
+  border-color: rgba(234, 88, 12, 0.4);
+  color: #C2410C;
+  background: rgba(234, 88, 12, 0.12);
+}
+
+[data-tema="claro"] .spirit-badge--tsubaki:hover {
+  background: rgba(234, 88, 12, 0.22);
+}
