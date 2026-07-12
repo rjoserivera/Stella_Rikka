@@ -91,9 +91,6 @@ if not os.path.exists(_uc_file):
     with open(_uc_file, 'w', encoding='utf-8') as _f:
         json.dump([], _f)
 
-# ── Seed Ejemplos y Creación de Faltantes ──
-from backend.seed_examples import seed_all
-seed_all()
 
 # ─────────────────────────────────────────────
 # API — Global Stats
