@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
   <link rel="stylesheet" href="/css/tema.css" />
+  <link rel="stylesheet" href="/css/navbar.css" />
   <link rel="stylesheet" href="/kanban/css/styles.css" />
 
   <!-- SortableJS -->
@@ -20,16 +21,6 @@
       document.documentElement.setAttribute('data-tema', t);
     })();
   </script>
-<link rel="stylesheet" href="/css/navbar.css" />
-</head>
-<body>
-<div class="app-wrapper">
-
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <a href="/kanban/seleccion" class="topbar-back">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      <span>Proyectos</span>
 </head>
 <body>
 <div class="app-wrapper">
@@ -80,11 +71,11 @@
   <div class="canvas-container">
     <div class="kanban-grid" id="kanban-grid">
       
-      <!-- MUST -->
+      <!-- BACKLOG -->
       <div class="kanban-col" data-col="backlog">
         <div class="kanban-col-header">
           <div class="kanban-col-label">
-            <div class="kanban-col-dot" style="background:#ef4444"></div>
+            <div class="kanban-col-dot" style="background:#ffffff"></div>
             <div class="kanban-col-name">Por Hacer (Backlog)</div>
           </div>
           <div class="kanban-col-count" id="count-backlog">0</div>
@@ -93,11 +84,11 @@
         <button class="kanban-add-btn" data-col="backlog">+ Nueva funcionalidad</button>
       </div>
 
-      <!-- SHOULD -->
+      <!-- EN PROGRESO -->
       <div class="kanban-col" data-col="progreso">
         <div class="kanban-col-header">
           <div class="kanban-col-label">
-            <div class="kanban-col-dot" style="background:#f59e0b"></div>
+            <div class="kanban-col-dot" style="background:#ffffff"></div>
             <div class="kanban-col-name">En Progreso</div>
           </div>
           <div class="kanban-col-count" id="count-progreso">0</div>
@@ -106,11 +97,11 @@
         <button class="kanban-add-btn" data-col="progreso">+ Nueva funcionalidad</button>
       </div>
 
-      <!-- COULD -->
+      <!-- EN PRUEBAS -->
       <div class="kanban-col" data-col="pruebas">
         <div class="kanban-col-header">
           <div class="kanban-col-label">
-            <div class="kanban-col-dot" style="background:#3b82f6"></div>
+            <div class="kanban-col-dot" style="background:#ffffff"></div>
             <div class="kanban-col-name">En Pruebas</div>
           </div>
           <div class="kanban-col-count" id="count-pruebas">0</div>
@@ -119,11 +110,11 @@
         <button class="kanban-add-btn" data-col="pruebas">+ Nueva funcionalidad</button>
       </div>
 
-      <!-- WON'T -->
+      <!-- TERMINADO -->
       <div class="kanban-col" data-col="terminado">
         <div class="kanban-col-header">
           <div class="kanban-col-label">
-            <div class="kanban-col-dot" style="background:#10b981"></div>
+            <div class="kanban-col-dot" style="background:#ffffff"></div>
             <div class="kanban-col-name">Terminado</div>
           </div>
           <div class="kanban-col-count" id="count-terminado">0</div>
@@ -165,6 +156,7 @@
     </div>
     
     <div class="resumen-total">Total: <span id="resumen-total">0</span> tareas</div>
+    <div class="resumen-salud" id="resumen-salud"></div>
   </div>
 
 </div>
@@ -240,7 +232,7 @@
   </div>
 </div>
 
-<!-- Modal: Ayuda / Guía de uso -->
+<!-- Modal: Ayuda -->
 <div class="modal-overlay help-modal-overlay" id="modal-ayuda" role="dialog" aria-modal="true" aria-labelledby="ayuda-title">
   <div class="modal-box help-modal-box" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
     <div class="modal-header">
@@ -251,49 +243,31 @@
       <button class="modal-close" id="modal-ayuda-close" aria-label="Cerrar ayuda">✕</button>
     </div>
 
-    <!-- Intro -->
     <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
       El <strong>Tablero Kanban</strong> es una herramienta visual para gestionar el flujo de trabajo. Te permite ver exactamente en qué estado se encuentra cada tarea de tu proyecto, identificar cuellos de botella y maximizar la eficiencia del equipo.
     </p>
 
-    <!-- Explicación de bloques -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
       <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
         <h4 style="color: #ef4444; margin-top: 0; margin-bottom: 8px;">🔴 Por Hacer (Backlog)</h4>
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Lista de todas las tareas pendientes. Es el "almacén" de cosas que aún no han comenzado. Prioriza las tarjetas colocando las más importantes arriba.</p>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Lista de todas las tareas pendientes. Es el "almacén" de cosas que aún no han comenzado.</p>
       </div>
-      
       <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
         <h4 style="color: #f59e0b; margin-top: 0; margin-bottom: 8px;">🟠 En Progreso</h4>
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Tareas que el equipo está desarrollando en este momento. Intenta no saturar esta columna; el foco es clave para terminar rápido.</p>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Tareas que el equipo está desarrollando en este momento.</p>
       </div>
-
       <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
         <h4 style="color: #3b82f6; margin-top: 0; margin-bottom: 8px;">🔵 En Pruebas</h4>
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">El desarrollo terminó, pero se está verificando que cumpla con la calidad esperada (QA) antes de darlo por finalizado.</p>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">El desarrollo terminó, pero se está verificando la calidad (QA) antes de darlo por finalizado.</p>
       </div>
-
       <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
         <h4 style="color: #10b981; margin-top: 0; margin-bottom: 8px;">🟢 Terminado</h4>
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Tareas finalizadas con éxito y listas para producción. ¡Es la métrica principal del avance de tu proyecto!</p>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Tareas finalizadas con éxito y listas para producción.</p>
       </div>
-    </div>
-
-    <!-- Guía rápida de uso de la app -->
-    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-      <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 1rem; color: var(--text-primary);">🖱️ Cómo usar esta aplicación</h3>
-      <ul style="color: var(--text-secondary); font-size: 0.85rem; padding-left: 20px; margin: 0; display: flex; flex-direction: column; gap: 8px;">
-        <li>Usa el botón <strong>"+"</strong> debajo de una columna o el botón <strong>"+"</strong> inferior derecho para crear tareas nuevas.</li>
-        <li><strong>Arrastra y suelta (Drag & Drop)</strong> las tarjetas entre las columnas para avanzar su estado de desarrollo.</li>
-        <li>Haz clic sobre cualquier tarjeta para <strong>editar su contenido</strong>, cambiar el tipo (Feature, Bug) o la prioridad.</li>
-        <li>Abre el <strong>"📊 Resumen"</strong> en la barra superior para ver de forma gráfica cómo se distribuye la carga de trabajo.</li>
-      </ul>
     </div>
 
     <div class="modal-actions" style="margin-top:24px;">
-      <button class="btn btn-primary" id="btn-ayuda-cerrar">
-        ¡Entendido! 🚀
-      </button>
+      <button class="btn btn-primary" id="btn-ayuda-cerrar">¡Entendido! 🚀</button>
     </div>
   </div>
 </div>
@@ -307,4 +281,3 @@
 <script src="/js/navbar.js"></script>
 </body>
 </html>
-

@@ -8,7 +8,7 @@ from backend.config import DATA_DIR_BASE
 DATA_DIR = os.path.join(DATA_DIR_BASE, 'kanban')
 ITEMS_FILE = os.path.join(DATA_DIR, 'tareas.json')
 
-COLUMNAS_VALIDAS   = ['backlog', 'should', 'could', 'wont']
+COLUMNAS_VALIDAS   = ['backlog', 'progreso', 'pruebas', 'terminado']
 PRIORIDADES_VALIDAS = ['alta', 'media', 'baja']
 ESFUERZOS_VALIDOS  = ['bajo', 'medio', 'alto']
 TIPOS_VALIDOS      = ['feature', 'bug', 'tecnico', 'ux']
