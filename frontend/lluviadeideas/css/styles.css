@@ -1,0 +1,526 @@
+/* ════════════════════════════════════════════
+   styles.css — Lienzo Infinito Lluvia de Ideas
+   ════════════════════════════════════════════ */
+
+body {
+  margin: 0;
+  background-color: var(--bg-secondary);
+}
+
+/* ── TOOLBAR LATERAL IZQUERDA ── */
+.toolbar-left {
+  position: absolute;
+  top: 76px;
+  left: 20px;
+  z-index: 900;
+  width: 220px;
+  background: rgba(13, 17, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+[data-tema="claro"] .toolbar-left {
+  background: rgba(255, 251, 242, 0.95);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.tool-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+}
+
+.tool-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  font-size: 1.2rem;
+}
+
+.tool-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+[data-tema="claro"] .tool-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.tool-btn.active {
+  background: #6366f1;
+  color: white;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+}
+
+.divider-h {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 4px 0;
+}
+
+[data-tema="claro"] .divider-h {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.btn-danger-icon:hover {
+  background: #ef4444;
+  color: white;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+}
+
+.color-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.color-picker-wrapper input[type="color"] {
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+}
+
+/* ── PAN CONTAINER & NATIVE ELEMENTS ── */
+#canvas-wrapper {
+  position: relative;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  cursor: grab;
+}
+
+[data-tema="claro"] #canvas-wrapper {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+}
+
+#canvas-wrapper:active {
+  cursor: grabbing;
+}
+
+#pan-container,
+#connections-svg,
+#nodes-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#nodes-container {
+  pointer-events: none;
+}
+
+#pan-container {
+  transform-origin: 0 0;
+}
+
+#connections-svg {
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* ── ESTILOS DE NODOS ── */
+.canvas-node {
+  position: absolute;
+  cursor: grab;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.canvas-node.selected {
+  z-index: 50;
+}
+
+.canvas-node.highlighted-adjacent {
+  z-index: 49;
+}
+
+.canvas-node.selected>.node-content {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8), 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-tema="claro"] .canvas-node.selected>.node-content {
+  box-shadow: 0 0 0 4px #111, 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.canvas-node.highlighted-adjacent>.node-content {
+  box-shadow: 0 0 0 3px #fca311, 0 4px 15px rgba(252, 163, 17, 0.4);
+}
+
+.canvas-node:active {
+  cursor: grabbing;
+}
+
+/* RE-SIZE (permitiendo al usuario alterar libremente el tamano de la envoltura) */
+/* El Resize se hará mediante las texturas/cajas internas, o CSS nativo resize en el content principal. */
+.node-content {
+  position: relative;
+  overflow: hidden;
+  /* For container box sizing inside node */
+}
+
+/* TIPO: Pildora */
+.node-content-pildora {
+  width: 400px;
+  min-height: 80px;
+  border-radius: 16px;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 5px;
+  resize: both;
+  /* AQUI AGRANDAR/ACHICAR CUALQUIER NODO */
+}
+
+.node-content-pildora textarea {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  background: transparent;
+  color: inherit;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  resize: none;
+  overflow: hidden;
+  padding-top: 15px;
+  /* centering approx */
+}
+
+/* TIPO: Ronda */
+.node-content-ronda {
+  width: 400px;
+  min-height: 180px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  resize: both;
+  /* AQUI AGRANDAR/ACHICAR */
+}
+
+[data-tema="claro"] .node-content-ronda {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.ronda-header {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-left: 2px;
+}
+
+.ronda-grid {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.ronda-item {
+  flex: 1;
+  border-radius: 8px;
+  border: 2px solid;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ronda-item textarea {
+  flex: 1;
+  width: 100%;
+  height: auto;
+  background: transparent;
+  color: var(--text-primary);
+  border: none;
+  resize: none;
+  outline: none;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+/* TIPO: Idea individual (Post-it) */
+.node-content-idea {
+  width: 200px;
+  min-height: 200px;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 2px solid;
+  display: flex;
+  resize: both;
+  /* AQUI AGRANDAR/ACHICAR */
+}
+
+.node-content-idea textarea {
+  width: 100%;
+  flex: 1;
+  background: transparent;
+  color: var(--text-primary);
+  border: none;
+  resize: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+/* ── Puertos ── */
+.port {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border: 3px solid #6366f1;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.canvas-node:hover .port,
+.canvas-node.selected .port,
+.canvas-node.highlighted-adjacent .port {
+  opacity: 1;
+}
+
+.port:hover {
+  transform: scale(1.6);
+  background-color: #fca311;
+  border-color: white;
+}
+
+.port-t-l {
+  top: -6px;
+  left: 0%;
+  transform: translateX(-50%);
+}
+
+.port-t-c {
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.port-t-r {
+  top: -6px;
+  left: 100%;
+  transform: translateX(-50%);
+}
+
+.port-b-l {
+  bottom: -6px;
+  left: 0%;
+  transform: translateX(-50%);
+}
+
+.port-b-c {
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.port-b-r {
+  bottom: -6px;
+  left: 100%;
+  transform: translateX(-50%);
+}
+
+.port-l-t {
+  top: 25%;
+  left: -6px;
+  transform: translateY(-50%);
+}
+
+.port-l-c {
+  top: 50%;
+  left: -6px;
+  transform: translateY(-50%);
+}
+
+.port-l-b {
+  top: 75%;
+  left: -6px;
+  transform: translateY(-50%);
+}
+
+.port-r-t {
+  top: 25%;
+  right: -6px;
+  transform: translateY(-50%);
+}
+
+.port-r-c {
+  top: 50%;
+  right: -6px;
+  transform: translateY(-50%);
+}
+
+.port-r-b {
+  top: 75%;
+  right: -6px;
+  transform: translateY(-50%);
+}
+
+/* ── Rutas y Zoom ── */
+path.connection-line {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 4;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: stroke 0.2s, stroke-width 0.2s;
+}
+
+[data-tema="claro"] path.connection-line {
+  stroke: rgba(0, 0, 0, 0.4);
+}
+
+path.connection-line:hover {
+  stroke: #818cf8;
+  stroke-width: 6;
+}
+
+path.connection-line.highlight {
+  stroke: #fca311;
+  stroke-width: 6;
+  marker-end: url(#arrowhead-highlight);
+  z-index: 999;
+}
+
+.zoom-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(13, 17, 30, 0.85);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  padding: 4px;
+  z-index: 900;
+}
+
+[data-tema="claro"] .zoom-controls {
+  background: rgba(255, 251, 242, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.zoom-controls button {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.zoom-controls button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-tema="claro"] .zoom-controls button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+#zoom-level {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  width: 45px;
+  text-align: center;
+}
+
+/* ── MODAL AYUDA ── */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.visible {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-box {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-tema="claro"] .modal-box {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

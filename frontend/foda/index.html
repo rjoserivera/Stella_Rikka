@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Análisis FODA — Stella Rikka</title>
+    <link rel="stylesheet" href="/css/tema.css" />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/foda/css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        (function () {
+            const t = localStorage.getItem('suite_tema') || 'oscuro';
+            document.documentElement.setAttribute('data-tema', t);
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- ── NAVBAR OFICIAL ── -->
+    <header class="navbar" style="position:relative; z-index:1000; width:100%; top:0; height: 56px;">
+        <a href="/" class="navbar-brand">
+            <img src="/assets/stella_rikka_logo.png" alt="Stella Rikka" class="brand-logo"
+                onerror="this.style.display='none'" />
+            <span class="brand-name">Stella<span class="brand-accent">Rikka</span></span>
+        </a>
+
+        <nav class="navbar-links" style="margin-left: 20px;">
+            <a href="/foda/seleccion" class="nav-link" style="color:var(--accent-primary) !important;">← Menú FODA</a>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 10px;"></div>
+            <a href="/" class="nav-link">Inicio</a>
+            <a href="/#tools" class="nav-link">Módulos</a>
+            <a href="/#stats" class="nav-link">Métricas</a>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 10px;"></div>
+            <span style="color:var(--text-muted);font-weight:500;margin-left:10px;" id="board-titulo">Cargando...</span>
+        </nav>
+
+        <div class="navbar-actions" style="display: flex; align-items: center; gap: 15px;">
+            <button class="btn btn-warning" id="btn-ayuda" style="padding:6px 12px;font-size:0.85rem;" title="Guía de Uso">
+                💡 Ayuda
+            </button>
+            <button class="btn btn-primary" id="btn-guardar" style="padding:6px 12px;font-size:0.85rem;" title="Guardar Matriz como archivo">
+                💾 Guardar como...
+            </button>
+            <button class="btn btn-primary" id="btn-export" style="padding:6px 12px;font-size:0.85rem;"
+                title="Descargar como Imagen PNG">
+                🖼️ Exportar PNG
+            </button>
+
+            <!-- Luna (Modo Oscuro/Claro Oficial) -->
+            <button class="wr-theme-btn" id="toggle-tema" aria-label="Cambiar tema">
+                <div class="wr-btn-sun"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="9" fill="#FFD700" />
+                        <g stroke="#FFD700" stroke-width="2.5" stroke-linecap="round">
+                            <line x1="20" y1="3" x2="20" y2="7" />
+                            <line x1="20" y1="33" x2="20" y2="37" />
+                            <line x1="3" y1="20" x2="7" y2="20" />
+                            <line x1="33" y1="20" x2="37" y2="20" />
+                            <line x1="8" y1="8" x2="11" y2="11" />
+                            <line x1="29" y1="29" x2="32" y2="32" />
+                            <line x1="8" y1="32" x2="11" y2="29" />
+                            <line x1="29" y1="11" x2="32" y2="8" />
+                        </g>
+                    </svg></div>
+                <div class="wr-btn-moon"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="moonGrad" cx="40%" cy="35%" r="60%">
+                                <stop offset="0%" stop-color="#f8f4e8" />
+                                <stop offset="70%" stop-color="#e8dfc0" />
+                                <stop offset="100%" stop-color="#c4b38a" />
+                            </radialGradient>
+                        </defs>
+                        <circle cx="20" cy="20" r="14" fill="url(#moonGrad)" />
+                        <circle cx="16" cy="18" r="2" fill="rgba(180,160,110,0.35)" />
+                        <circle cx="25" cy="23" r="2.5" fill="rgba(180,160,110,0.3)" />
+                        <circle cx="19" cy="26" r="1.5" fill="rgba(180,160,110,0.25)" />
+                    </svg></div>
+            </button>
+        </div>
+    </header>
+
+    <!-- ── CONTENEDOR PRINCIPAL ── -->
+    <div class="foda-container">
+        
+        <!-- Header de Acciones -->
+        <div class="foda-header">
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                <h2>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-primary);"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    Análisis FODA
+                </h2>
+                
+                <!-- Toggle Vistas -->
+                <div class="view-toggle">
+                    <button class="view-btn active" id="btn-view-grid" title="Vista Matriz 2x2">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        Matriz
+                    </button>
+                    <button class="view-btn" id="btn-view-table" title="Vista Tabla Listado">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                        Tabla
+                    </button>
+                </div>
+            </div>
+
+            <div style="display:flex; gap: 10px;">
+                <input type="text" id="search-input" class="search-input" placeholder="🔍 Buscar ítem..." />
+                <button class="btn-add-item" id="btn-add-foda">
+                    + Nuevo Ítem
+                </button>
+            </div>
+        </div>
+
+        <!-- ── VISTA MATRIZ (2x2) ── -->
+        <div class="foda-matrix" id="view-grid">
+            
+            <!-- Fortalezas -->
+            <div class="cuadrante cuadrante-f">
+                <div class="cuadrante-header">
+                    <div class="cuadrante-title">
+                        <span class="icon">💪</span> Fortalezas <span class="badge" id="count-f">0</span>
+                    </div>
+                    <div class="cuadrante-subtitle">Interno · Positivo</div>
+                </div>
+                <div class="cuadrante-body" id="list-fortalezas"></div>
+            </div>
+
+            <!-- Debilidades -->
+            <div class="cuadrante cuadrante-d">
+                <div class="cuadrante-header">
+                    <div class="cuadrante-title">
+                        <span class="icon">⚠️</span> Debilidades <span class="badge" id="count-d">0</span>
+                    </div>
+                    <div class="cuadrante-subtitle">Interno · Negativo</div>
+                </div>
+                <div class="cuadrante-body" id="list-debilidades"></div>
+            </div>
+
+            <!-- Oportunidades -->
+            <div class="cuadrante cuadrante-o">
+                <div class="cuadrante-header">
+                    <div class="cuadrante-title">
+                        <span class="icon">🌟</span> Oportunidades <span class="badge" id="count-o">0</span>
+                    </div>
+                    <div class="cuadrante-subtitle">Externo · Positivo</div>
+                </div>
+                <div class="cuadrante-body" id="list-oportunidades"></div>
+            </div>
+
+            <!-- Amenazas -->
+            <div class="cuadrante cuadrante-a">
+                <div class="cuadrante-header">
+                    <div class="cuadrante-title">
+                        <span class="icon">🔥</span> Amenazas <span class="badge" id="count-a">0</span>
+                    </div>
+                    <div class="cuadrante-subtitle">Externo · Negativo</div>
+                </div>
+                <div class="cuadrante-body" id="list-amenazas"></div>
+            </div>
+
+        </div>
+
+        <!-- ── VISTA TABLA ── -->
+        <div class="foda-table-view hidden" id="view-table">
+            <div class="table-responsive">
+                <table class="stella-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%">Cuadrante</th>
+                            <th style="width: 45%">Descripción</th>
+                            <th style="width: 15%">Prioridad</th>
+                            <th style="width: 15%">Responsable</th>
+                            <th style="width: 10%">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-foda">
+                        <!-- Renderizado por JS -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="table-empty-state" class="hidden" style="text-align:center; padding: 3rem; color:var(--text-muted);">
+                <div style="font-size:2rem; margin-bottom:10px;">📭</div>
+                No hay ítems registrados aún.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── MODAL AGREGAR / EDITAR ÍTEM ── -->
+    <div class="modal-overlay" id="modal-item">
+        <div class="modal-box" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-item-title">Nuevo Ítem FODA</h3>
+                <button class="btn-close" id="btn-close-modal">✖</button>
+            </div>
+            <form id="form-item">
+                <div class="modal-body">
+                    
+                    <div class="form-group">
+                        <label class="form-label">Cuadrante</label>
+                        <select id="select-cuadrante" class="input" required>
+                            <option value="fortalezas">💪 Fortalezas (Interno/Positivo)</option>
+                            <option value="oportunidades">🌟 Oportunidades (Externo/Positivo)</option>
+                            <option value="debilidades">⚠️ Debilidades (Interno/Negativo)</option>
+                            <option value="amenazas">🔥 Amenazas (Externo/Negativo)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Descripción</label>
+                        <textarea id="input-texto" class="input" rows="3" required placeholder="Ej: Equipo altamente motivado..."></textarea>
+                    </div>
+
+                    <div class="form-row" style="display:flex; gap:15px;">
+                        <div class="form-group" style="flex:1;">
+                            <label class="form-label">Prioridad / Impacto</label>
+                            <select id="select-prioridad" class="input">
+                                <option value="alta">Alta</option>
+                                <option value="media" selected>Media</option>
+                                <option value="baja">Baja</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label class="form-label">Responsable (Opc.)</label>
+                            <input type="text" id="input-responsable" class="input" placeholder="Nombre..." />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" id="btn-cancel-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-modal">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── MODAL AYUDA ── -->
+    <div class="modal-overlay" id="modal-ayuda" role="dialog" aria-modal="true">
+        <div class="modal-box" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 class="modal-title">💡 Guía de Uso: Análisis FODA</h3>
+                <button class="btn-close" id="btn-cerrar-ayuda">✖</button>
+            </div>
+            <div class="modal-body" style="max-height:65vh; overflow-y:auto; line-height: 1.5; color: var(--text-secondary);">
+                <p>El <strong>Análisis FODA</strong> es una herramienta estratégica para evaluar el estado actual de tu proyecto o empresa, dividiendo los factores en internos y externos, positivos y negativos.</p>
+                <div style="display:flex; gap:15px; margin-top: 15px; background: var(--surface-2); padding: 15px; border-radius: 8px;">
+                    <div style="font-size:1.5rem;">💪</div>
+                    <div>
+                        <strong style="color:var(--accent-success); display:block;">Fortalezas (Interno / Positivo)</strong>
+                        Atributos o recursos internos que te dan una ventaja competitiva. ¿Qué hacés mejor que los demás?
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px; margin-top: 10px; background: var(--surface-2); padding: 15px; border-radius: 8px;">
+                    <div style="font-size:1.5rem;">🌟</div>
+                    <div>
+                        <strong style="color:var(--accent-primary); display:block;">Oportunidades (Externo / Positivo)</strong>
+                        Factores externos que podés aprovechar a tu favor (tendencias de mercado, cambios tecnológicos, etc.).
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px; margin-top: 10px; background: var(--surface-2); padding: 15px; border-radius: 8px;">
+                    <div style="font-size:1.5rem;">⚠️</div>
+                    <div>
+                        <strong style="color:var(--accent-warning); display:block;">Debilidades (Interno / Negativo)</strong>
+                        Aspectos internos que te ponen en desventaja o que debés mejorar urgentemente.
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px; margin-top: 10px; background: var(--surface-2); padding: 15px; border-radius: 8px;">
+                    <div style="font-size:1.5rem;">🔥</div>
+                    <div>
+                        <strong style="color:var(--accent-danger); display:block;">Amenazas (Externo / Negativo)</strong>
+                        Riesgos externos fuera de tu control que podrían afectar negativamente tu proyecto.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="document.getElementById('modal-ayuda').classList.remove('visible')">¡Entendido!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-container" role="alert" aria-live="polite"></div>
+
+    <script src="/js/tema.js"></script>
+    <script src="/foda/js/foda.js"></script>
+</body>
+
+</html>

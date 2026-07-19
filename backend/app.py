@@ -5,8 +5,10 @@ import sys
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
-# Asegurar que los módulos del backend sean encontrables
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Asegurar que los módulos del backend y de raíz sean encontrables
+backend_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, backend_dir)
+sys.path.insert(0, os.path.dirname(backend_dir))
 
 from herramientas.eisenhower import proyectos as mod_proyectos
 from herramientas.eisenhower import tareas as mod_tareas
@@ -21,6 +23,17 @@ from herramientas.kanban import tareas as mod_kanban_tareas
 from herramientas.diagramas import proyectos as mod_diagramas_proyectos
 from herramientas.dbdiagrams import proyectos as mod_dbdiagramas_proyectos
 from herramientas.casosdeuso import proyectos as mod_casos_proyectos
+
+from herramientas.lluviadeideas import sesiones as mod_li_sesiones
+from herramientas.lluviadeideas import fusion as mod_li_fusion
+from herramientas.requerimientos import requerimientos as mod_req_reqs
+from herramientas.requerimientos import trazabilidad as mod_req_trazabilidad
+from herramientas.requerimientos import historial as mod_req_historial
+from herramientas.requerimientos import proyectos as mod_req_proyectos
+from herramientas.historias import proyectos as mod_hu_proyectos
+from herramientas.historias import historias as mod_hu_historias
+from herramientas.foda import proyectos as mod_foda_proyectos
+from herramientas.foda import items as mod_foda_items
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(BASE_DIR, '..', 'frontend')
@@ -91,6 +104,30 @@ if not os.path.exists(_uc_file):
     with open(_uc_file, 'w', encoding='utf-8') as _f:
         json.dump([], _f)
 
+# ── Inicializar datos Lluvia de Ideas si no existen ──
+_li_data = os.path.join(DATA_DIR, 'lluviadeideas')
+os.makedirs(_li_data, exist_ok=True)
+if not os.path.exists(os.path.join(_li_data, 'sesiones.json')):
+    with open(os.path.join(_li_data, 'sesiones.json'), 'w', encoding='utf-8') as _f:
+        json.dump([], _f)
+
+# ── Inicializar datos Requerimientos si no existen ──
+_req_data = os.path.join(DATA_DIR, 'requerimientos')
+os.makedirs(_req_data, exist_ok=True)
+for _fname in ['requerimientos.json', 'historial.json']:
+    _fpath = os.path.join(_req_data, _fname)
+    if not os.path.exists(_fpath):
+        with open(_fpath, 'w', encoding='utf-8') as _f:
+            json.dump([], _f)
+
+# ── Inicializar datos FODA si no existen ──
+_foda_data = os.path.join(DATA_DIR, 'foda')
+os.makedirs(_foda_data, exist_ok=True)
+for _fname in ['proyectos.json', 'items.json']:
+    _fpath = os.path.join(_foda_data, _fname)
+    if not os.path.exists(_fpath):
+        with open(_fpath, 'w', encoding='utf-8') as _f:
+            json.dump([], _f)
 
 # ─────────────────────────────────────────────
 # API — Global Stats
@@ -136,6 +173,29 @@ def global_stats():
 @app.route('/')
 def home():
     return send_from_directory(FRONTEND_DIR, 'home.html')
+
+# ─────────────────────────────────────────────
+# Frontend — FODA
+# ─────────────────────────────────────────────
+@app.route('/foda/seleccion')
+def foda_seleccion():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'foda'), 'seleccion.html')
+
+@app.route('/foda/matriz')
+def foda_matriz():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'foda'), 'index.html')
+
+@app.route('/foda/css/<path:filename>')
+def css_foda(filename):
+    resp = send_from_directory(os.path.join(FRONTEND_DIR, 'foda', 'css'), filename)
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    return resp
+
+@app.route('/foda/js/<path:filename>')
+def js_foda(filename):
+    resp = send_from_directory(os.path.join(FRONTEND_DIR, 'foda', 'js'), filename)
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    return resp
 
 @app.route('/eisenhower/seleccion')
 def seleccion():
@@ -1258,6 +1318,253 @@ def uc_importar_proyecto():
 
 
 # ─────────────────────────────────────────────
+# Lluvia de Ideas
+# ─────────────────────────────────────────────
+@app.route('/lluviadeideas/seleccion')
+def lluviadeideas_seleccion():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'lluviadeideas'), 'seleccion.html')
+
+@app.route('/lluviadeideas/lienzo')
+def lluviadeideas_lienzo():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'lluviadeideas'), 'index.html')
+
+@app.route('/lluviadeideas')
+def lluviadeideas_root():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'lluviadeideas'), 'seleccion.html')
+
+@app.route('/lluviadeideas/css/<path:filename>')
+def css_lluviadeideas(filename):
+    resp = send_from_directory(os.path.join(FRONTEND_DIR, 'lluviadeideas', 'css'), filename)
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
+
+@app.route('/lluviadeideas/js/<path:filename>')
+def js_lluviadeideas(filename):
+    resp = send_from_directory(os.path.join(FRONTEND_DIR, 'lluviadeideas', 'js'), filename)
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
+
+@app.route('/api/lluviadeideas/sesiones', methods=['GET'])
+def api_li_get_sesiones():
+    return jsonify(mod_li_sesiones.listar_sesiones())
+
+@app.route('/api/lluviadeideas/sesiones', methods=['POST'])
+def api_li_post_sesiones():
+    return jsonify(mod_li_sesiones.crear_sesion(request.json.get('titulo', 'Nueva sesión'))), 201
+
+@app.route('/api/lluviadeideas/sesiones/<sid>', methods=['GET'])
+def api_li_get_sesion(sid):
+    s = mod_li_sesiones.obtener_sesion(sid)
+    if not s: return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(s)
+
+@app.route('/api/lluviadeideas/sesiones/<sid>', methods=['PUT'])
+def api_li_put_sesion(sid):
+    s = mod_li_sesiones.actualizar_sesion(sid, request.json)
+    if not s: return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(s)
+
+@app.route('/api/lluviadeideas/sesiones/<sid>', methods=['DELETE'])
+def api_li_delete_sesion(sid):
+    if mod_li_sesiones.eliminar_sesion(sid):
+        return jsonify({'mensaje': 'Eliminado'})
+    return jsonify({'error': 'No encontrado'}), 404
+
+@app.route('/api/lluviadeideas/sesiones/<sid>/fusionar', methods=['POST'])
+def api_li_fusionar(sid):
+    data = request.json
+    nuevo = mod_li_fusion.fusionar_nodos(sid, data.get('ids_nodos', []), data.get('nuevo_texto', 'Idea superadora'), data.get('categoria', 'producto'))
+    if not nuevo: return jsonify({'error': 'Error en fusión'}), 400
+    return jsonify(nuevo), 200
+
+# ─────────────────────────────────────────────
+# Toma de Requerimientos
+# ─────────────────────────────────────────────
+@app.route('/requerimientos/seleccion')
+def requerimientos_seleccion():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'requerimientos'), 'seleccion.html')
+
+@app.route('/requerimientos/listado')
+def requerimientos_listado():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'requerimientos'), 'index.html')
+
+@app.route('/requerimientos/trazabilidad')
+def requerimientos_trazabilidad():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'requerimientos'), 'trazabilidad.html')
+
+@app.route('/requerimientos')
+def requerimientos_root():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'requerimientos'), 'seleccion.html')
+
+@app.route('/requerimientos/css/<path:filename>')
+def css_requerimientos(filename):
+    resp = send_from_directory(os.path.join(FRONTEND_DIR, 'requerimientos', 'css'), filename)
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
+
+@app.route('/requerimientos/js/<path:filename>')
+def js_requerimientos(filename):
+    resp = send_from_directory(os.path.join(FRONTEND_DIR, 'requerimientos', 'js'), filename)
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
+
+@app.route('/api/requerimientos/proyectos', methods=['GET'])
+def api_req_get_proyectos():
+    return jsonify(mod_req_proyectos.listar_proyectos())
+
+@app.route('/api/requerimientos/proyectos', methods=['POST'])
+def api_req_post_proyectos():
+    return jsonify(mod_req_proyectos.crear_proyecto(request.json.get('titulo', 'Nuevo Archivo'), request.json.get('descripcion', ''))), 201
+
+@app.route('/api/requerimientos/proyectos/<pid>', methods=['GET'])
+def api_req_get_proyecto(pid):
+    p = mod_req_proyectos.obtener_proyecto(pid)
+    if not p: return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(p)
+
+@app.route('/api/requerimientos/proyectos/<pid>', methods=['DELETE'])
+def api_req_delete_proyecto(pid):
+    if mod_req_proyectos.eliminar_proyecto(pid):
+        return jsonify({'mensaje': 'Eliminado'})
+    return jsonify({'error': 'No encontrado'}), 404
+
+@app.route('/api/requerimientos', methods=['GET'])
+def api_req_get():
+    pid = request.args.get('pid')
+    return jsonify(mod_req_reqs.listar_requerimientos(pid))
+
+@app.route('/api/requerimientos', methods=['POST'])
+def api_req_post():
+    data = request.json
+    nuevo = mod_req_reqs.crear_requerimiento(
+        data['titulo'], data['descripcion'],
+        data.get('tipo', 'funcional'), data.get('prioridad', 'media'),
+        data.get('estado', 'borrador'), data.get('origen', ''),
+        data.get('criterios_aceptacion', []),
+        data.get('proyecto_id')
+    )
+    mod_req_historial.registrar(nuevo['id'], 'creacion', 'Requerimiento creado')
+    return jsonify(nuevo), 201
+
+@app.route('/api/requerimientos/<req_id>', methods=['GET'])
+def api_req_get_one(req_id):
+    r = mod_req_reqs.obtener_requerimiento(req_id)
+    if not r: return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(r)
+
+@app.route('/api/requerimientos/<req_id>', methods=['PUT'])
+def api_req_put(req_id):
+    anterior = mod_req_reqs.obtener_requerimiento(req_id)
+    r = mod_req_reqs.actualizar_requerimiento(req_id, request.json)
+    if not r: return jsonify({'error': 'No encontrado'}), 404
+    if anterior and anterior.get('estado') != r.get('estado'):
+        mod_req_historial.registrar(req_id, 'cambio_estado', f"Estado cambió de {anterior.get('estado')} a {r.get('estado')}")
+    else:
+        mod_req_historial.registrar(req_id, 'actualizacion', 'Requerimiento actualizado')
+    return jsonify(r)
+
+@app.route('/api/requerimientos/<req_id>', methods=['DELETE'])
+def api_req_delete(req_id):
+    if mod_req_reqs.eliminar_requerimiento(req_id):
+        return jsonify({'mensaje': 'Eliminado'})
+    return jsonify({'error': 'No encontrado'}), 404
+
+@app.route('/api/requerimientos/<req_id>/comentarios', methods=['POST'])
+def api_req_post_comentario(req_id):
+    r = mod_req_reqs.agregar_comentario(req_id, request.json.get('texto'))
+    if not r: return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(r), 201
+
+@app.route('/api/requerimientos/<req_id>/historial', methods=['GET'])
+def api_req_get_historial(req_id):
+    return jsonify(mod_req_historial.listar_historial(req_id))
+
+@app.route('/api/requerimientos_trazabilidad', methods=['GET'])
+def api_req_trazabilidad():
+    return jsonify(mod_req_trazabilidad.generar_matriz_trazabilidad())
+
+# ─────────────────────────────────────────────
+# Rutas HTML — Historias de Usuario
+# ─────────────────────────────────────────────
+@app.route('/historias')
+@app.route('/historias/')
+def html_historias_index():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'historias'), 'index.html')
+
+@app.route('/historias/seleccion')
+@app.route('/historias/seleccion.html')
+def html_historias_seleccion():
+    return send_from_directory(os.path.join(FRONTEND_DIR, 'historias'), 'seleccion.html')
+
+@app.route('/historias/css/<path:filename>')
+def css_historias(filename):
+    resp = send_from_directory(os.path.join(FRONTEND_DIR, 'historias', 'css'), filename)
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
+
+@app.route('/historias/js/<path:filename>')
+def js_historias(filename):
+    resp = send_from_directory(os.path.join(FRONTEND_DIR, 'historias', 'js'), filename)
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
+
+# ─────────────────────────────────────────────
+# API — Historias de Usuario
+# ─────────────────────────────────────────────
+@app.route('/api/historias/proyectos', methods=['GET'])
+def api_hu_get_proyectos():
+    return jsonify(mod_hu_proyectos.listar_proyectos())
+
+@app.route('/api/historias/proyectos', methods=['POST'])
+def api_hu_post_proyectos():
+    data = request.json
+    return jsonify(mod_hu_proyectos.crear_proyecto(
+        data.get('titulo', 'Nuevo Proyecto'),
+        data.get('descripcion', '')
+    )), 201
+
+@app.route('/api/historias/proyectos/<pid>', methods=['GET'])
+def api_hu_get_proyecto(pid):
+    p = mod_hu_proyectos.obtener_proyecto(pid)
+    if not p: return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(p)
+
+@app.route('/api/historias/proyectos/<pid>', methods=['DELETE'])
+def api_hu_delete_proyecto(pid):
+    if mod_hu_proyectos.eliminar_proyecto(pid):
+        return jsonify({'mensaje': 'Eliminado'})
+    return jsonify({'error': 'No encontrado'}), 404
+
+@app.route('/api/historias', methods=['GET'])
+def api_hu_get():
+    pid = request.args.get('pid')
+    return jsonify(mod_hu_historias.listar_historias(pid))
+
+@app.route('/api/historias', methods=['POST'])
+def api_hu_post():
+    data = request.json
+    nueva = mod_hu_historias.crear_historia(data.get('proyecto_id'), data)
+    return jsonify(nueva), 201
+
+@app.route('/api/historias/<hid>', methods=['GET'])
+def api_hu_get_one(hid):
+    h = mod_hu_historias.obtener_historia(hid)
+    if not h: return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(h)
+
+@app.route('/api/historias/<hid>', methods=['PUT'])
+def api_hu_put(hid):
+    h = mod_hu_historias.actualizar_historia(hid, request.json)
+    if not h: return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(h)
+
+@app.route('/api/historias/<hid>', methods=['DELETE'])
+def api_hu_delete(hid):
+    if mod_hu_historias.eliminar_historia(hid):
+        return jsonify({'mensaje': 'Eliminado'})
+    return jsonify({'error': 'No encontrado'}), 404
+
+# ─────────────────────────────────────────────
 # API — Sistema / Auto-actualización
 # ─────────────────────────────────────────────
 
@@ -1276,6 +1583,60 @@ def system_version():
 def system_update_status():
     """Devuelve el estado de la verificación de actualización."""
     return jsonify(get_update_info())
+
+
+# ─────────────────────────────────────────────
+# API — Análisis FODA
+# ─────────────────────────────────────────────
+@app.route('/api/foda/proyectos', methods=['GET'])
+def get_foda_proyectos():
+    return jsonify(mod_foda_proyectos.listar_proyectos())
+
+@app.route('/api/foda/proyectos', methods=['POST'])
+def post_foda_proyecto():
+    data = request.json
+    nuevo = mod_foda_proyectos.crear_proyecto(data.get('titulo', 'Sin título'), data.get('descripcion', ''))
+    return jsonify(nuevo), 201
+
+@app.route('/api/foda/proyectos/<pid>', methods=['GET'])
+def get_foda_proyecto(pid):
+    p = mod_foda_proyectos.obtener_proyecto(pid)
+    if not p:
+        return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(p)
+
+@app.route('/api/foda/proyectos/<pid>', methods=['DELETE'])
+def delete_foda_proyecto(pid):
+    if mod_foda_proyectos.eliminar_proyecto(pid):
+        return '', 204
+    return jsonify({'error': 'No encontrado'}), 404
+
+@app.route('/api/foda', methods=['GET'])
+def get_foda_items():
+    pid = request.args.get('pid')
+    return jsonify(mod_foda_items.listar_items(pid))
+
+@app.route('/api/foda', methods=['POST'])
+def post_foda_item():
+    data = request.json
+    pid = data.get('proyecto_id')
+    if not pid:
+        return jsonify({'error': 'Falta proyecto_id'}), 400
+    nuevo = mod_foda_items.crear_item(pid, data)
+    return jsonify(nuevo), 201
+
+@app.route('/api/foda/<iid>', methods=['PUT'])
+def put_foda_item(iid):
+    item = mod_foda_items.actualizar_item(iid, request.json)
+    if not item:
+        return jsonify({'error': 'No encontrado'}), 404
+    return jsonify(item)
+
+@app.route('/api/foda/<iid>', methods=['DELETE'])
+def delete_foda_item(iid):
+    if mod_foda_items.eliminar_item(iid):
+        return '', 204
+    return jsonify({'error': 'No encontrado'}), 404
 
 
 if __name__ == '__main__':

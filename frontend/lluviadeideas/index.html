@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lluvia de Ideas — Mindmap</title>
+    <link rel="stylesheet" href="/css/tema.css" />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/lluviadeideas/css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        (function () {
+            const t = localStorage.getItem('suite_tema') || 'oscuro';
+            document.documentElement.setAttribute('data-tema', t);
+        })();
+    </script>
+</head>
+
+<body style="overflow:hidden">
+
+    <!-- ── NAVBAR OFICIAL ── -->
+    <header class="navbar" style="position:fixed; z-index:1000; width:100%; top:0;">
+        <a href="/" class="navbar-brand">
+            <img src="/assets/stella_rikka_logo.png" alt="Stella Rikka" class="brand-logo"
+                onerror="this.style.display='none'" />
+            <span class="brand-name">Stella<span class="brand-accent">Rikka</span></span>
+        </a>
+
+        <nav class="navbar-links" style="margin-left: 20px;">
+            <a href="/lluviadeideas/seleccion" class="nav-link" style="color:var(--accent-primary) !important;">← Menú Lluvia de Ideas</a>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 10px;"></div>
+            <a href="/" class="nav-link">Inicio</a>
+            <a href="/#tools" class="nav-link">Módulos</a>
+            <a href="/#stats" class="nav-link">Métricas</a>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 10px;"></div>
+            <span style="color:var(--text-muted);font-weight:500;margin-left:10px;">Lienzo de Innovación</span>
+        </nav>
+
+        <div class="navbar-actions" style="display: flex; align-items: center; gap: 15px;">
+            <button class="btn btn-warning" id="btn-ayuda" style="padding:6px 12px;font-size:0.85rem;"
+                title="Ayuda e Instrucciones">
+                💡 Ayuda
+            </button>
+            <button class="btn btn-primary" id="btn-export" style="padding:6px 12px;font-size:0.85rem;"
+                title="Descargar como Imagen PNG">
+                🖼️ Exportar PNG
+            </button>
+            <button class="btn btn-primary" id="btn-guardar" style="padding:6px 12px;font-size:0.85rem;">
+                💾 Guardar como...
+            </button>
+
+            <!-- Luna (Modo Oscuro/Claro Oficial) -->
+            <button class="wr-theme-btn" id="toggle-tema" aria-label="Cambiar tema">
+                <div class="wr-btn-sun"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="9" fill="#FFD700" />
+                        <g stroke="#FFD700" stroke-width="2.5" stroke-linecap="round">
+                            <line x1="20" y1="3" x2="20" y2="7" />
+                            <line x1="20" y1="33" x2="20" y2="37" />
+                            <line x1="3" y1="20" x2="7" y2="20" />
+                            <line x1="33" y1="20" x2="37" y2="20" />
+                            <line x1="8" y1="8" x2="11" y2="11" />
+                            <line x1="29" y1="29" x2="32" y2="32" />
+                            <line x1="8" y1="32" x2="11" y2="29" />
+                            <line x1="29" y1="11" x2="32" y2="8" />
+                        </g>
+                    </svg></div>
+                <div class="wr-btn-moon"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="moonGrad" cx="40%" cy="35%" r="60%">
+                                <stop offset="0%" stop-color="#f8f4e8" />
+                                <stop offset="70%" stop-color="#e8dfc0" />
+                                <stop offset="100%" stop-color="#c4b38a" />
+                            </radialGradient>
+                        </defs>
+                        <circle cx="20" cy="20" r="14" fill="url(#moonGrad)" />
+                        <circle cx="16" cy="18" r="2" fill="rgba(180,160,110,0.35)" />
+                        <circle cx="25" cy="23" r="2.5" fill="rgba(180,160,110,0.3)" />
+                        <circle cx="19" cy="26" r="1.5" fill="rgba(180,160,110,0.25)" />
+                    </svg></div>
+            </button>
+        </div>
+    </header>
+
+    <!-- ── HERRAMIENTAS IZQUIERDA ── -->
+    <div class="toolbar-left" id="toolbar-left">
+        <div class="toolbar-title">Caja de Herramientas</div>
+
+        <button class="tool-btn active" id="btn-mover" title="Mover lienzo o seleccionar">
+            <span class="tool-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
+                </svg></span>
+            <span>Mover (V)</span>
+        </button>
+
+        <div class="divider-h"></div>
+
+        <button class="tool-btn" id="btn-add-pildora" title="Agrega una gran cabecera">
+            <span class="tool-icon">🏷️</span>
+            <span>Píldora Título</span>
+        </button>
+
+        <button class="tool-btn" id="btn-add-ronda" title="Contenedor de 3 ideas seguidas">
+            <span class="tool-icon">🗄️</span>
+            <span>Cajón 3 Ideas</span>
+        </button>
+
+        <button class="tool-btn" id="btn-add-idea" title="Hoja post-it solitaria">
+            <span class="tool-icon">📝</span>
+            <span>Post-it Solo</span>
+        </button>
+
+        <div class="divider-h"></div>
+
+        <div class="color-picker-wrapper">
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom: 4px;">Color Seleccionado</div>
+            <input type="color" id="color-picker" value="#3b82f6"
+                title="Cambiar color del nodo seleccionado o los nuevos" />
+        </div>
+
+        <div class="divider-h"></div>
+
+        <button class="tool-btn btn-danger-icon" id="btn-delete" title="Borrar seleccionado (Supr)">
+            <span class="tool-icon">✂️</span>
+            <span>Borrar</span>
+        </button>
+    </div>
+
+    <!-- ── LIENZO INFINITO ── -->
+    <div id="canvas-wrapper" style="margin-top: 56px; height: calc(100vh - 56px);">
+        <div id="pan-container">
+            <svg id="connections-svg">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
+                    </marker>
+                    <marker id="arrowhead-highlight" markerWidth="10" markerHeight="7" refX="9" refY="3.5"
+                        orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#fca311" />
+                    </marker>
+                </defs>
+                <g id="paths-group"></g>
+                <path id="drawing-path" d="" fill="none" stroke="#6366f1" stroke-width="3" stroke-dasharray="5,5"
+                    marker-end="url(#arrowhead)" style="display:none;" />
+            </svg>
+            <div id="nodes-container"></div>
+        </div>
+
+        <!-- Controles flotantes esquina inferior -->
+        <div class="zoom-controls">
+            <button id="btn-zoom-in">＋</button>
+            <span id="zoom-level">100%</span>
+            <button id="btn-zoom-out">－</button>
+            <button id="btn-zoom-reset">⛶</button>
+        </div>
+    </div>
+
+    <div id="toast-container" role="alert" aria-live="polite"></div>
+
+    <!-- ── MODAL AYUDA ── -->
+    <div class="modal-overlay" id="modal-ayuda" role="dialog" aria-modal="true">
+        <div class="modal-box" style="max-width: 700px; padding: 30px; border-radius: 16px;">
+            <h3 class="modal-title"
+                style="border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px; font-size:1.5rem; display:flex; align-items:center; gap:10px;">
+                <span style="font-size:1.8rem;">💡</span> Guía de Uso del Lienzo
+            </h3>
+
+            <div
+                style="font-size:0.95rem; line-height:1.5; color:var(--text-secondary); max-height:65vh; overflow-y:auto; padding-right:15px;">
+
+                <div
+                    style="display:flex; gap:15px; margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:1.5rem; color:#6366f1;">✚</div>
+                    <div>
+                        <strong
+                            style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">1.
+                            Crear Componentes</strong>
+                        Selecciona una herramienta del panel izquierdo (Píldora, Cajón de 3 Ideas o Post-it solo) y haz
+                        <strong>clic en cualquier parte del lienzo</strong> para soltarla.
+                    </div>
+                </div>
+
+                <div
+                    style="display:flex; gap:15px; margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:1.5rem; color:#fca311;">🎨</div>
+                    <div>
+                        <strong
+                            style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">2.
+                            Cambiar de Color</strong>
+                        Haz clic en cualquier cajón para <strong>seleccionarlo</strong> (borde brillante). Luego, cambia
+                        el color en la paleta del panel izquierdo; el cajón se actualizará al instante.
+                    </div>
+                </div>
+
+                <div
+                    style="display:flex; gap:15px; margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:1.5rem; color:#10b981;">↔️</div>
+                    <div>
+                        <strong
+                            style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">3.
+                            Redimensionar (Agrandar / Achicar)</strong>
+                        Busca las <strong>dos líneas diagonales</strong> en la esquina inferior derecha de cada cajón.
+                        Mantén clic y arrastra para cambiar el tamaño libremente.
+                    </div>
+                </div>
+
+                <div
+                    style="display:flex; gap:15px; margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:1.5rem; color:#ec4899;">🔗</div>
+                    <div>
+                        <strong
+                            style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">4.
+                            Conectar Ideas</strong>
+                        Al acercar el mouse a un cajón, aparecerán pequeños <strong>puertos de conexión</strong> en sus
+                        bordes. Haz clic en uno y arrastra hasta otro puerto para crear una línea.
+                    </div>
+                </div>
+
+                <div
+                    style="display:flex; gap:15px; margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:1.5rem; color:#8b5cf6;">✋</div>
+                    <div>
+                        <strong
+                            style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">5.
+                            Moverse (Pan & Zoom)</strong>
+                        Activa la herramienta <strong>Mover (V)</strong>. Haz clic sostenido en el fondo cuadriculado
+                        para arrastrar la cámara. Usa la rueda del ratón o botones para hacer zoom.
+                    </div>
+                </div>
+
+                <div
+                    style="display:flex; gap:15px; margin-bottom: 5px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:1.5rem; color:#ef4444;">✂️</div>
+                    <div>
+                        <strong
+                            style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">6.
+                            Borrar Elementos</strong>
+                        Selecciona un elemento y presiona el botón de <strong>Borrar</strong> en el panel izquierdo (o
+                        presiona la tecla <strong>Supr</strong>).
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-actions"
+                style="margin-top:25px; display:flex; justify-content: flex-end; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                <button class="btn btn-primary" id="btn-cerrar-ayuda"
+                    style="padding: 10px 24px; font-size:1rem;">¡Entendido, a crear!</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/tema.js"></script>
+    <script>
+        // Script rápido boton ayuda
+        document.getElementById('btn-ayuda').addEventListener('click', () => {
+            document.getElementById('modal-ayuda').classList.add('visible');
+        });
+        document.getElementById('btn-cerrar-ayuda').addEventListener('click', () => {
+            document.getElementById('modal-ayuda').classList.remove('visible');
+        });
+    </script>
+    <script src="/lluviadeideas/js/lienzo.js"></script>
+
+</body>
+
+</html>

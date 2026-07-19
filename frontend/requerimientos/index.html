@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toma de Requerimientos — Stella Rikka</title>
+    <link rel="stylesheet" href="/css/tema.css" />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/requerimientos/css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        (function () {
+            const t = localStorage.getItem('suite_tema') || 'oscuro';
+            document.documentElement.setAttribute('data-tema', t);
+        })();
+    </script>
+</head>
+
+<body>
+
+    <!-- ── NAVBAR OFICIAL ── -->
+    <header class="navbar" style="position:relative; z-index:1000; width:100%; top:0; height: 56px;">
+        <a href="/" class="navbar-brand">
+            <img src="/assets/stella_rikka_logo.png" alt="Stella Rikka" class="brand-logo"
+                onerror="this.style.display='none'" />
+            <span class="brand-name">Stella<span class="brand-accent">Rikka</span></span>
+        </a>
+
+        <nav class="navbar-links" style="margin-left: 20px;">
+            <a href="/requerimientos/seleccion" class="nav-link" style="color:var(--accent-primary) !important;">← Al inicio</a>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 10px;"></div>
+            <a href="/" class="nav-link">Inicio</a>
+            <a href="/#tools" class="nav-link">Módulos</a>
+            <a href="/#stats" class="nav-link">Métricas</a>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 10px;"></div>
+            <span style="color:var(--text-muted);font-weight:500;margin-left:10px;" id="board-titulo">Manejo de Requisitos</span>
+        </nav>
+
+        <div class="navbar-actions" style="display: flex; align-items: center; gap: 15px;">
+            <button class="btn btn-warning" id="btn-ayuda" style="padding:6px 12px;font-size:0.85rem;" title="Guía de Uso">
+                💡 Ayuda
+            </button>
+            <button class="btn btn-primary" id="btn-export" style="padding:6px 12px;font-size:0.85rem;"
+                title="Descargar como Imagen PNG">
+                🖼️ Exportar PNG
+            </button>
+            <button class="btn btn-primary" id="btn-guardar" style="padding:6px 12px;font-size:0.85rem;">
+                💾 Guardar como...
+            </button>
+
+            <!-- Luna (Modo Oscuro/Claro Oficial) -->
+            <button class="wr-theme-btn" id="toggle-tema" aria-label="Cambiar tema">
+                <div class="wr-btn-sun"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="9" fill="#FFD700" />
+                        <g stroke="#FFD700" stroke-width="2.5" stroke-linecap="round">
+                            <line x1="20" y1="3" x2="20" y2="7" />
+                            <line x1="20" y1="33" x2="20" y2="37" />
+                            <line x1="3" y1="20" x2="7" y2="20" />
+                            <line x1="33" y1="20" x2="37" y2="20" />
+                            <line x1="8" y1="8" x2="11" y2="11" />
+                            <line x1="29" y1="29" x2="32" y2="32" />
+                            <line x1="8" y1="32" x2="11" y2="29" />
+                            <line x1="29" y1="11" x2="32" y2="8" />
+                        </g>
+                    </svg></div>
+                <div class="wr-btn-moon"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="moonGrad" cx="40%" cy="35%" r="60%">
+                                <stop offset="0%" stop-color="#f8f4e8" />
+                                <stop offset="70%" stop-color="#e8dfc0" />
+                                <stop offset="100%" stop-color="#c4b38a" />
+                            </radialGradient>
+                        </defs>
+                        <circle cx="20" cy="20" r="14" fill="url(#moonGrad)" />
+                        <circle cx="16" cy="18" r="2" fill="rgba(180,160,110,0.35)" />
+                        <circle cx="25" cy="23" r="2.5" fill="rgba(180,160,110,0.3)" />
+                        <circle cx="19" cy="26" r="1.5" fill="rgba(180,160,110,0.25)" />
+                    </svg></div>
+            </button>
+        </div>
+    </header>
+
+    <!-- ── LIST VIEW DE REQUERIMIENTOS ── -->
+    <div class="req-list-container">
+        <div class="req-list-header">
+            <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                <h2>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-primary); flex-shrink:0;"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    Toma de requerimientos
+                </h2>
+                <div id="status-counters" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <!-- Los contadores se inyectan por JS -->
+                </div>
+            </div>
+            <button class="btn-add-req" id="btn-add-req-top">
+                + Agregar requerimiento
+            </button>
+        </div>
+
+        <!-- Lista dinámica generada por JS -->
+        <div class="req-list-body" id="req-list"></div>
+
+        <button class="btn-add-req-inline" id="btn-add-req-bottom">
+            + Agregar requerimiento
+        </button>
+    </div>
+
+    <!-- ── MODAL AYUDA ── -->
+    <div class="modal-overlay" id="modal-ayuda" role="dialog" aria-modal="true">
+        <div class="modal-box" style="max-width: 700px; padding: 30px; border-radius: 16px;">
+            <h3 class="modal-title" style="border-bottom:1px solid rgba(150,150,150,0.1); padding-bottom:15px; margin-bottom:20px; font-size:1.5rem; display:flex; align-items:center; gap:10px;">
+                <span style="font-size:1.8rem;">💡</span> Guía de Uso: Toma de Requerimientos
+            </h3>
+            
+            <div style="font-size:0.95rem; line-height:1.5; color:var(--text-secondary); max-height:65vh; overflow-y:auto; padding-right:15px;">
+                <div style="display:flex; gap:15px; margin-bottom: 20px; background: var(--bg-secondary); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <div style="font-size:1.5rem; color:#6366f1;">✚</div>
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">1. Agregar Requerimientos</strong>
+                        Haz clic en el botón superior derecho <strong>"+ Agregar requerimiento"</strong>. Escribe un título claro y una descripción detallada de lo que el sistema debe hacer. Al guardarlo, se añadirá automáticamente a la lista.
+                    </div>
+                </div>
+                
+                <div style="display:flex; gap:15px; margin-bottom: 20px; background: var(--bg-secondary); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <div style="font-size:1.5rem; color:#fca311;">🔄</div>
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">2. Cambiar Estados Rápidamente</strong>
+                        No necesitas editar para cambiar el estado. Haz clic directamente en el <strong>desplegable de estado</strong> de cualquier requerimiento en la lista para actualizarlo al instante. El color de toda la fila cambiará para reflejar visualmente su nuevo estado.
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:15px; margin-bottom: 20px; background: var(--bg-secondary); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <div style="font-size:1.5rem; color:#10b981;">✏️</div>
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">3. Editar o Eliminar</strong>
+                        A la derecha de cada requerimiento verás un botón con tres puntos (<strong>...</strong>). Haz clic ahí para abrir la ventana de edición. Podrás modificar todo el contenido de ese requerimiento o eliminarlo de forma definitiva utilizando el botón rojo.
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:15px; margin-bottom: 20px; background: var(--bg-secondary); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <div style="font-size:1.5rem; color:#8b5cf6;">🖼️</div>
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">4. Exportar y Guardar</strong>
+                        Usa los botones de la barra superior. <strong>Exportar PNG</strong> crea una imagen impecable de toda tu lista (perfecta para incluir en documentos, ya que oculta los botones de edición automáticamente). <strong>Guardar como...</strong> descarga una copia de seguridad en formato JSON de tus datos.
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions" style="margin-top:25px; display:flex; justify-content: flex-end; border-top:1px solid rgba(150,150,150,0.1); padding-top:15px;">
+                <button class="btn btn-primary" id="btn-cerrar-ayuda" style="padding: 10px 24px; font-size:1rem;">¡Entendido, a crear!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── MODAL NUEVO / EDITAR ── -->
+    <div class="modal-overlay" id="modal-req" role="dialog" aria-modal="true">
+        <div class="modal-box">
+            <h3 class="modal-title" id="modal-title">Registrar Requerimiento</h3>
+
+            <div class="modal-form-row">
+                <div class="form-group" style="flex:1;">
+                    <label class="form-label">Título</label>
+                    <input class="input" id="req-titulo" type="text" placeholder="Ej: Autenticación 2FA" />
+                </div>
+                <div class="form-group" style="width: 160px;">
+                    <label class="form-label">Tipo</label>
+                    <select class="input" id="req-tipo">
+                        <option value="funcional">Funcional</option>
+                        <option value="no_funcional">No Funcional</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Descripción</label>
+                <textarea class="input" id="req-desc" rows="4" placeholder="El sistema debe..."></textarea>
+            </div>
+
+            <div class="modal-form-row">
+                <div class="form-group" style="flex:1;">
+                    <label class="form-label">Prioridad</label>
+                    <select class="input" id="req-prioridad">
+                        <option value="alta">Alta</option>
+                        <option value="media" selected>Media</option>
+                        <option value="baja">Baja</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label class="form-label">Estado</label>
+                    <select class="input" id="req-estado">
+                        <option value="borrador" selected>Borrador</option>
+                        <option value="en_revision">En Revisión</option>
+                        <option value="aprobado">Aprobado</option>
+                        <option value="implementado">Implementado</option>
+                        <option value="obsoleto">Obsoleto</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-ghost" id="modal-req-cancel">Cancelar</button>
+                <button class="btn btn-danger" id="modal-req-delete" style="display:none; margin-right:auto;">🗑️ Eliminar</button>
+                <button class="btn btn-primary" id="modal-req-save">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" role="alert" aria-live="polite"></div>
+
+    <script src="/js/tema.js"></script>
+    <script src="/requerimientos/js/requerimientos.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lluvia de Ideas — Selección de sesión</title>
+    <meta name="description" content="Crea o abre una sesión de lluvia de ideas." />
+    <link rel="stylesheet" href="/css/tema.css" />
+    <link rel="stylesheet" href="/css/seleccion.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <script>
+        (function () {
+            const t = localStorage.getItem('suite_tema') || 'oscuro';
+            document.documentElement.setAttribute('data-tema', t);
+        })();
+    </script>
+</head>
+
+<body>
+    <div class="sel-wrapper">
+
+        <main class="sel-content">
+            <h1 class="sel-page-title">¿Qué deseas hacer?</h1>
+            <p class="sel-page-subtitle">Crea o abre una sesión de Lluvia de Ideas para generar y conectar ideas.</p>
+
+            <div class="sel-options" role="group" aria-label="Opciones de sesión">
+
+                <button class="sel-option-btn active" id="btn-nuevo" aria-pressed="true" aria-controls="panel-nuevo">
+                    <div class="sel-option-icon sel-option-icon-nuevo">✨</div>
+                    <div class="sel-option-name">Crear sesión nueva</div>
+                    <div class="sel-option-desc">Comenzar desde cero. El lienzo arrancará vacío y listo para idear.
+                    </div>
+                </button>
+
+                <button class="sel-option-btn" id="btn-existente" aria-pressed="false" aria-controls="panel-existente">
+                    <div class="sel-option-icon sel-option-icon-existente">📂</div>
+                    <div class="sel-option-name">Abrir sesión existente</div>
+                    <div class="sel-option-desc">Retomar una sesión guardada y seguir trabajando en ella.</div>
+                </button>
+
+            </div>
+
+            <!-- Panel: Nueva sesión -->
+            <div class="panel visible" id="panel-nuevo" role="region" aria-label="Formulario nueva sesión">
+                <h2 class="panel-title">Datos de la nueva sesión</h2>
+                <form id="form-nuevo" novalidate>
+                    <div class="form-group">
+                        <label class="form-label" for="input-titulo">Título de la sesión <span
+                                style="color:var(--accent-danger)">*</span></label>
+                        <input class="input" id="input-titulo" type="text"
+                            placeholder="Ej: Ideas para el nuevo módulo..." maxlength="80" autocomplete="off"
+                            required />
+                        <span class="form-hint">Máximo 80 caracteres.</span>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-ghost" id="btn-cancelar-nuevo">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btn-crear">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M12 5v14M5 12h14" />
+                            </svg>
+                            Crear y abrir
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Panel: Sesiones existentes -->
+            <div class="panel" id="panel-existente" role="region" aria-label="Sesiones existentes">
+                <h2 class="panel-title">Tus sesiones de Lluvia de Ideas</h2>
+                <div class="projects-list" id="projects-list" aria-live="polite">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⏳</div>
+                        <p class="empty-state-text">Cargando sesiones...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Modal eliminación -->
+    <div class="modal-overlay" id="modal-eliminar" role="dialog" aria-modal="true">
+        <div class="modal-box">
+            <h3 class="modal-title" id="modal-title">⚠️ Eliminar sesión</h3>
+            <p class="modal-body" id="modal-body">¿Seguro? Esta acción no se puede deshacer.</p>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" id="btn-modal-cancelar">Cancelar</button>
+                <button class="btn btn-danger" id="btn-modal-confirmar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" role="alert" aria-live="polite"></div>
+
+    <script src="/js/tema.js"></script>
+    <script src="/lluviadeideas/js/seleccion.js"></script>
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

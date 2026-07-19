@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historias de Usuario — Stella Rikka</title>
+    <meta name="description" content="Gestiona las Historias de Usuario con criterios de aceptación Gherkin." />
+    <link rel="stylesheet" href="/css/tema.css" />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/historias/css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        (function () {
+            const t = localStorage.getItem('suite_tema') || 'oscuro';
+            document.documentElement.setAttribute('data-tema', t);
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- ── NAVBAR OFICIAL ── -->
+    <header class="navbar" style="position:relative; z-index:1000; width:100%; top:0; height: 56px;">
+        <a href="/" class="navbar-brand">
+            <img src="/assets/stella_rikka_logo.png" alt="Stella Rikka" class="brand-logo"
+                onerror="this.style.display='none'" />
+            <span class="brand-name">Stella<span class="brand-accent">Rikka</span></span>
+        </a>
+
+        <nav class="navbar-links" style="margin-left: 20px;">
+            <a href="/historias/seleccion.html" class="nav-link" style="color:var(--accent-primary) !important;">← Al inicio</a>
+            <div style="width: 1px; height: 20px; background: rgba(150,150,150,0.2); margin: 0 10px;"></div>
+            <a href="/home.html" class="nav-link">Inicio</a>
+            <a href="/home.html#tools" class="nav-link">Módulos</a>
+            <a href="/home.html#stats" class="nav-link">Métricas</a>
+            <div style="width: 1px; height: 20px; background: rgba(150,150,150,0.2); margin: 0 10px;"></div>
+            <span style="color:var(--text-muted);font-weight:500;margin-left:10px;" id="board-titulo">Historias de Usuario</span>
+        </nav>
+
+        <div class="navbar-actions" style="display: flex; align-items: center; gap: 15px;">
+            <button class="btn btn-warning" id="btn-ayuda" style="padding:6px 12px;font-size:0.85rem;" title="Guía de Uso">
+                💡 Ayuda
+            </button>
+            <button class="btn btn-primary" id="btn-export" style="padding:6px 12px;font-size:0.85rem;"
+                title="Descargar como Imagen PNG">
+                🖼️ Exportar PNG
+            </button>
+            <button class="btn btn-primary" id="btn-guardar" style="padding:6px 12px;font-size:0.85rem;">
+                💾 Guardar como...
+            </button>
+        </div>
+    </header>
+
+    <!-- ── CONTENEDOR PRINCIPAL ── -->
+    <main class="hu-main">
+        <!-- ── LISTA DE HISTORIAS ── -->
+        <div class="hu-list-container">
+            <div class="hu-list-header">
+                <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                    <h2>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-primary); flex-shrink:0;"><path d="M4 19.5v-15A2.5 2.5 0 016.5 2H20v20H6.5a2.5 2.5 0 010-5H20"/></svg>
+                        Historias de Usuario
+                    </h2>
+                    <div id="status-counters" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <!-- Contadores por JS -->
+                    </div>
+                </div>
+                <button class="btn-add-req" id="btn-add-hu-top">+ Agregar Historia</button>
+            </div>
+
+            <div id="hu-list" class="hu-list" aria-live="polite">
+                <!-- Items generados por JS -->
+            </div>
+
+            <button class="btn-add-req btn-add-bottom" id="btn-add-hu-bottom">+ Agregar Historia</button>
+        </div>
+    </main>
+
+    <div id="toast-container" role="alert" aria-live="polite"></div>
+
+    <!-- ── MODAL AYUDA ── -->
+    <div class="modal-overlay" id="modal-ayuda" role="dialog" aria-modal="true">
+        <div class="modal-box" style="max-width: 720px; padding: 30px; border-radius: 16px;">
+            <h3 class="modal-title" style="border-bottom:1px solid rgba(150,150,150,0.1); padding-bottom:15px; margin-bottom:20px; font-size:1.5rem; display:flex; align-items:center; gap:10px;">
+                <span style="font-size:1.8rem;">💡</span> Guía de Uso: Historias de Usuario
+            </h3>
+            <div style="font-size:0.95rem; line-height:1.6; color:var(--text-secondary); max-height:65vh; overflow-y:auto; padding-right:15px;">
+                <div style="display:flex; gap:15px; margin-bottom:18px; background:var(--bg-secondary); padding:15px; border-radius:8px; border:1px solid var(--border-color);">
+                    <div style="font-size:1.5rem; color:#6366f1;">✚</div>
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">1. Agregar una Historia</strong>
+                        Haz clic en <strong>"+ Agregar Historia"</strong>. Se abrirá un formulario completo donde podrás llenar el ID, título, épica y la narrativa estándar: <em>"Como [rol], quiero [acción], para [beneficio]"</em>.
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px; margin-bottom:18px; background:var(--bg-secondary); padding:15px; border-radius:8px; border:1px solid var(--border-color);">
+                    <div style="font-size:1.5rem; color:#10b981;">📋</div>
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">2. Criterios de Aceptación (Gherkin)</strong>
+                        Dentro del formulario de edición podrás añadir múltiples criterios con el formato <strong>Dado/Cuando/Entonces</strong>. Cada criterio se puede añadir o eliminar individualmente para definir exactamente cuándo la historia está "terminada".
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px; margin-bottom:18px; background:var(--bg-secondary); padding:15px; border-radius:8px; border:1px solid var(--border-color);">
+                    <div style="font-size:1.5rem; color:#fca311;">🔄</div>
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">3. Cambiar Estado desde la Lista</strong>
+                        Haz clic directamente en el estado de cualquier historia para actualizarlo al instante. El color de la fila cambiará para reflejar su estado actual: Backlog (gris), En Sprint (azul), En Desarrollo (naranja), En Testing (morado) y Terminada (verde).
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px; margin-bottom:18px; background:var(--bg-secondary); padding:15px; border-radius:8px; border:1px solid var(--border-color);">
+                    <div style="font-size:1.5rem; color:#ec4899;">🔗</div>
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">4. Trazabilidad al Requerimiento</strong>
+                        Cada historia puede vincularse a su <strong>requerimiento de origen</strong> (ej: RF-001) para mantener la trazabilidad completa entre análisis y diseño ágil.
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px; margin-bottom:5px; background:var(--bg-secondary); padding:15px; border-radius:8px; border:1px solid var(--border-color);">
+                    <div style="font-size:1.5rem; color:#8b5cf6;">🖼️</div>
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem; display:block; margin-bottom:4px;">5. Exportar y Guardar</strong>
+                        <strong>Exportar PNG</strong> genera una imagen limpia de toda la tabla (sin botones). <strong>Guardar como...</strong> descarga un JSON con todos los datos para respaldo o para importar en otra sesión.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions" style="margin-top:25px; display:flex; justify-content:flex-end; border-top:1px solid rgba(150,150,150,0.1); padding-top:15px;">
+                <button class="btn btn-primary" id="btn-cerrar-ayuda" style="padding:10px 24px; font-size:1rem;">¡Entendido, a crear!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── MODAL AGREGAR / EDITAR HISTORIA ── -->
+    <div class="modal-overlay" id="modal-hu" role="dialog" aria-modal="true">
+        <div class="modal-box" style="max-width: 760px; max-height: 92vh; overflow-y: auto;">
+            <h3 class="modal-title" id="modal-hu-titulo">Nueva Historia de Usuario</h3>
+
+            <div class="modal-section">
+                <h4 class="modal-section-title">🏷️ Identificación</h4>
+                <div class="modal-grid-3">
+                    <div class="form-group">
+                        <label class="form-label">ID</label>
+                        <input class="input" id="hu-id" type="text" placeholder="HU-001" readonly style="opacity:0.7; cursor:default;" />
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label class="form-label">Título <span style="color:var(--accent-danger)">*</span></label>
+                        <input class="input" id="hu-titulo" type="text" placeholder="Ej: Registrar venta con descuento de stock" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Épica / Módulo</label>
+                    <input class="input" id="hu-epica" type="text" placeholder="Ej: Gestión de Ventas" />
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h4 class="modal-section-title">📖 La Historia</h4>
+                <div class="hu-narrativa">
+                    <div class="narrativa-row">
+                        <span class="narrativa-label">Como</span>
+                        <input class="input" id="hu-como" type="text" placeholder="vendedor / administrador / cliente..." />
+                    </div>
+                    <div class="narrativa-row">
+                        <span class="narrativa-label">quiero</span>
+                        <input class="input" id="hu-quiero" type="text" placeholder="registrar una venta en el sistema..." />
+                    </div>
+                    <div class="narrativa-row">
+                        <span class="narrativa-label">para</span>
+                        <input class="input" id="hu-para" type="text" placeholder="que el stock se descuente automáticamente..." />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h4 class="modal-section-title">✅ Criterios de Aceptación <span style="font-size:0.8rem; font-weight:400; color:var(--text-muted);">(formato Gherkin)</span></h4>
+                <div id="criterios-list">
+                    <!-- Criterios generados por JS -->
+                </div>
+                <button class="btn btn-ghost" id="btn-add-criterio" style="margin-top:10px; font-size:0.85rem; padding:6px 14px;">+ Agregar criterio</button>
+            </div>
+
+            <div class="modal-section">
+                <h4 class="modal-section-title">📊 Estimación y Planificación</h4>
+                <div class="modal-grid-4">
+                    <div class="form-group">
+                        <label class="form-label">Prioridad</label>
+                        <select class="input" id="hu-prioridad">
+                            <option value="alta">🔴 Alta</option>
+                            <option value="media" selected>🟡 Media</option>
+                            <option value="baja">🟢 Baja</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Story Points</label>
+                        <select class="input" id="hu-estimacion">
+                            <option value="">— sin estimar —</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                            <option value="8">8</option>
+                            <option value="13">13</option>
+                            <option value="21">21</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado</label>
+                        <select class="input" id="hu-estado">
+                            <option value="backlog">Backlog</option>
+                            <option value="en_sprint">En Sprint</option>
+                            <option value="en_desarrollo">En Desarrollo</option>
+                            <option value="en_testing">En Testing</option>
+                            <option value="terminada">Terminada</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sprint</label>
+                        <input class="input" id="hu-sprint" type="text" placeholder="Sprint 1" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Req. Origen (Trazabilidad)</label>
+                    <input class="input" id="hu-req-origen" type="text" placeholder="Ej: RF-001, RF-002" />
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h4 class="modal-section-title">📝 Notas / Dependencias</h4>
+                <textarea class="input" id="hu-notas" rows="3" placeholder="Dependencias, aclaraciones técnicas, bloqueos..." style="resize:vertical;"></textarea>
+            </div>
+
+            <div class="modal-actions" style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 10px;">
+                <button class="btn btn-danger" id="modal-hu-delete" style="margin-right:auto; display:none;">🗑️ Eliminar</button>
+                <button class="btn btn-ghost" id="modal-hu-cancel">Cancelar</button>
+                <button class="btn btn-primary" id="modal-hu-save">💾 Guardar Historia</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/tema.js"></script>
+    <script src="/historias/js/historias.js"></script>
+</body>
+
+</html>

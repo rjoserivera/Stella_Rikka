@@ -1,0 +1,371 @@
+/* ════════════════════════════════════════════
+   styles.css — Requerimientos (Lista)
+   ════════════════════════════════════════════ */
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* ── CONTENEDOR PRINCIPAL ── */
+.req-list-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+    min-height: calc(100vh - 56px);
+}
+
+/* ── HEADER DE LA LISTA ── */
+.req-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.req-list-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Botón "Agregar" arriba derecha — con borde ámbar */
+.btn-add-req {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid var(--accent-primary);
+    border-radius: 10px;
+    color: var(--accent-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.btn-add-req:hover {
+    background: var(--accent-primary);
+    color: #fff;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+}
+
+/* ── LISTA DE ITEMS ── */
+.req-list-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* ── FILA DE REQUERIMIENTO ── */
+.req-list-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    box-shadow: var(--shadow-sm);
+    background: rgba(245, 158, 11, 0.08);
+    border-left: 4px solid #fca311;
+}
+
+.req-list-item:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.row-borrador { background: rgba(252, 163, 17, 0.08); border-color: rgba(252, 163, 17, 0.25); border-left-color: #fca311; }
+.row-en_revision { background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.25); border-left-color: #3b82f6; }
+.row-aprobado { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.25); border-left-color: #10b981; }
+.row-implementado { background: rgba(139, 92, 246, 0.08); border-color: rgba(139, 92, 246, 0.25); border-left-color: #8b5cf6; }
+.row-obsoleto { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.25); border-left-color: #ef4444; }
+
+.row-borrador:hover { border-color: rgba(252, 163, 17, 0.5); }
+.row-en_revision:hover { border-color: rgba(59, 130, 246, 0.5); }
+.row-aprobado:hover { border-color: rgba(16, 185, 129, 0.5); }
+.row-implementado:hover { border-color: rgba(139, 92, 246, 0.5); }
+.row-obsoleto:hover { border-color: rgba(239, 68, 68, 0.5); }
+
+/* ── BADGE REQ-ID ── */
+.req-item-id {
+    flex: 0 0 auto;
+}
+
+.req-item-id .req-badge-id {
+    display: inline-block;
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── CAMPOS (título / descripción) ── */
+.req-item-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.req-item-field label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.req-item-field .req-input {
+    width: 100%;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px solid rgba(150, 150, 150, 0.18);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    cursor: default;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    min-height: 35px;
+    display: block;
+    line-height: 19px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.req-item-field .req-input:focus {
+    border-color: var(--border-focus);
+    cursor: text;
+}
+
+.req-item-title {
+    flex: 1 1 25%;
+    min-width: 0;
+}
+
+.req-item-desc {
+    flex: 2 1 45%;
+    min-width: 0;
+}
+
+/* ── ESTADO ── */
+.req-item-status {
+    flex: 0 0 175px;
+}
+
+.status-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.status-dot {
+    position: absolute;
+    left: 11px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+.status-borrador   { background-color: #fca311; }
+.status-en_revision { background-color: #3b82f6; }
+.status-aprobado   { background-color: #10b981; }
+.status-implementado { background-color: #8b5cf6; }
+.status-obsoleto   { background-color: #ef4444; }
+
+.status-select {
+    width: 100%;
+    padding: 8px 12px 8px 30px;
+    background: transparent;
+    border: 1px solid rgba(150, 150, 150, 0.18);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: border-color 0.2s;
+    min-height: 35px;
+    display: block;
+    line-height: 19px;
+    box-sizing: border-box;
+}
+
+.status-select option {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.status-select:focus {
+    border-color: var(--border-focus);
+}
+
+/* ── BOTÓN TRES PUNTOS ── */
+.req-item-actions {
+    flex: 0 0 auto;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-icon:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* ── BOTÓN INFERIOR "Agregar" ── */
+.btn-add-req-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--accent-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 4px;
+    transition: opacity 0.2s;
+}
+
+.btn-add-req-inline:hover {
+    opacity: 0.75;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.visible {
+    display: flex;
+}
+
+.modal-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 28px 32px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn 0.25s ease;
+}
+
+.modal-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem 0;
+}
+
+.modal-form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ── TOASTS ── */
+#toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn 0.3s ease;
+    min-width: 240px;
+}
+
+.toast-success { border-left: 3px solid var(--accent-success); }
+.toast-error   { border-left: 3px solid #ef4444; }
+.toast-info    { border-left: 3px solid var(--accent-primary); }
+
+/* Estado vacío */
+.req-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.req-empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}

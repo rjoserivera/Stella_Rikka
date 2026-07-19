@@ -39,7 +39,7 @@ let notaActualIndex = null;
 async function init() {
   await cargarProyecto();
   await cargarVersiones();
-  
+
   if (versiones.length > 0) {
     // Cargar la última versión por defecto
     const ultima = versiones[versiones.length - 1];
@@ -72,7 +72,7 @@ async function cargarVersiones() {
     versiones = await res.json();
     // Ordenar por fecha asc (la más nueva al final)
     versiones.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-    
+
     const select = document.getElementById('select-version');
     const selectCompA = document.getElementById('select-comp-a');
     const selectCompB = document.getElementById('select-comp-b');
@@ -87,7 +87,7 @@ async function cargarVersiones() {
       selectCompA.add(option.cloneNode(true));
       selectCompB.add(option.cloneNode(true));
     });
-    
+
     if (versionActualId) {
       select.value = versionActualId;
     }
@@ -100,7 +100,7 @@ async function cargarVersion(vid) {
   versionActualId = vid;
   document.getElementById('select-version').value = vid;
   const version = versiones.find(v => v.id === vid);
-  
+
   if (version) {
     canvasActual = JSON.parse(JSON.stringify(version.canvas || {}));
     renderCanvas();
@@ -110,11 +110,11 @@ async function cargarVersion(vid) {
 // ── Renderizado del Canvas ──
 function renderCanvas() {
   const bloques = ['problema', 'solucion', 'metricas', 'propuesta', 'ventaja', 'canales', 'segmentos', 'costos', 'ingresos'];
-  
+
   if (!canvasActual.layout) {
     canvasActual.layout = JSON.parse(JSON.stringify(defaultLayout));
   }
-  
+
   // Auto-fix si el layout está corrupto (bloques apilados en el mismo X, Y)
   const l_prob = canvasActual.layout.problema;
   const l_sol = canvasActual.layout.solucion;
@@ -129,26 +129,26 @@ function renderCanvas() {
 
   let maxRight = 1500;
   let maxBottom = 900;
-  
+
   bloques.forEach(b => {
     // Aplicar posicionamiento libre
     const blockEl = document.querySelector(`.lc-block[data-block="${b}"]`);
-    if(blockEl) {
+    if (blockEl) {
       let lay = canvasActual.layout[b];
       if (!lay) lay = { ...defaultLayout[b] };
-      
+
       const x = typeof lay.x === 'number' && !isNaN(lay.x) ? lay.x : defaultLayout[b].x;
       const y = typeof lay.y === 'number' && !isNaN(lay.y) ? lay.y : defaultLayout[b].y;
       const w = typeof lay.w === 'number' && !isNaN(lay.w) && lay.w > 0 ? lay.w : defaultLayout[b].w;
       const h = typeof lay.h === 'number' && !isNaN(lay.h) && lay.h > 0 ? lay.h : defaultLayout[b].h;
-      
+
       canvasActual.layout[b] = { x, y, w, h };
 
       blockEl.style.left = x + 'px';
       blockEl.style.top = y + 'px';
       blockEl.style.width = w + 'px';
       blockEl.style.height = h + 'px';
-      
+
       const right = x + w + 20;
       const bottom = y + h + 20;
       if (right > maxRight) maxRight = right;
@@ -158,12 +158,12 @@ function renderCanvas() {
     const list = document.getElementById(`list-${b}`);
     list.innerHTML = '';
     const notas = canvasActual[b] || [];
-    
+
     notas.forEach((nota, index) => {
       const el = document.createElement('div');
       el.className = 'lc-note';
       el.onclick = () => abrirModalEditar(b, index);
-      
+
       const statusClass = {
         'hipotesis': 'status-hipotesis',
         'validacion': 'status-validacion',
@@ -207,7 +207,7 @@ function setupEvents() {
         body: JSON.stringify({ titulo: newTitle })
       });
       mostrarToast('Título guardado.', 'success');
-    } catch {}
+    } catch { }
   });
 
   // Nueva Versión
@@ -233,12 +233,12 @@ function setupEvents() {
   // Modales
   document.getElementById('modal-nota-close').addEventListener('click', cerrarModalNota);
   document.getElementById('btn-cancelar-nota').addEventListener('click', cerrarModalNota);
-  
+
   document.getElementById('form-nota').addEventListener('submit', async (e) => {
     e.preventDefault();
     const texto = document.getElementById('nota-texto').value.trim();
     const estado = document.getElementById('nota-estado').value;
-    
+
     if (!canvasActual[bloqueActual]) canvasActual[bloqueActual] = [];
 
     if (modalModo === 'crear') {
@@ -246,7 +246,7 @@ function setupEvents() {
     } else {
       canvasActual[bloqueActual][notaActualIndex] = { texto, estado };
     }
-    
+
     await guardarVersionActual();
     renderCanvas();
     cerrarModalNota();
@@ -336,7 +336,7 @@ function setupEvents() {
         const parent = el.parentElement;
         const currentRight = parseInt(el.style.left || 0) + el.offsetWidth + 20;
         const currentBottom = parseInt(el.style.top || 0) + el.offsetHeight + 20;
-        
+
         if (currentRight > parent.offsetWidth) parent.style.width = currentRight + 'px';
         if (currentBottom > parent.offsetHeight) parent.style.height = currentBottom + 'px';
 
@@ -351,7 +351,7 @@ function setupEvents() {
     }
     if (changed) guardarVersionActual();
   });
-  
+
   document.querySelectorAll('.lc-block').forEach(el => {
     resizeObserver.observe(el);
   });
@@ -382,17 +382,17 @@ function setupEvents() {
       const scale = window.canvasScale || 1;
       const dx = (e.clientX - startMouseX) / scale;
       const dy = (e.clientY - startMouseY) / scale;
-      
+
       const parent = activeBlock.parentElement;
       let newX = Math.max(0, startBlockX + dx);
       let newY = Math.max(0, startBlockY + dy);
-      
+
       activeBlock.style.left = newX + 'px';
       activeBlock.style.top = newY + 'px';
-      
+
       const currentRight = newX + activeBlock.offsetWidth + 20;
       const currentBottom = newY + activeBlock.offsetHeight + 20;
-      
+
       if (currentRight > parent.offsetWidth) parent.style.width = currentRight + 'px';
       if (currentBottom > parent.offsetHeight) parent.style.height = currentBottom + 'px';
     }
@@ -435,7 +435,7 @@ async function guardarVersionActual() {
     });
     // Actualizar cache local
     const v = versiones.find(x => x.id === versionActualId);
-    if(v) v.canvas = JSON.parse(JSON.stringify(canvasActual));
+    if (v) v.canvas = JSON.parse(JSON.stringify(canvasActual));
   } catch {
     mostrarToast('Error al guardar cambios', 'error');
   }
@@ -457,7 +457,7 @@ function abrirModalEditar(bloque, index) {
   bloqueActual = bloque;
   notaActualIndex = index;
   modalModo = 'editar';
-  
+
   const nota = canvasActual[bloque][index];
   document.getElementById('modal-nota-title').textContent = 'Editar Nota';
   document.getElementById('nota-texto').value = nota.texto;
@@ -474,7 +474,7 @@ function cerrarModalNota() {
 function compararVersiones() {
   const idA = document.getElementById('select-comp-a').value;
   const idB = document.getElementById('select-comp-b').value;
-  
+
   const vA = versiones.find(v => v.id === idA);
   const vB = versiones.find(v => v.id === idB);
   const diffBox = document.getElementById('diff-results');
@@ -486,7 +486,7 @@ function compararVersiones() {
 
   const bloques = ['problema', 'solucion', 'metricas', 'propuesta', 'ventaja', 'canales', 'segmentos', 'costos', 'ingresos'];
   const nombresBloques = {
-    'problema': 'Problema', 'solucion': 'Solución', 'metricas': 'Métricas', 
+    'problema': 'Problema', 'solucion': 'Solución', 'metricas': 'Métricas',
     'propuesta': 'Propuesta de Valor', 'ventaja': 'Ventaja Injusta', 'canales': 'Canales',
     'segmentos': 'Segmentos', 'costos': 'Costos', 'ingresos': 'Ingresos'
   };
@@ -514,11 +514,11 @@ function compararVersiones() {
       diferencias++;
       html += `<div class="diff-item">
         <div class="diff-block-name">${nombresBloques[b]}</div>`;
-      
+
       removed.forEach(n => html += `<div class="diff-removed">- ${escHtml(n.texto)}</div>`);
       added.forEach(n => html += `<div class="diff-added">+ ${escHtml(n.texto)} (Nuevo: ${n.estado})</div>`);
       changed.forEach(n => html += `<div class="diff-changed">~ ${escHtml(n.texto)} (Estado: ${n.estado})</div>`);
-      
+
       html += `</div>`;
     }
   });
@@ -568,11 +568,11 @@ function setupPanZoom() {
     container.style.cursor = 'grab';
   });
 
-  
+
   // Zoom buttons
   const btnZoomIn = document.getElementById('btn-zoom-in');
   const btnZoomOut = document.getElementById('btn-zoom-out');
-  
+
   const applyZoom = (zoomFactor) => {
     let oldScale = window.canvasScale;
     if (zoomFactor > 0) {
@@ -580,15 +580,15 @@ function setupPanZoom() {
     } else {
       window.canvasScale = Math.max(window.canvasScale + zoomFactor, 0.4);
     }
-    
+
     // Zoom around the center of the viewport
     const rect = container.getBoundingClientRect();
     const mouseX = rect.width / 2;
     const mouseY = rect.height / 2;
-    
+
     translateX = mouseX - ((mouseX - translateX) * (window.canvasScale / oldScale));
     translateY = mouseY - ((mouseY - translateY) * (window.canvasScale / oldScale));
-    
+
     updateTransform();
   };
 
@@ -599,42 +599,42 @@ function setupPanZoom() {
   container.addEventListener('wheel', (e) => {
     if (!e.ctrlKey) return; // Requerir CTRL para zoom
     e.preventDefault();
-    
+
     const zoomFactor = 0.1;
     let oldScale = window.canvasScale;
-    
+
     if (e.deltaY < 0) window.canvasScale = Math.min(window.canvasScale + zoomFactor, 2);
     else window.canvasScale = Math.max(window.canvasScale - zoomFactor, 0.4);
-    
+
     // Zoom a donde está el mouse
     const rect = container.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
-    
+
     translateX = mouseX - ((mouseX - translateX) * (window.canvasScale / oldScale));
     translateY = mouseY - ((mouseY - translateY) * (window.canvasScale / oldScale));
-    
+
     updateTransform();
   }, { passive: false });
 }
 
 // ── Exportar ──
-async function exportarPNG() {
+async function exportarPNG(escala = 4) {
   document.getElementById('export-menu').classList.remove('show');
   const grid = document.getElementById('lean-canvas-grid');
-  
+
   // Guardar estado original
   const originalTransform = document.getElementById('canvas-inner').style.transform;
   document.getElementById('canvas-inner').style.transform = 'none';
-  
+
   // Expandir cuerpos para asegurar que todo sea visible
   const bodies = grid.querySelectorAll('.lc-block-body');
   bodies.forEach(b => b.style.overflow = 'visible');
 
   try {
-    const canvas = await html2canvas(grid, { 
-      backgroundColor: '#1e293b', 
-      scale: 2 
+    const canvas = await html2canvas(grid, {
+      backgroundColor: '#1e293b',
+      scale: escala
     });
     const link = document.createElement('a');
     link.download = `leancanvas_${proyecto.titulo}.png`;
@@ -653,24 +653,24 @@ async function exportarPNG() {
 async function exportarPDF() {
   document.getElementById('export-menu').classList.remove('show');
   const grid = document.getElementById('lean-canvas-grid');
-  
+
   const originalTransform = document.getElementById('canvas-inner').style.transform;
   document.getElementById('canvas-inner').style.transform = 'none';
-  
+
   const bodies = grid.querySelectorAll('.lc-block-body');
   bodies.forEach(b => b.style.overflow = 'visible');
 
   try {
     const canvas = await html2canvas(grid, { backgroundColor: '#1e293b', scale: 2 });
     const imgData = canvas.toDataURL('image/jpeg', 0.95);
-    
+
     const pdf = new jspdf.jsPDF('l', 'mm', 'a4'); // Landscape A4
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    
+
     pdf.addImage(imgData, 'JPEG', 0, 10, pdfWidth, pdfHeight);
     pdf.save(`leancanvas_${proyecto.titulo}.pdf`);
-    
+
     mostrarToast('Exportado a PDF exitosamente', 'success');
   } catch {
     mostrarToast('Error al exportar PDF', 'error');
@@ -720,7 +720,7 @@ document.getElementById('btn-confirmar-importar').addEventListener('click', asyn
     mostrarToast('Selecciona un archivo', 'error');
     return;
   }
-  
+
   const file = fileInput.files[0];
   const reader = new FileReader();
 
@@ -752,13 +752,13 @@ document.getElementById('btn-confirmar-importar').addEventListener('click', asyn
         const keyBloque = Object.keys(row).find(k => k.toLowerCase().includes('bloque') || k.toLowerCase() === 'block');
         const keyTexto = Object.keys(row).find(k => k.toLowerCase().includes('text'));
         const keyEstado = Object.keys(row).find(k => k.toLowerCase().includes('estad') || k.toLowerCase().includes('status'));
-        
+
         if (!keyBloque || !keyTexto) continue;
-        
+
         let targetBlock = aliasBloques[row[keyBloque].toString().toLowerCase().trim()];
         let targetText = row[keyTexto].toString().trim();
         let targetEstado = keyEstado ? row[keyEstado].toString().toLowerCase().trim() : 'hipotesis';
-        
+
         // Validar estado
         if (!['hipotesis', 'validacion', 'validado'].includes(targetEstado)) {
           targetEstado = 'hipotesis';
@@ -786,7 +786,7 @@ document.getElementById('btn-confirmar-importar').addEventListener('click', asyn
       mostrarToast('Error al leer el archivo Excel/CSV', 'error');
     }
   };
-  
+
   reader.readAsArrayBuffer(file);
 });
 

@@ -38,7 +38,8 @@
     <!-- Sky objects (sun / moon / clouds) -->
     <div class="wr-sky-objects">
       <!-- SUN — visible in light mode -->
-      <div class="wr-sun" id="wr-sun" style="opacity: 0; width: 120px; height: 120px; position: absolute; top: 50px; right: 10vw;">
+      <div class="wr-sun" id="wr-sun"
+        style="opacity: 0; width: 120px; height: 120px; position: absolute; top: 50px; right: 10vw;">
         <div class="wr-sun-core"></div>
         <div class="wr-sun-rays">
           <span></span><span></span><span></span><span></span>
@@ -46,19 +47,21 @@
         </div>
       </div>
       <!-- MOON — visible in dark mode -->
-      <svg class="wr-moon" id="wr-moon" style="opacity: 0; width: 100px; height: 100px; position: absolute; top: 50px; right: 10vw;" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <svg class="wr-moon" id="wr-moon"
+        style="opacity: 0; width: 100px; height: 100px; position: absolute; top: 50px; right: 10vw;" viewBox="0 0 80 80"
+        xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="moonGrad" cx="40%" cy="35%" r="60%">
-            <stop offset="0%"   stop-color="#f8f4e8"/>
-            <stop offset="70%"  stop-color="#e8dfc0"/>
-            <stop offset="100%" stop-color="#c4b38a"/>
+            <stop offset="0%" stop-color="#f8f4e8" />
+            <stop offset="70%" stop-color="#e8dfc0" />
+            <stop offset="100%" stop-color="#c4b38a" />
           </radialGradient>
         </defs>
-        <circle cx="40" cy="40" r="28" fill="url(#moonGrad)"/>
+        <circle cx="40" cy="40" r="28" fill="url(#moonGrad)" />
         <!-- craters -->
-        <circle cx="32" cy="35" r="4" fill="rgba(180,160,110,0.35)"/>
-        <circle cx="50" cy="46" r="5" fill="rgba(180,160,110,0.3)"/>
-        <circle cx="38" cy="52" r="3" fill="rgba(180,160,110,0.25)"/>
+        <circle cx="32" cy="35" r="4" fill="rgba(180,160,110,0.35)" />
+        <circle cx="50" cy="46" r="5" fill="rgba(180,160,110,0.3)" />
+        <circle cx="38" cy="52" r="3" fill="rgba(180,160,110,0.25)" />
       </svg>
       <!-- Clouds -->
       <div class="wr-cloud wr-cloud-1">
@@ -82,7 +85,7 @@
     <div class="wr-sky-stars" id="wr-sky-stars"></div>
     <div class="wr-shooting-stars" id="wr-shooting-stars"></div>
     <!-- (olas eliminadas) -->
-    </div>
+  </div>
   </div>
 
   <div class="home-wrapper">
@@ -95,7 +98,8 @@
           Nueva versión disponible: <strong id="update-version"></strong>
         </span>
         <a id="update-link" href="#" target="_blank" class="update-btn">Ver novedades →</a>
-        <button class="update-close" onclick="document.getElementById('update-banner').hidden=true" aria-label="Cerrar">×</button>
+        <button class="update-close" onclick="document.getElementById('update-banner').hidden=true"
+          aria-label="Cerrar">×</button>
       </div>
     </div>
 
@@ -136,15 +140,15 @@
             <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <radialGradient id="btnMoonGrad" cx="38%" cy="32%" r="60%">
-                  <stop offset="0%"   stop-color="#fffde7"/>
-                  <stop offset="60%"  stop-color="#e8dfc0"/>
-                  <stop offset="100%" stop-color="#c4b38a"/>
+                  <stop offset="0%" stop-color="#fffde7" />
+                  <stop offset="60%" stop-color="#e8dfc0" />
+                  <stop offset="100%" stop-color="#c4b38a" />
                 </radialGradient>
               </defs>
-              <circle cx="20" cy="20" r="14" fill="url(#btnMoonGrad)"/>
-              <circle cx="16" cy="17" r="2"   fill="rgba(180,155,100,0.35)"/>
-              <circle cx="25" cy="23" r="2.5" fill="rgba(180,155,100,0.30)"/>
-              <circle cx="19" cy="26" r="1.5" fill="rgba(180,155,100,0.25)"/>
+              <circle cx="20" cy="20" r="14" fill="url(#btnMoonGrad)" />
+              <circle cx="16" cy="17" r="2" fill="rgba(180,155,100,0.35)" />
+              <circle cx="25" cy="23" r="2.5" fill="rgba(180,155,100,0.30)" />
+              <circle cx="19" cy="26" r="1.5" fill="rgba(180,155,100,0.25)" />
             </svg>
           </div>
         </button>
@@ -233,11 +237,40 @@
           <div class="tc-arrow">Abrir Hub <span>→</span></div>
         </a>
 
-        <!-- Lean Canvas -->
+        <!-- Lluvia de Ideas -->
+        <a href="/lluviadeideas/seleccion" class="tool-card disponible" id="card-lluviadeideas">
+          <div class="tc-glow tc-glow--cyan"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>💡 Lluvia de Ideas</strong>
+            Lienzo libre para explorar, conectar y organizar conceptos visualmente mediante nodos y relaciones.
+            <div class="tip-when">📌 Úsala cuando: Estás empezando un proyecto y querés explorar ideas sin restricciones.</div>
+          </div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-lluviadeideas.png" alt="Lluvia de Ideas Icon"
+              style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Lluvia de Ideas</div>
+          <p class="tc-desc">Lienzo libre para crear, conectar y fusionar nodos de ideas. El punto de partida de todo proyecto.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">Brainstorming</span>
+            <span class="tc-tag">Conexiones</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- 2 — Lean Canvas -->
         <a href="/leancanvas/seleccion" class="tool-card disponible" id="card-leancanvas">
           <div class="tc-glow tc-glow--cyan"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>📊 Lean Canvas</strong>
+            Plantilla de una página para modelar un negocio: problema, solución, segmento, propuesta de valor, métricas e ingresos.
+            <div class="tip-when">📌 Úsala cuando: Vas a lanzar un producto propio o de emprendimiento y necesitás validar la idea de negocio.</div>
+          </div>
           <div class="tc-icon" style="background: transparent;">
-            <img src="/assets/icon-leancanvas.png" alt="Lean Canvas Icon" style="width: 100%; height: 100%; object-fit: contain;">
+            <img src="/assets/icon-leancanvas.png" alt="Lean Canvas Icon"
+              style="width: 100%; height: 100%; object-fit: contain;">
           </div>
           <div class="tc-name">Lean Canvas</div>
           <p class="tc-desc">Valida tu modelo de negocio. Define problemas, soluciones y métricas clave.</p>
@@ -249,89 +282,106 @@
           <div class="tc-arrow">Abrir <span>→</span></div>
         </a>
 
-        <!-- MoSCoW -->
+        <!-- Análisis FODA -->
+        <a href="/foda/seleccion" class="tool-card disponible" id="card-foda">
+          <div class="tc-glow tc-glow--blue"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>🎯 Análisis FODA</strong>
+            Matriz de 4 cuadrantes para evaluar Fortalezas, Oportunidades, Debilidades y Amenazas.
+            <div class="tip-when">📌 Úsala cuando: Necesitás evaluar el estado actual de un proyecto o empresa frente a su entorno y competencia.</div>
+          </div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-foda.png" alt="Análisis FODA Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Análisis FODA</div>
+          <p class="tc-desc">Evalúa factores internos y externos. Grilla 2x2 visual con exportación a PNG.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">Estrategia</span>
+            <span class="tc-tag">Matriz 2x2</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- 3 — Toma de Requerimientos -->
+        <a href="/requerimientos/seleccion" class="tool-card disponible" id="card-requerimientos">
+          <div class="tc-glow tc-glow--blue"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>📋 Toma de Requerimientos</strong>
+            Documenta qué debe hacer el sistema (RF) y bajo qué condiciones (RNF), con trazabilidad y estados.
+            <div class="tip-when">📌 Úsala cuando: Tenés un cliente o proyecto con necesidades concretas que hay que registrar formalmente.</div>
+          </div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-requerimientos.png" alt="Toma de Requerimientos Icon"
+              style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Requerimientos</div>
+          <p class="tc-desc">Recolecta, traza y gestiona los requerimientos funcionales y no funcionales.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">SRS</span>
+            <span class="tc-tag">Trazabilidad</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- 4 — MoSCoW -->
         <a href="/moscow/seleccion" class="tool-card disponible" id="card-moscow">
           <div class="tc-glow tc-glow--red"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>🎯 Matriz MoSCoW</strong>
+            Clasifica funcionalidades en Must Have, Should Have, Could Have y Won't Have para definir el alcance del MVP.
+            <div class="tip-when">📌 Úsala cuando: Tenés muchos requerimientos y necesitás decidir cuáles van en la primera versión.</div>
+          </div>
           <div class="tc-icon" style="background: transparent;">
-            <img src="/assets/icon-moscow.png" alt="MoSCoW Icon" style="width: 100%; height: 100%; object-fit: contain;">
+            <img src="/assets/icon-moscow.png" alt="MoSCoW Icon"
+              style="width: 100%; height: 100%; object-fit: contain;">
           </div>
           <div class="tc-name">Matriz MoSCoW</div>
           <p class="tc-desc">Prioriza funcionalidades por Must, Should, Could y Won't Have.</p>
           <div class="tc-tags">
             <span class="tc-tag">MVP Scoping</span>
-            <span class="tc-tag">Drag & Drop</span>
+            <span class="tc-tag">Drag &amp; Drop</span>
             <span class="tc-tag">Estadísticas</span>
           </div>
           <div class="tc-arrow">Abrir <span>→</span></div>
         </a>
 
-        <!-- Kanban -->
-        <a href="/kanban/seleccion" class="tool-card disponible" id="card-kanban">
-          <div class="tc-glow tc-glow--green"></div>
-          <div class="tc-icon" style="background: transparent;">
-            <img src="/assets/icon-kanban.png" alt="Kanban Icon" style="width: 100%; height: 100%; object-fit: contain;">
-          </div>
-          <div class="tc-name">Tablero Kanban</div>
-          <p class="tc-desc">Motor de ejecución. Mueve tareas de Backlog a Terminado en tiempo real.</p>
-          <div class="tc-tags">
-            <span class="tc-tag">Drag & Drop</span>
-            <span class="tc-tag">Flujo de Trabajo</span>
-          </div>
-          <div class="tc-arrow">Abrir <span>→</span></div>
-        </a>
-
-        <!-- Eisenhower -->
-        <a href="/eisenhower/seleccion" class="tool-card disponible" id="card-eisenhower">
-          <div class="tc-glow tc-glow--purple"></div>
-          <div class="tc-icon" style="background: transparent;">
-            <img src="/assets/icon-eisenhower.png" alt="Eisenhower Icon" style="width: 100%; height: 100%; object-fit: contain;">
-          </div>
-          <div class="tc-name">Matriz Eisenhower</div>
-          <p class="tc-desc">Clasifica tareas por urgencia e importancia. Visualiza tu carga de trabajo.</p>
-          <div class="tc-tags">
-            <span class="tc-tag">Drag & Drop</span>
-            <span class="tc-tag">Export PNG</span>
-            <span class="tc-tag">Import Excel</span>
-          </div>
-          <div class="tc-arrow">Abrir <span>→</span></div>
-        </a>
-
-        <!-- Diagramas de Flujo -->
-        <a href="/diagramas/seleccion" class="tool-card disponible" id="card-diagramas">
-          <div class="tc-glow tc-glow--blue"></div>
-          <div class="tc-icon" style="background: transparent;">
-            <img src="/assets/icon-diagramas.png" alt="Diagramas Icon" style="width: 100%; height: 100%; object-fit: contain;">
-          </div>
-          <div class="tc-name">Diagramas de Flujo</div>
-          <p class="tc-desc">Editor interactivo con formas, flechas SVG y exportación en alta resolución.</p>
-          <div class="tc-tags">
-            <span class="tc-tag">Drag & Drop</span>
-            <span class="tc-tag">SVG</span>
-            <span class="tc-tag">Export PNG</span>
-          </div>
-          <div class="tc-arrow">Abrir <span>→</span></div>
-        </a>
-
-        <!-- BD / ER -->
-        <a href="/dbdiagrams/seleccion" class="tool-card disponible" id="card-dbdiagrams">
+        <!-- 5 — Historias de Usuario -->
+        <a href="/historias/seleccion.html" class="tool-card disponible" id="card-historias">
           <div class="tc-glow tc-glow--violet"></div>
-          <div class="tc-icon" style="background: transparent;">
-            <img src="/assets/icon-dbdiagrams.png" alt="DB Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>📖 Historias de Usuario</strong>
+            Describe funcionalidades desde la perspectiva del usuario con formato "Como / quiero / para", criterios Gherkin y story points.
+            <div class="tip-when">📌 Úsala cuando: Trabajás con metodología ágil (Scrum) y necesitás descomponer requerimientos en tareas del sprint.</div>
           </div>
-          <div class="tc-name">Diagramas BD / ER</div>
-          <p class="tc-desc">Genera diagramas ER desde SQL. Modela tus bases de datos visualmente.</p>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-historias.png" alt="Historias de Usuario Icon" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Historias de Usuario</div>
+          <p class="tc-desc">Crea y gestiona HU con narrativa ágil, criterios Gherkin, story points y trazabilidad a requerimientos.</p>
           <div class="tc-tags">
-            <span class="tc-tag">SQL → Diagrama</span>
-            <span class="tc-tag">Entidad-Relación</span>
+            <span class="tc-tag">Gherkin</span>
+            <span class="tc-tag">Story Points</span>
+            <span class="tc-tag">Scrum</span>
           </div>
           <div class="tc-arrow">Abrir <span>→</span></div>
         </a>
 
-        <!-- Casos de Uso -->
+        <!-- 6 — Casos de Uso -->
         <a href="/casosdeuso/seleccion" class="tool-card disponible" id="card-casosdeuso">
           <div class="tc-glow tc-glow--cyan"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>🔵 Casos de Uso UML</strong>
+            Modela visualmente cómo actores externos interactúan con el sistema usando el estándar UML con relaciones include y extend.
+            <div class="tip-when">📌 Úsala cuando: Necesitás documentar el comportamiento del sistema para un cliente, cátedra o equipo técnico.</div>
+          </div>
           <div class="tc-icon" style="background: transparent;">
-            <img src="/assets/icon-casosdeuso.png" alt="Casos de Uso Icon" style="width: 100%; height: 100%; object-fit: contain;">
+            <img src="/assets/icon-casosdeuso.png" alt="Casos de Uso Icon"
+              style="width: 100%; height: 100%; object-fit: contain;">
           </div>
           <div class="tc-name">Casos de Uso UML</div>
           <p class="tc-desc">Define actores, sistemas y relaciones include/extend. Estándar UML.</p>
@@ -342,9 +392,98 @@
           <div class="tc-arrow">Abrir <span>→</span></div>
         </a>
 
+        <!-- 7 — Diagramas de Flujo -->
+        <a href="/diagramas/seleccion" class="tool-card disponible" id="card-diagramas">
+          <div class="tc-glow tc-glow--blue"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>🔷 Diagramas de Flujo</strong>
+            Editor interactivo para crear diagramas con formas, flechas y conectores SVG. Exportable en alta resolución.
+            <div class="tip-when">📌 Úsala cuando: Necesitás representar procesos, algoritmos, flujos de navegación o lógica de negocio.</div>
+          </div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-diagramas.png" alt="Diagramas Icon"
+              style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Diagramas de Flujo</div>
+          <p class="tc-desc">Editor interactivo con formas, flechas SVG y exportación en alta resolución.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">Drag &amp; Drop</span>
+            <span class="tc-tag">SVG</span>
+            <span class="tc-tag">Export PNG</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- 8 — Diagramas BD / ER -->
+        <a href="/dbdiagrams/seleccion" class="tool-card disponible" id="card-dbdiagrams">
+          <div class="tc-glow tc-glow--violet"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>🗄️ Diagramas BD / ER</strong>
+            Genera diagramas Entidad-Relación a partir de código SQL. Visualiza la estructura completa de tu base de datos.
+            <div class="tip-when">📌 Úsala cuando: Estás diseñando o documentando la base de datos de un sistema.</div>
+          </div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-dbdiagrams.png" alt="DB Icon"
+              style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Diagramas BD / ER</div>
+          <p class="tc-desc">Genera diagramas ER desde SQL. Modela tus bases de datos visualmente.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">SQL → Diagrama</span>
+            <span class="tc-tag">Entidad-Relación</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- 9 — Matriz Eisenhower -->
+        <a href="/eisenhower/seleccion" class="tool-card disponible" id="card-eisenhower">
+          <div class="tc-glow tc-glow--purple"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>⚡ Matriz Eisenhower</strong>
+            Organiza tareas en 4 cuadrantes según urgencia e importancia para optimizar el tiempo y el foco.
+            <div class="tip-when">📌 Úsala cuando: Tenés muchas tareas pendientes y necesitás decidir qué hacer, delegar o eliminar.</div>
+          </div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-eisenhower.png" alt="Eisenhower Icon"
+              style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Matriz Eisenhower</div>
+          <p class="tc-desc">Clasifica tareas por urgencia e importancia. Visualiza tu carga de trabajo.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">Drag &amp; Drop</span>
+            <span class="tc-tag">Export PNG</span>
+            <span class="tc-tag">Import Excel</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
+        <!-- 10 — Tablero Kanban -->
+        <a href="/kanban/seleccion" class="tool-card disponible" id="card-kanban">
+          <div class="tc-glow tc-glow--green"></div>
+          <div class="tc-badge tc-badge--help" tabindex="0">?</div>
+          <div class="tc-help-tooltip">
+            <strong>🟢 Tablero Kanban</strong>
+            Gestiona el flujo de trabajo con columnas Backlog, En Progreso y Terminado. Mover tareas en tiempo real.
+            <div class="tip-when">📌 Úsala cuando: Estás en la fase de desarrollo y necesitás controlar el avance de las tareas del equipo o sprint.</div>
+          </div>
+          <div class="tc-icon" style="background: transparent;">
+            <img src="/assets/icon-kanban.png" alt="Kanban Icon"
+              style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="tc-name">Tablero Kanban</div>
+          <p class="tc-desc">Motor de ejecución. Mueve tareas de Backlog a Terminado en tiempo real.</p>
+          <div class="tc-tags">
+            <span class="tc-tag">Drag &amp; Drop</span>
+            <span class="tc-tag">Flujo de Trabajo</span>
+          </div>
+          <div class="tc-arrow">Abrir <span>→</span></div>
+        </a>
+
       </div>
     </section>
-
     <!-- ── SECCIÓN: ¿Por qué Stella Rikka? ── -->
     <section class="rikka-origin-section" aria-label="Origen del nombre Stella Rikka">
       <div class="rikka-origin-inner">
@@ -354,10 +493,13 @@
         <div class="rikka-origin-text">
           <h2 class="rikka-origin-title">¿Por qué <span class="rikka-highlight">Stella Rikka</span>?</h2>
           <p class="rikka-origin-desc">
-            <strong>Stella</strong> proviene del latín y significa <em>"estrella"</em> — refleja la naturaleza espacial y de constelaciones de esta suite, donde cada herramienta es un punto de luz en tu sistema de trabajo.
+            <strong>Stella</strong> proviene del latín y significa <em>"estrella"</em> — refleja la naturaleza espacial
+            y de constelaciones de esta suite, donde cada herramienta es un punto de luz en tu sistema de trabajo.
           </p>
           <p class="rikka-origin-desc">
-            <strong>Rikka</strong> es un homenaje al poder <em>Shun Shun Rikka</em> de Orihime Inoue — las <strong>Seis Flores Espirituales</strong> de su horquilla que protegen, rechazan el daño y sanan lo roto. Como esta suite: protege tu flujo de trabajo, rechaza el caos y restaura el orden.
+            <strong>Rikka</strong> es un homenaje al poder <em>Shun Shun Rikka</em> de Orihime Inoue — las <strong>Seis
+              Flores Espirituales</strong> de su horquilla que protegen, rechazan el daño y sanan lo roto. Como esta
+            suite: protege tu flujo de trabajo, rechaza el caos y restaura el orden.
           </p>
           <div class="rikka-origin-spirits">
             <span class="spirit-badge">⬡ Hinagiku</span>
@@ -389,7 +531,7 @@
   <script src="/js/home.js"></script>
   <script src="/js/host.js"></script>
   <script>
-    setTimeout(() => { if(window.initHostBtn) window.initHostBtn('btn-host-home'); }, 200);
+    setTimeout(() => { if (window.initHostBtn) window.initHostBtn('btn-host-home'); }, 200);
   </script>
   <script>
     // ── Stats ──
@@ -451,7 +593,7 @@
     // ── Auto-actualización: verifica tras 5 seg (el backend lo chequea en background) ──
     async function checkForUpdates() {
       try {
-        const res  = await fetch('/api/system/update-status');
+        const res = await fetch('/api/system/update-status');
         const data = await res.json();
         if (data.available) {
           document.getElementById('update-version').textContent = `v${data.latest}`;

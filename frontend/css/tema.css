@@ -48,45 +48,45 @@
   --scrollbar-track: #0A1628;
 }
 
-/* ── Modo Claro — Soten Kisshun (Luz Sanadora) ── */
+/* ── Modo Claro — Cielo Rikka (Celeste Cósmico) ── */
 [data-tema="claro"] {
-  /* Fondos: luz pura y cálida */
-  --bg-primary:     #FFFBF2;
-  --bg-secondary:   #FEF3DC;
-  --bg-card:        #FFFFFF;
-  --bg-card-hover:  #FFF7E6;
-  --bg-overlay:     rgba(255,251,242,0.94);
+  /* Fondos: celeste suave inspirado en los pétalos de Shun Shun Rikka */
+  --bg-primary:     #E8F7FB;
+  --bg-secondary:   #D4EFF7;
+  --bg-card:        #F0FBFF;
+  --bg-card-hover:  #E0F6FD;
+  --bg-overlay:     rgba(232,247,251,0.96);
 
-  /* Bordes: ámbar suave */
-  --border-color:   rgba(245,158,11,0.15);
-  --border-focus:   rgba(249,115,22,0.5);
+  /* Bordes: cian ámbar suave */
+  --border-color:   rgba(0,180,220,0.18);
+  --border-focus:   rgba(0,180,220,0.55);
 
-  /* Texto oscuro sobre fondo claro */
-  --text-primary:   #1C1007;
-  --text-secondary: #5C4020;
-  --text-muted:     #9A7850;
+  /* Texto oscuro sobre fondo celeste */
+  --text-primary:   #0A2A35;
+  --text-secondary: #1E5068;
+  --text-muted:     #5A8FA0;
 
-  /* Acentos en modo claro — más saturados para contraste */
-  --accent-primary:   #D97706;  /* Ámbar oscuro legible sobre blanco    */
-  --accent-secondary: #EA580C;  /* Naranja oscuro                       */
-  --accent-tertiary:  #B45309;  /* Dorado profundo                      */
+  /* Acentos: ámbar sobre celeste para contraste perfecto */
+  --accent-primary:   #D97706;
+  --accent-secondary: #EA580C;
+  --accent-tertiary:  #B45309;
   --accent-success:   #059669;
   --accent-warning:   #F59E0B;
   --accent-danger:    #DC2626;
 
-  /* Gradientes cálidos diurnos */
+  /* Gradientes celestes diurnos */
   --gradient-hero:  linear-gradient(135deg, #D97706 0%, #EA580C 50%, #F59E0B 100%);
-  --gradient-card:  linear-gradient(145deg, #FFFFFF 0%, #FFFBF2 100%);
+  --gradient-card:  linear-gradient(145deg, #F0FBFF 0%, #E8F7FB 100%);
   --gradient-btn:   linear-gradient(135deg, #D97706, #EA580C);
 
-  /* Sombras con resplandor ámbar suave */
-  --shadow-sm:  0 2px 8px rgba(217,119,6,0.08);
-  --shadow-md:  0 8px 24px rgba(217,119,6,0.13);
-  --shadow-lg:  0 20px 60px rgba(217,119,6,0.18);
-  --shadow-glow: 0 0 30px rgba(245,158,11,0.25);
+  /* Sombras con toque cian */
+  --shadow-sm:  0 2px 8px rgba(0,150,200,0.10);
+  --shadow-md:  0 8px 24px rgba(0,150,200,0.14);
+  --shadow-lg:  0 20px 60px rgba(0,150,200,0.18);
+  --shadow-glow: 0 0 30px rgba(0,200,255,0.20);
 
-  --scrollbar-thumb: #FBBF24;
-  --scrollbar-track: #FEF3DC;
+  --scrollbar-thumb: #7DD3F0;
+  --scrollbar-track: #D4EFF7;
 }
 
 /* ── Reset y base ── */

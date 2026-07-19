@@ -236,8 +236,21 @@
 }
 
 [data-tema="claro"] .navbar {
-  background: rgba(255,251,242,0.92);
-  border-bottom: 1px solid rgba(245,158,11,0.18);
+  /* La navbar SIEMPRE permanece oscura — no cambia con el tema */
+  background: rgba(9, 6, 15, 0.92);
+  border-bottom: 1px solid rgba(245,158,11,0.12);
+}
+
+/* Forzar colores de texto de la navbar siempre en modo oscuro */
+[data-tema="claro"] .navbar .nav-link {
+  color: #9CA3AF;
+}
+[data-tema="claro"] .navbar .nav-link:hover {
+  color: #FFF8EE;
+  background: rgba(255,255,255,0.06);
+}
+[data-tema="claro"] .navbar .brand-name {
+  color: #FFF8EE;
 }
 
 .navbar-brand {
@@ -862,6 +875,69 @@
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.08);
 }
+
+/* Badge "?" con tooltip de ayuda */
+.tc-badge--help {
+  cursor: help;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+.tc-badge--help:hover {
+  color: var(--accent-primary);
+  background: rgba(245,158,11,0.12);
+  border-color: rgba(245,158,11,0.3);
+}
+
+/* Tooltip del badge */
+.tc-help-tooltip {
+  position: absolute;
+  top: calc(14px + 28px);
+  right: 14px;
+  width: 230px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+.tc-help-tooltip strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  margin-bottom: 6px;
+}
+.tc-help-tooltip .tip-when {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+.tc-badge--help:hover + .tc-help-tooltip,
+.tc-badge--help:focus + .tc-help-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 
 /* Icon */
 .tc-icon {

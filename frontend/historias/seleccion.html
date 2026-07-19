@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historias de Usuario — Stella Rikka</title>
+    <meta name="description" content="Gestiona las Historias de Usuario de tu proyecto con criterios de aceptación Gherkin." />
+    <link rel="stylesheet" href="/css/tema.css" />
+    <link rel="stylesheet" href="/css/seleccion.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <script>
+        (function () {
+            const t = localStorage.getItem('suite_tema') || 'oscuro';
+            document.documentElement.setAttribute('data-tema', t);
+        })();
+    </script>
+</head>
+
+<body>
+    <div class="sel-wrapper">
+        <main class="sel-content">
+            <h1 class="sel-page-title">Historias de Usuario</h1>
+            <p class="sel-page-subtitle">
+                Crea y gestiona las Historias de Usuario (HU) de tu proyecto con criterios de aceptación Gherkin, estimación y trazabilidad.
+            </p>
+
+            <div class="sel-options" role="group" aria-label="Opciones">
+                <button class="sel-option-btn active" id="btn-nuevo" aria-pressed="true" aria-controls="panel-nuevo">
+                    <div class="sel-option-icon sel-option-icon-nuevo">✨</div>
+                    <div class="sel-option-name">Crear nuevo Archivo</div>
+                    <div class="sel-option-desc">Inicia un nuevo conjunto de Historias de Usuario para un proyecto.</div>
+                </button>
+
+                <button class="sel-option-btn" id="btn-existente" aria-pressed="false" aria-controls="panel-existente">
+                    <div class="sel-option-icon sel-option-icon-existente">📂</div>
+                    <div class="sel-option-name">Abrir Archivo Existente</div>
+                    <div class="sel-option-desc">Retoma un conjunto de historias previamente creado.</div>
+                </button>
+            </div>
+
+            <!-- Panel: Nuevo archivo -->
+            <div class="panel visible" id="panel-nuevo" role="region" aria-label="Formulario nuevo">
+                <h2 class="panel-title">Nuevo Archivo de Historias de Usuario</h2>
+                <form id="form-nuevo" novalidate>
+                    <div class="form-group">
+                        <label class="form-label" for="input-titulo">Nombre del proyecto <span style="color:var(--accent-danger)">*</span></label>
+                        <input class="input" id="input-titulo" type="text" placeholder="Ej: Sistema de Inventario V2"
+                            maxlength="120" autocomplete="off" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-descripcion">Descripción breve (opcional)</label>
+                        <textarea class="input" id="input-descripcion" rows="2" placeholder="Agrega un contexto..."
+                            maxlength="600" style="resize:vertical;"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-ghost" id="btn-cancelar-nuevo">Limpiar</button>
+                        <button type="submit" class="btn btn-primary" id="btn-crear">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M12 5v14M5 12h14" />
+                            </svg>
+                            Crear Archivo
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Panel: Abrir existente -->
+            <div class="panel" id="panel-existente" role="region" aria-label="Existentes">
+                <h2 class="panel-title">Archivos de Historias de Usuario</h2>
+                <div class="projects-list" id="projects-list" aria-live="polite">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⏳</div>
+                        <p class="empty-state-text">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal eliminar -->
+    <div class="modal-overlay" id="modal-eliminar" role="dialog" aria-modal="true">
+        <div class="modal-box">
+            <h3 class="modal-title">⚠️ Eliminar archivo</h3>
+            <p class="modal-body" id="modal-body">¿Seguro? Esta acción borrará todas sus historias.</p>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" id="btn-modal-cancelar">Cancelar</button>
+                <button class="btn btn-danger" id="btn-modal-confirmar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" role="alert" aria-live="polite"></div>
+
+    <script src="/js/tema.js"></script>
+    <script src="/historias/js/seleccion.js"></script>
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>
